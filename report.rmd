@@ -54,3 +54,129 @@ The 24 research groups of the laboratory are dispatched in seven scientific depa
 - Dpt ICI : Interaction, Collective Intelligence
 - Dpt IA : Artificial Intelligence
 - Dpt SI : Signals, Images
+
+## The internship
+
+Markov decisions processes (MDPs) and their model free counterpart in reinforcement learning (RL) have known a large success in the last two decades. Although research in these two areas has been taking place for more than fifty years, the field gained momentum only recently following the advent of powerful hardware and algorithms with which supra­human performance were obtained in games like Chess or Go. However, these impressive successes often rely on quite exceptional hardware possibilities and cannot be applied in many ”usual” contexts, where, for instance, the volume of data available or the amount of computing power is more restricted. To define the next generation of more ”democratic” and widely applicable algorithms, such methods still need to deal with very demanding exploration issues as soon as the state/action spaces are not small. One way around this is to use underlying knowledge and structure present in many MDPs. This is especially true for problems related to scheduling and resources sharing in among others server farms, clouds, and cellular wireless networks. The internships will revolve around this theme of improving the efficiency of learning algorithms by leveraging the structure of the underlying problem and focus mainly on model­free approach.
+
+# Problem settings
+
+Two type of systems are studied in this internship: queuing system and load-balancing system.
+
+## Queuing system
+
+### Describe
+
+We have $n$ classes of queue $C_{1}, \dots, C_{n}$. For each class of queue, its behavior is fully controlled by which environment it is in. An environment can be in one of the states $m_{1}, \dots, m_{m}$. And the environment of class $C_{i}$ is a random variable, denoted by $M_{i}$, which is in one of the states $m_{1}, \dots, m_{m}$. For each environment, $C_{i}$ has their own holding cost $c_{i, j}$ (the cost of one unfinished unit of work on the queue), arrival rate $\lambda_{i, j}$ (the rate of one more unit of work arriving to the queue) and departure rate $\mu_{i, j}$ (the rate of one unit of work on the queue has finished). Furthermore, the environment $M_{i}$ can change from $m_{j}$ and $m_{k}$ with the rate of $\xi_{i, j, k}$. A table summarizing all parameters is shown below.
+
+```{=latex}
+\begin{table}[ht]
+\caption{Queuing system parameters}
+\begin{center}
+\begin{tabular}{c c c c c}
+    \hline
+    \multicolumn{2}{c}{} & $m_{1}$ & $\dots$ & $m_{m}$ \\
+    \cline{2-5}
+    \multirow{3}{*}{$C_{1}$} &  Holding cost & $c_{1, 1}$ & $\dots$ & $c_{1, m}$ \\
+    & Arrival rate & $\lambda_{1, 1}$ & $\dots$ & $\lambda_{1, m}$ \\
+    & Departure rate & $\mu_{1, 1}$ & $\dots$ & $\mu_{1, m}$ \\
+    \cline{2-5}
+    $\vdots$  \\
+    \cline{2-5}
+    \multirow{3}{*}{$C_{n}$} &  Holding cost & $c_{n, 1}$ & $\dots$ & $c_{n, m}$ \\
+    & Arrival rate & $\lambda_{n, 1}$ & $\dots$ & $\lambda_{n, m}$ \\
+    & Departure rate & $\mu_{n, 1}$ & $\dots$ & $\mu_{n, m}$ \\
+    \hline
+\end{tabular}
+\end{center}
+\label{tab:qs-param}
+\end{table}
+```
+
+For each $C_{i}$, we have a matrix transition as below.
+
+```{=latex}
+\begin{table}[ht]
+\caption{Matrix transition of the environment of $C_{i}$}
+\begin{center}
+\begin{tabular}{c c c c}
+    \hline
+    & $m_{1}$ & $\dots$ & $m_{m}$ \\
+    $m_{1}$ & $\xi_{i, 1, 1}$ & \dots & $\xi_{i, 1, m}$ \\
+    \vdots \\
+    $m_{m}$ & $\xi_{i, m, 1}$ & \dots & $\xi_{i, m, m}$ \\
+    \hline
+\end{tabular}
+\end{center}
+\label{tab:mat-transition-ci}
+\end{table}
+```
+
+The agent will decide which queues should be activated. Only works on activating queues can be processed and finished. In more generic problems, the agent is allowed to activate / deactivate multiple queues at the same time based on some conditions. However, in this internship, the agent can only activate one queue at a time.
+
+```{=latex}
+\begin{figure}
+\centering
+\begin{tikzpicture}[>=latex]
+% the shapes
+\path
+  (0,3cm) pic {queuei=1}
+  (0,1cm) pic {queuei=2}
+  (0,-2cm) pic {queuei=n};
+\path
+  (1,4cm) coordinate (aux1)
+  (1,-3.5cm) coordinate (aux2)
+  (-0.5,0cm) coordinate (aux3)
+  (2.5,0cm) coordinate (aux4);
+\node[draw,dashed,text width=2.5cm,fit={(aux1) (aux2) (aux3) (aux4)}] (dashed) {};
+\node[draw,align=center,circle,inner sep=2pt]
+  at (4,-1) (agent)
+  {Agent};
+
+%the arrows
+\draw[->, line width=1.25]
+  ([xshift=-3.5cm]q-1.west) --
+    node[anchor=south,align=center] {$\lambda_{1, m_{1}}$}
+  (q-1.west);
+\draw[->]
+  ([xshift=1.5cm]q-1.east) --
+    node[anchor=south,align=center] {$\mu_{1, m_{1}}$}
+  ([xshift=4.5cm]q-1.east);
+\draw[->, line width=1.25]
+  ([xshift=-3.5cm]q-2.west) --
+    node[anchor=south,align=center] {$\lambda_{2, m_{2}}$}
+  (q-2.west);
+\draw[->, line width=1.25]
+  ([xshift=1.5cm]q-2.east) --
+    node[anchor=south,align=center] {$\mu_{2, m_{2}}$}
+  ([xshift=4.5cm]q-2.east);
+\draw[->, line width=1.25]
+  ([xshift=-3.5cm]q-n.west) --
+    node[anchor=south,align=center] {$\lambda_{n, m_{n}}$}
+  (q-n.west);
+\draw[->]
+  ([xshift=1.5cm]q-n.east) --
+    node[anchor=south,align=center] {$\mu_{n, m_{n}}$}
+  ([xshift=4.5cm]q-n.east);
+\draw[->,dotted]
+  (agent.west) --
+    node[anchor=south,align=center] {}
+  ([xshift=1.5cm]q-1.east);
+\draw[->,densely dotted, line width=1]
+  (agent.west) --
+    node[anchor=south,align=center] {}
+  ([xshift=1.5cm]q-2.east);
+\draw[->,dotted]
+  (agent.west) --
+    node[anchor=south,align=center] {}
+  ([xshift=1.5cm]q-n.east);
+\path ([xshift=0.5cm]q-2.south) -- ([xshift=0.5cm]q-n.north) node [font=\LARGE, midway, sloped] {$\dots$};
+\end{tikzpicture}
+\caption[Visualization of the queueing system when the agent activates queue 2]{Visualization of the queueing system when the agent activates queue 2, the bold lines represent the flow of works inside the system.}
+\end{figure}
+```
+
+The state of the system is represented by two vectors:
+
+- $S = (X_{1}, \dots, X_{n})$ where $X_{i}$ is a random variable represents the current number of works of class $C_{i}$ and is observable.
+- $E = (M_{1}, \dots, M_{n})$ and this vector is not observable.
