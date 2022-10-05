@@ -1,0 +1,189 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+  a4paper, xcolor = usenames,dvipsnames]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{listings}
+\newcommand{\passthrough}[1]{#1}
+\lstset{defaultdialect=[5.3]Lua}
+\lstset{defaultdialect=[x86masm]Assembler}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
+\usepackage{setspace}
+\usepackage{float}
+\usepackage{fontspec}
+\usepackage{subfig}
+\usepackage{hyperref}
+\floatplacement{figure}{H}
+\makeatletter
+\renewcommand\paragraph{\@startsection{paragraph}{4}{\z@}%
+  {-2.5ex\@plus -1ex \@minus -.25ex}%
+  {1.25ex \@plus .25ex}%
+  {\normalfont\normalsize\bfseries}}
+\makeatother
+\setcounter{secnumdepth}{4}
+\hypersetup{
+  colorlinks = true,
+}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{}
+\date{\vspace{-2.5em}}
+
+\begin{document}
+
+\onehalfspacing
+
+\pagenumbering{gobble}
+
+\vspace*{\fill}
+\begin{center}
+  \Large{\textbf{Internship report}}\\
+  \vspace*{1\baselineskip}
+  \Large{\textbf{Members}}\\
+  Vo Van Nghia\\
+  \vfill
+  \vspace*{\fill}
+  \Large{\textbf{Date}}\\
+  29 Sep, 2022
+\end{center}
+
+\newpage
+
+\newpage
+\pagenumbering{roman}
+\tableofcontents
+\addcontentsline{toc}{section}{\contentsname}
+
+\newpage
+\pagenumbering{arabic}
+
+\hypertarget{introduction}{%
+\section{Introduction}\label{introduction}}
+
+\hypertarget{institut-de-recherche-en-informatique-de-toulouse-irit}{%
+\subsection{Institut de Recherche en Informatique de Toulouse (IRIT)}\label{institut-de-recherche-en-informatique-de-toulouse-irit}}
+
+\hypertarget{about-the-institut}{%
+\subsubsection{About the institut}\label{about-the-institut}}
+
+The Institut de Recherche en Informatique de Toulouse (IRIT), created in 1990, is a Joint Research Unit (UMR 5505) of the Centre National de la Recherche Scientifique (CNRS), the Institut National Polytechnique de Toulouse (INP), the Université Paul Sabatier Toulouse3 (UT3), the Université Toulouse1 Capitole (UT1) and the Université de Toulouse Jean Jaurès (UT2J).
+
+IRIT is one of the largest UMR at the national level, is one of the pillars of research in Occitanie with its 600 members, permanent and non-permanent, and about 100 external collaborators. Due to its multi-tutorial nature (CNRS, Toulouse Universities), its scientific impact and its interactions with other fields, the laboratory constitutes one of the structuring forces of the IT landscape and its applications in the digital world, both at regional and national level.
+
+Through its cutting-edge work and dynamics, our unit has been able to define its identity and acquire undeniable visibility, while positioning itself at the heart of changes in local structures: University of Toulouse, as well as the various mechanisms resulting from future investments (LabEx CIMI, IRT Saint-Exupéry, SAT TTT, 3IA ANITI).
+
+IRIT has focused its research on five major scientific issues and six strategic application areas.
+
+\begin{itemize}
+\tightlist
+\item
+  Health, Autonomy, Living, Well-being
+\item
+  Smart City
+\item
+  Aerospace and Transportation
+\item
+  Social Media, Digital Social Ecosystems
+\item
+  e-Education for learning and teaching
+\item
+  Heritage and People Safety
+\end{itemize}
+
+As well as strategic action:
+
+\begin{itemize}
+\tightlist
+\item
+  Scientific Computing, Big Data and AI
+\end{itemize}
+
+\hypertarget{organization}{%
+\subsubsection{Organization}\label{organization}}
+
+The 24 research groups of the laboratory are dispatched in seven scientific departments:
+
+\begin{itemize}
+\tightlist
+\item
+  Dpt ASR : Architecture, Systems, Networks
+\item
+  Dpt CISO : HPC, Simulation, Optimization
+\item
+  Dpt FSL : Reliability of Systems and Software
+\item
+  Dpt GD : Data Management
+\item
+  Dpt ICI : Interaction, Collective Intelligence
+\item
+  Dpt IA : Artificial Intelligence
+\item
+  Dpt SI : Signals, Images
+\end{itemize}
+
+\end{document}

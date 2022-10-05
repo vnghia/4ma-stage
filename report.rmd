@@ -1,0 +1,56 @@
+---
+classoption: a4paper, xcolor = usenames,dvipsnames
+geometry: margin=2.5cm
+output:
+  bookdown::pdf_document2:
+    papersize: a4
+    fig_caption: true
+    highlight: tango
+    keep_tex: true
+    number_sections: true
+    pandoc_args:
+      - "--listings"
+    toc_depth: 3
+    toc: false
+    latex_engine: lualatex
+    includes:
+      in_header: preamble.tex
+      before_body: cover.tex
+---
+
+# Introduction
+
+## Institut de Recherche en Informatique de Toulouse (IRIT)
+
+### About the institut
+
+The Institut de Recherche en Informatique de Toulouse (IRIT), created in 1990, is a Joint Research Unit (UMR 5505) of the Centre National de la Recherche Scientifique (CNRS), the Institut National Polytechnique de Toulouse (INP), the Université Paul Sabatier Toulouse3 (UT3), the Université Toulouse1 Capitole (UT1) and the Université de Toulouse Jean Jaurès (UT2J).
+
+IRIT is one of the largest UMR at the national level, is one of the pillars of research in Occitanie with its 600 members, permanent and non-permanent, and about 100 external collaborators. Due to its multi-tutorial nature (CNRS, Toulouse Universities), its scientific impact and its interactions with other fields, the laboratory constitutes one of the structuring forces of the IT landscape and its applications in the digital world, both at regional and national level.
+
+Through its cutting-edge work and dynamics, our unit has been able to define its identity and acquire undeniable visibility, while positioning itself at the heart of changes in local structures: University of Toulouse, as well as the various mechanisms resulting from future investments (LabEx CIMI, IRT Saint-Exupéry, SAT TTT, 3IA ANITI).
+
+IRIT has focused its research on five major scientific issues and six strategic application areas.
+
+- Health, Autonomy, Living, Well-being
+- Smart City
+- Aerospace and Transportation
+- Social Media, Digital Social Ecosystems
+- e-Education for learning and teaching
+- Heritage and People Safety
+
+As well as strategic action:
+
+- Scientific Computing, Big Data and AI
+
+### Organization
+
+The 24 research groups of the laboratory are dispatched in seven scientific departments:
+
+- Dpt ASR : Architecture, Systems, Networks
+- Dpt CISO : HPC, Simulation, Optimization
+- Dpt FSL : Reliability of Systems and Software
+- Dpt GD : Data Management
+- Dpt ICI : Interaction, Collective Intelligence
+- Dpt IA : Artificial Intelligence
+- Dpt SI : Signals, Images
