@@ -4,10 +4,10 @@
 %
 \documentclass[
   a4paper, xcolor = usenames,dvipsnames]{article}
+\usepackage{amsmath,amssymb}
 \usepackage{lmodern}
-\usepackage{amssymb,amsmath}
-\usepackage{ifxetex,ifluatex}
-\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+\usepackage{iftex}
+\ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
@@ -33,18 +33,13 @@
   \KOMAoptions{parskip=half}}
 \makeatother
 \usepackage{xcolor}
-\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
-\hypersetup{
-  hidelinks,
-  pdfcreator={LaTeX via pandoc}}
-\urlstyle{same} % disable monospaced font for URLs
 \usepackage[margin=2.5cm]{geometry}
 \usepackage{listings}
 \newcommand{\passthrough}[1]{#1}
 \lstset{defaultdialect=[5.3]Lua}
 \lstset{defaultdialect=[x86masm]Assembler}
-\usepackage{longtable,booktabs}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
 % Correct order of tables after \paragraph or \subparagraph
 \usepackage{etoolbox}
 \makeatletter
@@ -107,6 +102,15 @@ mytri/.style={
   inner xsep=0.65cm
   }
 }
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
 
 \author{}
 \date{\vspace{-2.5em}}
@@ -219,7 +223,7 @@ Two type of systems are studied in this internship: queuing system and load-bala
 \hypertarget{parameters}{%
 \subsubsection{Parameters}\label{parameters}}
 
-We have \(n\) classes of queue \(C_{1}, \dots, C_{n}\). For each class of queue, its behavior is fully controlled by which environment it is in. An environment can be in one of the states \(m_{1}, \dots, m_{m}\). And the environment of class \(C_{i}\) is a random variable, denoted by \(M_{i}\), which is in one of the states \(m_{1}, \dots, m_{m}\). For each environment, \(C_{i}\) has their own holding cost \(c_{i, j}\) (the cost of one unfinished unit of work on the queue), arrival rate \(\lambda_{i, j}\) (the rate of one more unit of work arriving to the queue) and departure rate \(\mu_{i, j}\) (the rate of one unit of work on the queue has finished). Furthermore, the environment \(M_{i}\) can change from \(m_{j}\) and \(m_{k}\) with the rate of \(\xi_{i, j, k}\). A table summarizing all parameters is shown below.
+We have \(n\) classes of queue \(C_{1}, \dots, C_{n}\). For each class of queue, its behavior is fully controlled by which environment it is in. An environment can be in one of the states \(m_{1}, \dots, m_{m}\). And the environment of class \(C_{i}\) is a random variable, denoted by \(M_{i}\), which is in one of the states \(m_{1}, \dots, m_{m}\). For each environment, \(C_{i}\) has their own holding cost \(c_{i, j}\) (the cost of one unfinished unit of work on the queue), arrival rate \(\lambda_{i, j}\) (the rate of one more unit of work arriving to the queue) and departure rate \(\mu_{i, j}\) (the rate of one unit of work on the queue has finished). Furthermore, the environment \(M_{i}\) can change from \(m_{j}\) and \(m_{k}\) with the rate of \(\xi_{i, j, k}\). In this internship, we focus on the case where \(n \coloneq 2\). A table summarizing all parameters is shown below.
 
 \begin{table}[ht]
 \caption{Queuing system parameters}
@@ -260,7 +264,35 @@ For each \(C_{i}\), we have a matrix transition as below.
 \label{tab:mat-transition-ci}
 \end{table}
 
-The agent will decide which queues should be activated. Only works on activating queues can be processed and finished. In more generic problems, the agent is allowed to activate / deactivate multiple queues at the same time based on some conditions. However, in this internship, the agent can only activate one queue at a time.
+The state of the system is represented by two vectors:
+
+\begin{itemize}
+\tightlist
+\item
+  \(S = (X_{1}, \dots, X_{n})\) where \(X_{i}\) is a random variable represents the current number of works of class \(C_{i}\) and is observable.
+\item
+  \(E = (M_{1}, \dots, M_{n})\) and this vector is not observable.
+\end{itemize}
+
+\hypertarget{cost}{%
+\subsubsection{Cost}\label{cost}}
+
+The cost of the system is a function of \(S\) and \(E\). We propose two functions of cost. The first one is a simple linear function.
+
+\[
+f_{1}(S, E) = \sum_{1}^{n} c_{i, M_{i}} X_{i}
+\]
+
+And the second one is a convex function which is specialized for the case \(n = 2\), where \(\epsilon\) is a fixed positive constant.
+
+\[
+f_{2}(S, E) = c_{1, M_{1}} X_{1} + c_{2, M_{2}} (\epsilon X_{2}^{2} + X_{2})
+\]
+
+\hypertarget{agent}{%
+\subsubsection{Agent}\label{agent}}
+
+The agent will decide which queues should be activated. His mission is to minimize the cost of the whole system. Only works on activating queues can be processed and finished. In more generic problems, the agent is allowed to activate / deactivate multiple queues at the same time based on some conditions. However, in this internship, the agent can only activate one queue at a time.
 
 \begin{figure}
 \centering
@@ -283,27 +315,27 @@ The agent will decide which queues should be activated. Only works on activating
 %the arrows
 \draw[->, line width=1.25]
   ([xshift=-3.5cm]q-1.west) --
-    node[anchor=south,align=center] {$\lambda_{1, m_{1}}$}
+    node[anchor=south,align=center] {$\lambda_{1, M_{1}}$}
   (q-1.west);
 \draw[->]
   ([xshift=1.5cm]q-1.east) --
-    node[anchor=south,align=center] {$\mu_{1, m_{1}}$}
+    node[anchor=south,align=center] {$\mu_{1, M_{1}}$}
   ([xshift=4.5cm]q-1.east);
 \draw[->, line width=1.25]
   ([xshift=-3.5cm]q-2.west) --
-    node[anchor=south,align=center] {$\lambda_{2, m_{2}}$}
+    node[anchor=south,align=center] {$\lambda_{2, M_{2}}$}
   (q-2.west);
 \draw[->, line width=1.25]
   ([xshift=1.5cm]q-2.east) --
-    node[anchor=south,align=center] {$\mu_{2, m_{2}}$}
+    node[anchor=south,align=center] {$\mu_{2, M_{2}}$}
   ([xshift=4.5cm]q-2.east);
 \draw[->, line width=1.25]
   ([xshift=-3.5cm]q-n.west) --
-    node[anchor=south,align=center] {$\lambda_{n, m_{n}}$}
+    node[anchor=south,align=center] {$\lambda_{n, M_{n}}$}
   (q-n.west);
 \draw[->]
   ([xshift=1.5cm]q-n.east) --
-    node[anchor=south,align=center] {$\mu_{n, m_{n}}$}
+    node[anchor=south,align=center] {$\mu_{n, M_{n}}$}
   ([xshift=4.5cm]q-n.east);
 \draw[->,dotted]
   (agent.west) --
@@ -322,16 +354,6 @@ The agent will decide which queues should be activated. Only works on activating
 \caption[Visualization of the queueing system when the agent activates queue 2]{Visualization of the queueing system when the agent activates queue 2, the bold lines represent the flow of works inside the system.}
 \end{figure}
 
-The state of the system is represented by two vectors:
-
-\begin{itemize}
-\tightlist
-\item
-  \(S = (X_{1}, \dots, X_{n})\) where \(X_{i}\) is a random variable represents the current number of works of class \(C_{i}\) and is observable.
-\item
-  \(E = (M_{1}, \dots, M_{n})\) and this vector is not observable.
-\end{itemize}
-
 \hypertarget{evolution}{%
 \subsubsection{Evolution}\label{evolution}}
 
@@ -342,11 +364,11 @@ In particular, given the system state is \((S, E)\), the agent decides to activa
 \begin{itemize}
 \tightlist
 \item
-  The work of class \(C_{i}\) increases by 1. Because there are \(n\) classes, we have \(n\) events of this kind with the rate \(\lambda_{1, m_{1}}, \dots, \lambda_{n, m_{n}}\) respectively (if the number of work of class \(C_{i}\) reaches an upper limit, we consider \(\lambda_{i, m_{i}} = 0\)).
+  The work of class \(C_{i}\) increases by 1. Because there are \(n\) classes, we have \(n\) events of this kind with the rate \(\lambda_{1, M_{1}}, \dots, \lambda_{n, M_{n}}\) respectively (if the number of work of class \(C_{i}\) reaches an upper limit, we consider \(\lambda_{i, M_{i}} = 0\)).
 \item
-  The work of class \(C_{a}\) decreases by 1. Because we can only activate only one class, there is only one event of this type and its rate is \(\mu_{a, m_{a}}\).
+  The work of class \(C_{a}\) decreases by 1. Because we can only activate only one class, there is only one event of this type and its rate is \(\mu_{a, M_{a}}\).
 \item
-  The environment of class \(C_{i}\) changes to a different environment other than \(m_{i}\) and the rate changing to environment \(j\) is \(\xi_{i, m_{i}, j}\). Because there are \(m - 1\) possible changes for each class and there are \(n\) classes, the number of this kind of event is \(n(m - 1)\).
+  The environment of class \(C_{i}\) changes to a different environment other than \(m_{i}\) and the rate changing to environment \(j\) is \(\xi_{i, M_{i}, j}\). Because there are \(m - 1\) possible changes for each class and there are \(n\) classes, the number of this kind of event is \(n(m - 1)\).
 \item
   And a special dummy event where nothing changes.
 \end{itemize}
