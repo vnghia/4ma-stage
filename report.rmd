@@ -134,7 +134,7 @@ $$
 
 ### Agent
 
-The agent will decide which queues should be activated. His mission is to minimize the cost of the whole system. Only works on activating queues can be processed and finished. In more generic problems, the agent is allowed to activate / deactivate multiple queues at the same time based on some conditions. However, in this internship, the agent can only activate one queue at a time.
+The agent will decide which queues should be activated. His goal is to minimize the cost of the whole system. Only works on activating queues can be processed and finished. In more generic problems, the agent is allowed to activate / deactivate multiple queues at the same time based on some conditions. However, in this internship, the agent can only activate one queue at a time.
 
 ```{=latex}
 \begin{figure}
@@ -220,3 +220,114 @@ $$
 If $\epsilon > 0$, the probability of the dummy event will always be greater than 0. In this internship, as we do not want the system evolves too slowly, we choose $\epsilon \coloneq 0$.
 
 After obtaining all the information above, we use that discrete probability distribution to obtain the next transition $T$ of the system and denote $S'$ and $E'$ the next state of the system.
+
+## Load-balancing system
+
+### Parameters
+
+For this system, we have a similar parameters with the one of the queuing system. The only difference in this system is that instead of having multiple arrival rate that depends on the class of queue as well as the environment, we have only one global arrival rate $\lambda$. A table summarizing the parameters of this system is shown below.
+
+```{=latex}
+\begin{table}[ht]
+\caption{Load-balancing system parameters}
+\begin{center}
+\begin{tabular}{c c c c c}
+    \hline
+    \multicolumn{2}{c}{} & $m_{1}$ & $\dots$ & $m_{m}$ \\
+    \cline{2-5}
+    \multirow{2}{*}{$C_{1}$} &  Holding cost & $c_{1, 1}$ & $\dots$ & $c_{1, m}$ \\
+    & Departure rate & $\mu_{1, 1}$ & $\dots$ & $\mu_{1, m}$ \\
+    \cline{2-5}
+    $\vdots$  \\
+    \cline{2-5}
+    \multirow{2}{*}{$C_{n}$} &  Holding cost & $c_{n, 1}$ & $\dots$ & $c_{n, m}$ \\
+    & Departure rate & $\mu_{n, 1}$ & $\dots$ & $\mu_{n, m}$ \\
+    \cline{2-5}
+    & Global arrival rate & & $\lambda$ & \\
+    \hline
+\end{tabular}
+\end{center}
+\label{tab:lbs-param}
+\end{table}
+```
+
+### Cost
+
+Same as above, the cost of the system is a function of $S$ and $E$. However, in this system, only the simple linear version is used.
+
+$$
+f_{1}(S, E) = \sum_{1}^{n} c_{i, M_{i}} X_{i}
+$$
+
+### Agent
+
+The goal of the agent is the same: minimizing the cost of the whole system. The difference here is instead of having to deactivating some queues, all queues now run continuously. His mission is to choose which queue to send the new arriving work to. Only the chosen queue will have new work arriving, the other queues only have to process the remaining works of them.
+
+```{=latex}
+\begin{figure}
+\centering
+\begin{tikzpicture}[>=latex]
+% the shapes
+\path
+  (0,3cm) pic {queuei=1}
+  (0,1cm) pic {queuei=2}
+  (0,-2cm) pic {queuei=n};
+\path
+  (1,4cm) coordinate (aux1)
+  (1,-3.5cm) coordinate (aux2)
+  (-0.5,0cm) coordinate (aux3)
+  (2.5,0cm) coordinate (aux4);
+\node[draw,dashed,text width=2.5cm,fit={(aux1) (aux2) (aux3) (aux4)}] (dashed) {};
+\node[draw,align=center,circle,inner sep=2pt]
+  at (-2,0) (agent)
+  {Agent};
+
+%the arrows
+\draw[->, line width=1.25]
+  ([xshift=-1cm]agent.west) --
+    node[anchor=south,align=center] {$\lambda$}
+  (agent.west);
+\draw[->, dotted]
+  (agent.east) --
+    node[anchor=south,align=center] {}
+  (q-1.west);
+\draw[->, line width=1.25]
+  ([xshift=1.5cm]q-1.east) --
+    node[anchor=south,align=center] {$\mu_{1, M_{1}}$}
+  ([xshift=4.5cm]q-1.east);
+\draw[->, densely dotted, line width=1]
+  (agent.east) --
+    node[anchor=south,align=center] {}
+  (q-2.west);
+\draw[->, line width=1.25]
+  ([xshift=1.5cm]q-2.east) --
+    node[anchor=south,align=center] {$\mu_{2, M_{2}}$}
+  ([xshift=4.5cm]q-2.east);
+\draw[->, dotted]
+  (agent.east) --
+    node[anchor=south,align=center] {}
+  (q-n.west);
+\draw[->, line width=1.25]
+  ([xshift=1.5cm]q-n.east) --
+    node[anchor=south,align=center] {$\mu_{n, M_{n}}$}
+  ([xshift=4.5cm]q-n.east);
+\path ([xshift=0.5cm]q-2.south) -- ([xshift=0.5cm]q-n.north) node [font=\LARGE, midway, sloped] {$\dots$};
+\end{tikzpicture}
+\caption[Visualization of the load-balancing system when the agent sends work to queue 2]{Visualization of the load-balancing system when the agent sends work to queue 2, the bold lines represent the flow of works inside the system.}
+\end{figure}
+```
+
+### Evolution
+
+In this system, given its state is $(S, E)$, the agent decides to send work to queue $a$. One of these $1 + n + n(m - 1) + 1$ events can happen.
+
+- The work of class $C_{a}$ increases by 1. Because we can only send work to one queue, there is only one event of this type and its rate is $\lambda$.
+- The work of class $C_{i}$ decreases by 1. Because there are $n$ classes, we have $n$ events of this kind with the rate $\mu_{1, M_{1}}, \dots, \mu_{n, M_{n}}$ respectively (if the number of work of class $C_{i}$ reaches 0, we consider $\mu_{i, M_{i}} = 0$).
+- The environment of class $C_{i}$ changes to a different environment other than $m_{i}$ and the rate changing to environment $j$ is $\xi_{i, M_{i}, j}$. Because there are $m - 1$ possible changes for each class and there are $n$ classes, the number of this kind of event is $n(m - 1)$.
+- And a special dummy event where nothing changes.
+
+The form of the normalization constant also changes according to the evolution of the system.
+
+$$
+C = \lambda + \sum_{i = 1}^{n} \max_{j} \mu_{i, j} + \sum_{i = 1}^{n} \max_{j} \sum_{k = 1, k \neq j}^{m} \xi_{i, j, k} + \epsilon
+$$
