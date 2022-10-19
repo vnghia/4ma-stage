@@ -19,6 +19,13 @@ output:
       before_body: cover.tex
 ---
 
+```{r, chunk, include=F, cache=F}
+knitr::read_chunk("report.r")
+```
+
+```{r init, include=F}
+```
+
 # Introduction
 
 ## Institut de Recherche en Informatique de Toulouse (IRIT)
