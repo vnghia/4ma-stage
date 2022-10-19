@@ -519,15 +519,22 @@ Formally, the algorithm can be written as follow:
 ```{=latex}
 \begin{algorithm}
 \caption{Online Q-Learning}\label{alg:on-q-learning}
-\KwIn{$T > 0$ number iterations, $\gamma$ discount factor, $\eta$ learning rate}
+\KwIn{$T > 0$ number iterations, $\gamma$ discount factor, $\epsilon$ exploration factor, $\eta$ learning rate}
 \KwOut{$Q_{*}$, $\pi_{*}$}
 \tcc{Internally, $\mathfrak{S}$ keeps track of the unobservable state $E$ as well but the algorithm can not extract it here.}
 $\mathfrak{S}$ simulator of the system\;
-$S$ initial observable state of the system\;
 \For {$t \gets 0$ \KwTo $T$} {
-  $a \gets \text{ using } \epsilon\text{-policy }$\;
+  $S \gets \mathfrak{S}$ current observable state of the system\;
+  $a \gets 
+    \begin{cases}
+    \begin{aligned}
+      \text{one random possible action}&, && \text{ with the probability of } \epsilon \text{ (exploration)}\\ 
+      \arg\max_{a \in \mathcal{A}} Q_{t}(S, a)&, && \text{ with the probability of } 1 - \epsilon \text{ (learning)}
+    \end{aligned}
+    \end{cases}
+  $\\
   \tcc{The state $E$ might change in this step but from the algorithm's perspective, nothing has changed.}
-  $R, S' \gets \mathfrak{S}(S, a)$\;
+  $R, S' \gets \mathfrak{S}(a)$\;
   $Q_{t+1}(S, a) \gets Q_{t}(S, a) + \eta (R + \gamma \max_{a' \in \mathcal{A}} Q_{t}(S', a'))$ \;
 }
 \end{algorithm}
@@ -536,7 +543,7 @@ $S$ initial observable state of the system\;
 ## Implementation
 
 In this section, we document the some difficulties while implementing the framework and how we overcome it. For illustration purpose, we will test the algorithm with a very simple problem of the [queuing system](#queuing-system)
-and linear cost function with no environment (or constant environment). The parameter of this system is:
+and linear cost function with no environment (or constant environment). The parameter of this system is show in table \@ref(tab:q-learning-test).
 
 ```{=latex}
 \begin{table}[ht]
