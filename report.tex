@@ -72,6 +72,7 @@
 \usepackage{hyperref}
 \usepackage{multirow}
 \usepackage{tikz}
+\usepackage[ruled]{algorithm2e}
 \usetikzlibrary{chains,shapes.multipart}
 \usetikzlibrary{shapes,calc,fit}
 \usetikzlibrary{automata,positioning}
@@ -87,20 +88,20 @@
   colorlinks = true,
 }
 \tikzset{
-queuei/.pic={
-  \draw[line width=1pt]
-    (0,0) -- ++(2cm,0) -- ++(0,-1cm) -- ++(-2cm,0);
-   \foreach \Val in {1,...,3}
-     \draw ([xshift=-\Val*10pt]2cm,0) -- ++(0,-1cm);
-   \node[above] at (1cm,0) {$c_{#1, m_{#1}}$};
-   \node[] at (0.5cm,-0.5cm) (q-#1) {};   
-  },
-mytri/.style={
-  draw,
-  shape=isosceles triangle,
-  isosceles triangle apex angle=60,
-  inner xsep=0.65cm
-  }
+  queuei/.pic={
+      \draw[line width=1pt]
+      (0,0) -- ++(2cm,0) -- ++(0,-1cm) -- ++(-2cm,0);
+      \foreach \Val in {1,...,3}
+      \draw ([xshift=-\Val*10pt]2cm,0) -- ++(0,-1cm);
+      \node[above] at (1cm,0) {$c_{#1, m_{#1}}$};
+      \node[] at (0.5cm,-0.5cm) (q-#1) {};
+    },
+  mytri/.style={
+      draw,
+      shape=isosceles triangle,
+      isosceles triangle apex angle=60,
+      inner xsep=0.65cm
+    }
 }
 \ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
@@ -658,5 +659,54 @@ Q_{*}(s, a) &= R(S) + \gamma \sum_{S' \in \mathcal{S}} P(S' | S, a) \max_{a' \in
 \end{align}
 
 We then move to next sections where we discuss about several training methods based on these equations.
+
+\hypertarget{online-q-learning}{%
+\section{Online Q-learning}\label{online-q-learning}}
+
+\hypertarget{about-the-algorithm}{%
+\subsection{About the algorithm}\label{about-the-algorithm}}
+
+Online Q-learning is probably one of the most simple and popular algorithm for reinforcement learning problem. It is used to estimate \(Q_{*}(S, a) \,\, \forall S \in \mathcal{S} \text{ and } a \in \mathcal{A}\) while interacting with the system. This algorithm only requires the real system or a simulator to interact with, and not the internal settings of that system, which makes it fit the context of this internship and more broadly real-life, where these settings can change at any time. Visually, we can imagine that our agent will follow a grid trajectory of states and try to discover what is the action-value at that state with a specific action.
+
+\begin{figure}
+\centering
+\def\mycolumns{5}
+\def\myrows{5}
+\begin{tikzpicture}[x=1cm, y=1cm, mynums/.style={inner sep=0}]
+\fill[gray!50] (0,5) -- +(0, 1) -- +(1, 1) -- +(1,0) -- cycle;
+\draw[step=1cm] (0,0) grid (\mycolumns + 1,\myrows + 1);
+\foreach\x in {0,...,\mycolumns}
+  \node[anchor=south, mynums] at (\x+0.5, \myrows + 1.25) {\x};
+\foreach\x in {0,...,\myrows}
+  \node[anchor=east, mynums] at (-0.25, \myrows - \x + 0.5) {\x};
+\draw[->]
+  (-1, \myrows + 0.5) --
+    node[anchor=east,align=center] {$Q_{1}$}
+  (-1, 0.5);
+\draw[->]
+  (0.5, \myrows + 2) --
+    node[anchor=south,align=center] {$Q_{2}$}
+  (\mycolumns + 0.5, \myrows + 2);
+\draw[->, line width=1.25] (0.5, 5.5) -- (1.5, 5.5) -- (1.5, 3.5) -- (0.5, 3.5) -- (0.5, 2.5) -- (3.5, 2.5);
+\end{tikzpicture}
+\caption[An example of the path which the agent might take]{An example of the path which the agent might take. It starts from $(0, 0)$ and moves to $(3, 3)$. The next state could be either $(3, 4), (4, 3), (3, 2), (2, 3)$ depends on the action it chooses and the transition probabilities.}
+\end{figure}
+
+Formally, the algorithm can be written as follow:
+
+\begin{algorithm}
+\caption{Online Q-Learning}\label{alg:on-q-learning}
+\KwIn{$T > 0$ number iterations, $\gamma$ discount factor, $\eta$ learning rate}
+\KwOut{$Q_{*}$, $\pi_{*}$}
+\tcc{Internally, $\mathfrak{S}$ keeps track of the unobservable state $E$ as well but the algorithm can not extract it here.}
+$\mathfrak{S}$ simulator of the system\;
+$S$ initial observable state of the system\;
+\For {$t \gets 0$ \KwTo $T$} {
+  $a \gets \text{ using } \epsilon\text{-policy }$\;
+  \tcc{The state $E$ might change in this step but from the algorithm's perspective, nothing has changed.}
+  $R, S' \gets \mathfrak{S}(S, a)$\;
+  $Q_{t+1}(S, a) \gets Q_{t}(S, a) + \eta (R + \gamma \max_{a' \in \mathcal{A}} Q_{t}(S', a'))$ \;
+}
+\end{algorithm}
 
 \end{document}
