@@ -709,4 +709,30 @@ $S$ initial observable state of the system\;
 }
 \end{algorithm}
 
+\hypertarget{implementation}{%
+\subsection{Implementation}\label{implementation}}
+
+In this section, we document the some difficulties while implementing the framework and how we overcome it. For illustration purpose, we will test the algorithm with a very simple problem of the \protect\hyperlink{queuing-system}{queuing system}
+and linear cost function with no environment (or constant environment). The parameter of this system is:
+
+\begin{table}[ht]
+\caption{Simple queuing problem for testing}
+\begin{center}
+\begin{tabular}{c c c}
+    \hline
+    \multirow{3}{*}{$C_{1}$} & Holding cost $c_{1}$ & $2$ \\
+    & Arrival rate $\lambda_{1}$ & $0.14$ \\
+    & Departure rate $\mu_{1}$ & $0.3$ \\
+    \cline{2-3}
+    \multirow{3}{*}{$C_{2}$} & Holding cost $c_{2}$ & $3$ \\
+    & Arrival rate $\lambda_{2}$ & $0.14$ \\
+    & Departure rate $\mu_{2}$ & $0.3$ \\    
+    \hline
+\end{tabular}
+\end{center}
+\label{tab:q-learning-test}
+\end{table}
+
+It has been proven that if we have \(c_{1} \mu_{1} \ge c_{2} \mu_{2}\), the optimal policy for all cases is activating the first queue if possible, and vice versa in the case where \(c_{1} \mu_{1} \le c_{2} \mu_{2}\). From table \ref{tab:q-learning-test}, we know that our optimal action here is activating the second queue.
+
 \end{document}
