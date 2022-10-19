@@ -219,7 +219,7 @@ Two type of systems are studied in this internship: queuing system and load-bala
 \hypertarget{parameters}{%
 \subsubsection{Parameters}\label{parameters}}
 
-We have \(n\) classes of queue \(C_{1}, \dots, C_{n}\). For each class of queue, its behavior is fully controlled by which environment it is in. An environment can be in one of the states \(m_{1}, \dots, m_{m}\). And the environment of class \(C_{i}\) is a random variable, denoted by \(M_{i}\), which is in one of the states \(m_{1}, \dots, m_{m}\). For each environment, \(C_{i}\) has their own holding cost \(c_{i, j}\) (the cost of one unfinished unit of work on the queue), arrival rate \(\lambda_{i, j}\) (the rate of one more unit of work arriving to the queue) and departure rate \(\mu_{i, j}\) (the rate of one unit of work on the queue has finished). Furthermore, the environment \(M_{i}\) can change from \(m_{j}\) and \(m_{k}\) with the rate of \(\xi_{i, j, k}\). In this internship, we focus on the case where \(n \coloneq 2\). A table summarizing all parameters is shown below.
+We have \(n\) classes of queue \(Q_{1}, \dots, Q_{n}\). For each class of queue, its behavior is fully controlled by which environment it is in. An environment can be in one of the states \(m_{1}, \dots, m_{m}\). And the environment of class \(Q_{i}\) is a random variable, denoted by \(M_{i}\), which is in one of the states \(m_{1}, \dots, m_{m}\). For each environment, \(Q_{i}\) has their own holding cost \(c_{i, j}\) (the cost of one unfinished unit of work on the queue), arrival rate \(\lambda_{i, j}\) (the rate of one more unit of work arriving to the queue) and departure rate \(\mu_{i, j}\) (the rate of one unit of work on the queue has finished). Furthermore, the environment \(M_{i}\) can change from \(m_{j}\) and \(m_{k}\) with the rate of \(\xi_{i, j, k}\). In this internship, we focus on the case where \(n \coloneq 2\). A table summarizing all parameters is shown below.
 
 \begin{table}[ht]
 \caption{Queuing system parameters}
@@ -228,13 +228,13 @@ We have \(n\) classes of queue \(C_{1}, \dots, C_{n}\). For each class of queue,
     \hline
     \multicolumn{2}{c}{} & $m_{1}$ & $\dots$ & $m_{m}$ \\
     \cline{2-5}
-    \multirow{3}{*}{$C_{1}$} &  Holding cost & $c_{1, 1}$ & $\dots$ & $c_{1, m}$ \\
+    \multirow{3}{*}{$Q_{1}$} &  Holding cost & $c_{1, 1}$ & $\dots$ & $c_{1, m}$ \\
     & Arrival rate & $\lambda_{1, 1}$ & $\dots$ & $\lambda_{1, m}$ \\
     & Departure rate & $\mu_{1, 1}$ & $\dots$ & $\mu_{1, m}$ \\
     \cline{2-5}
     $\vdots$  \\
     \cline{2-5}
-    \multirow{3}{*}{$C_{n}$} &  Holding cost & $c_{n, 1}$ & $\dots$ & $c_{n, m}$ \\
+    \multirow{3}{*}{$Q_{n}$} &  Holding cost & $c_{n, 1}$ & $\dots$ & $c_{n, m}$ \\
     & Arrival rate & $\lambda_{n, 1}$ & $\dots$ & $\lambda_{n, m}$ \\
     & Departure rate & $\mu_{n, 1}$ & $\dots$ & $\mu_{n, m}$ \\
     \hline
@@ -243,10 +243,10 @@ We have \(n\) classes of queue \(C_{1}, \dots, C_{n}\). For each class of queue,
 \label{tab:qs-param}
 \end{table}
 
-For each \(C_{i}\), we have a matrix transition as below.
+For each \(Q_{i}\), we have a matrix transition as below.
 
 \begin{table}[ht]
-\caption{Matrix transition of the environment of $C_{i}$}
+\caption{Matrix transition of the environment of $Q_{i}$}
 \begin{center}
 \begin{tabular}{c c c c}
     \hline
@@ -265,7 +265,7 @@ The state of the system is represented by two vectors:
 \begin{itemize}
 \tightlist
 \item
-  \(S = (X_{1}, \dots, X_{n})\) where \(X_{i}\) is a random variable represents the current number of works of class \(C_{i}\) and is observable.
+  \(S = (X_{1}, \dots, X_{n})\) where \(X_{i}\) is a random variable represents the current number of works of class \(Q_{i}\) and is observable.
 \item
   \(E = (M_{1}, \dots, M_{n})\) and this vector is not observable.
 \end{itemize}
@@ -360,11 +360,11 @@ In particular, given the system state is \((S, E)\), the agent decides to activa
 \begin{itemize}
 \tightlist
 \item
-  The work of class \(C_{i}\) increases by 1. Because there are \(n\) classes, we have \(n\) events of this kind with the rate \(\lambda_{1, M_{1}}, \dots, \lambda_{n, M_{n}}\) respectively (if the number of work of class \(C_{i}\) reaches an upper limit, we consider \(\lambda_{i, M_{i}} = 0\)).
+  The work of class \(Q_{i}\) increases by 1. Because there are \(n\) classes, we have \(n\) events of this kind with the rate \(\lambda_{1, M_{1}}, \dots, \lambda_{n, M_{n}}\) respectively (if the number of work of class \(Q_{i}\) reaches an upper limit, we consider \(\lambda_{i, M_{i}} = 0\)).
 \item
-  The work of class \(C_{a}\) decreases by 1. Because we can only activate only one class, there is only one event of this type and its rate is \(\mu_{a, M_{a}}\).
+  The work of class \(Q_{a}\) decreases by 1. Because we can only activate only one class, there is only one event of this type and its rate is \(\mu_{a, M_{a}}\).
 \item
-  The environment of class \(C_{i}\) changes to a different environment other than \(m_{i}\) and the rate changing to environment \(j\) is \(\xi_{i, M_{i}, j}\). Because there are \(m - 1\) possible changes for each class and there are \(n\) classes, the number of this kind of event is \(n(m - 1)\).
+  The environment of class \(Q_{i}\) changes to a different environment other than \(m_{i}\) and the rate changing to environment \(j\) is \(\xi_{i, M_{i}, j}\). Because there are \(m - 1\) possible changes for each class and there are \(n\) classes, the number of this kind of event is \(n(m - 1)\).
 \item
   And a special dummy event where nothing changes.
 \end{itemize}
@@ -396,12 +396,12 @@ For this system, we have a similar parameters with the one of the queuing system
     \hline
     \multicolumn{2}{c}{} & $m_{1}$ & $\dots$ & $m_{m}$ \\
     \cline{2-5}
-    \multirow{2}{*}{$C_{1}$} &  Holding cost & $c_{1, 1}$ & $\dots$ & $c_{1, m}$ \\
+    \multirow{2}{*}{$Q_{1}$} &  Holding cost & $c_{1, 1}$ & $\dots$ & $c_{1, m}$ \\
     & Departure rate & $\mu_{1, 1}$ & $\dots$ & $\mu_{1, m}$ \\
     \cline{2-5}
     $\vdots$  \\
     \cline{2-5}
-    \multirow{2}{*}{$C_{n}$} &  Holding cost & $c_{n, 1}$ & $\dots$ & $c_{n, m}$ \\
+    \multirow{2}{*}{$Q_{n}$} &  Holding cost & $c_{n, 1}$ & $\dots$ & $c_{n, m}$ \\
     & Departure rate & $\mu_{n, 1}$ & $\dots$ & $\mu_{n, m}$ \\
     \cline{2-5}
     & Global arrival rate & & $\lambda$ & \\
@@ -485,11 +485,11 @@ In this system, given its state is \((S, E)\), the agent decides to send work to
 \begin{itemize}
 \tightlist
 \item
-  The work of class \(C_{a}\) increases by 1. Because we can only send work to one queue, there is only one event of this type and its rate is \(\lambda\).
+  The work of class \(Q_{a}\) increases by 1. Because we can only send work to one queue, there is only one event of this type and its rate is \(\lambda\).
 \item
-  The work of class \(C_{i}\) decreases by 1. Because there are \(n\) classes, we have \(n\) events of this kind with the rate \(\mu_{1, M_{1}}, \dots, \mu_{n, M_{n}}\) respectively (if the number of work of class \(C_{i}\) reaches 0, we consider \(\mu_{i, M_{i}} = 0\)).
+  The work of class \(Q_{i}\) decreases by 1. Because there are \(n\) classes, we have \(n\) events of this kind with the rate \(\mu_{1, M_{1}}, \dots, \mu_{n, M_{n}}\) respectively (if the number of work of class \(Q_{i}\) reaches 0, we consider \(\mu_{i, M_{i}} = 0\)).
 \item
-  The environment of class \(C_{i}\) changes to a different environment other than \(m_{i}\) and the rate changing to environment \(j\) is \(\xi_{i, M_{i}, j}\). Because there are \(m - 1\) possible changes for each class and there are \(n\) classes, the number of this kind of event is \(n(m - 1)\).
+  The environment of class \(Q_{i}\) changes to a different environment other than \(m_{i}\) and the rate changing to environment \(j\) is \(\xi_{i, M_{i}, j}\). Because there are \(m - 1\) possible changes for each class and there are \(n\) classes, the number of this kind of event is \(n(m - 1)\).
 \item
   And a special dummy event where nothing changes.
 \end{itemize}
@@ -723,11 +723,11 @@ and linear cost function with no environment (or constant environment). The para
 \begin{center}
 \begin{tabular}{c c c}
     \hline
-    \multirow{3}{*}{$C_{1}$} & Holding cost $c_{1}$ & $2$ \\
+    \multirow{3}{*}{$Q_{1}$} & Holding cost $c_{1}$ & $2$ \\
     & Arrival rate $\lambda_{1}$ & $0.14$ \\
     & Departure rate $\mu_{1}$ & $0.3$ \\
     \cline{2-3}
-    \multirow{3}{*}{$C_{2}$} & Holding cost $c_{2}$ & $3$ \\
+    \multirow{3}{*}{$Q_{2}$} & Holding cost $c_{2}$ & $3$ \\
     & Arrival rate $\lambda_{2}$ & $0.14$ \\
     & Departure rate $\mu_{2}$ & $0.3$ \\    
     \hline
