@@ -4,10 +4,10 @@
 %
 \documentclass[
   a4paper, xcolor = usenames,dvipsnames]{article}
+\usepackage{amsmath,amssymb}
 \usepackage{lmodern}
-\usepackage{amssymb,amsmath}
-\usepackage{ifxetex,ifluatex}
-\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+\usepackage{iftex}
+\ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
@@ -33,18 +33,13 @@
   \KOMAoptions{parskip=half}}
 \makeatother
 \usepackage{xcolor}
-\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
-\hypersetup{
-  hidelinks,
-  pdfcreator={LaTeX via pandoc}}
-\urlstyle{same} % disable monospaced font for URLs
 \usepackage[margin=2.5cm]{geometry}
 \usepackage{listings}
 \newcommand{\passthrough}[1]{#1}
 \lstset{defaultdialect=[5.3]Lua}
 \lstset{defaultdialect=[x86masm]Assembler}
-\usepackage{longtable,booktabs}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
 % Correct order of tables after \paragraph or \subparagraph
 \usepackage{etoolbox}
 \makeatletter
@@ -107,6 +102,15 @@ mytri/.style={
   inner xsep=0.65cm
   }
 }
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
 
 \author{}
 \date{\vspace{-2.5em}}
@@ -542,51 +546,104 @@ A simple reinforcement learning is modeled by a markov decision process (MDP) wh
 \item
   \(\mathcal{S}\): the set of all states of the system.
 \item
-  \(\mathcal{A}\): the set of all actions, and \(A_{s}\), the set of all actions available from state \(s\).
+  \(\mathcal{A}\): the set of all actions, and \(A_{S}\), the set of all actions available from state \(S\).
 \item
-  \(P(s_{t + 1} = s' | s_{t} = s, a_{t} = a)\): the probability that action \(a\) in state \(s\) at time \(t\) will lead to state \(s'\) at time \(t + 1\).
+  \(P(S_{t + 1} = S' | S_{t} = S, a_{t} = a)\): the probability that action \(a\) in state \(S\) at time \(t\) will lead to state \(S'\) at time \(t + 1\).
 \item
-  \(R(s' | s, a)\): the immediate reward received after transitioning from state \(s\) to state \(s'\), due to action \(a\).
+  \(R(S' | S, a)\): the immediate reward received after transitioning from state \(S\) to state \(S'\), due to action \(a\).
 \end{itemize}
 
-In addition, we have policy \(\pi(a | s) = \mathbb{P}[A_{t} = a | S_{t} = s]\), a distribution over actions given states. In our problem, \(\mathcal{S}\) is represented as the grid, \(\mathcal{A}\) is activating / sending work to a queue, \(P_{a}(s, s')\) is the probability that specified in the evolution section and \(R_{a}(s, s')\) is \(-C\) where \(C\) is the total cost of the system. There is also an unobservable state inside our system, therefore, our problem is a generalization of the MDP, called partial observable markov decision process (POMDP).
+In addition, we have policy \(\pi(a | S) = \mathbb{P}[A_{t} = a | S_{t} = S]\), a distribution over actions given states. In our problem, there is also an unobservable state inside our system, therefore, our problem is a generalization of the MDP, called partial observable markov decision process (POMDP). The parameters could be seen as follow:
+
+\begin{itemize}
+\tightlist
+\item
+  \(\mathcal{S}\): the set of observable states is represented as the grid.
+\item
+  \(\mathcal{E}\): the set of unobservable environment states.
+\item
+  \(\mathcal{A}\): the action of activating / sending work to a queue.
+\item
+  \(P(S', E' | S, E, a)\): the transition probability that is clarified in the evolution section and depends on the both visible and hidden state (S, E).
+\item
+  \(R(S' | S, E, a)\): the immediate reward is \(-C\) where \(C\) is the total holding cost of the system. Since this function depends only on the the state (S, E) of system, we could write \(R(S, E)\) instead.
+\end{itemize}
 
 \hypertarget{bellman-equation}{%
 \subsection{Bellman equation}\label{bellman-equation}}
 
+First, we want to try the solving method of a MDP to our problem, so in this section, we assume that \(E\) is a constant state and will not consider \(E\).
+
 The accumulate discounted future reward (return) from time \(t\) with the discount factor \(0 \le \gamma \le 1\) is:
 \[
-G_{t} = r_{t + 1} + \gamma r_{t + 2} + \gamma^{2} r_{t + 3} + \gamma^{3} r_{t + 4} + \dots
+G_{t} = r_{t + 1} + \gamma r_{t + 2} + \gamma^{2} r_{t + 3} + \gamma^{3} r_{t + 4} + \dots = r_{t + 1} + \gamma G_{t + 1}
 \]
 
-From that, we have state-value function \(V_{\pi}(s)\) is the expected return starting from state \(s\), and then following policy \(\pi\):
+From that, we have state-value function \(V_{\pi}(S)\) is the expected return starting from state \(S\), and then following policy \(\pi\):
 
 \begin{equation}
-V_{\pi}(s) = \mathbb{E}_{\pi}[G_{t} | S_{t} = s]
+V_{\pi}(S) = \mathbb{E}_{\pi}[G_{t} | S_{t} = S]
 \label{eq:state-value}
 \end{equation}
 
-And action-value function \(Q_{\pi}(s, a)\) is the expected return starting from state \(s\), taking action \(a\), and then following policy \(\pi\):
+And action-value function \(Q_{\pi}(S, a)\) is the expected return starting from state \(S\), taking action \(a\), and then following policy \(\pi\):
 
 \begin{equation}
-Q_{\pi}(s, a) = \mathbb{E}_{\pi}[G_{t} | S_{t} = s, A_{t} = a]
+Q_{\pi}(S, a) = \mathbb{E}_{\pi}[G_{t} | S_{t} = S, a_{t} = a]
 \label{eq:action-value}
 \end{equation}
 
-Finally, the bellman equation are obtained by writing \eqref{eq:state-value} and \eqref{eq:action-value} recursively.
+From the fact that \(\pi(a | S)\) is a distribution over \(\mathcal{A}\) given \(S\), we have:
+
+\begin{equation}
+\begin{split}
+V_{\pi}(S) {}&= \mathbb{E}_{\pi}[G_{t} | S_{t} = S] \\
+  &= \sum_{a \in \mathcal{A}} \pi(a | S) \mathbb{E}_{\pi}[G_{t} | S_{t} = S, a_{t} = a] \\
+  &= \sum_{a \in \mathcal{A}} \pi(a | S) Q_{\pi}(S, a)
+\label{eq:v-to-q}
+\end{split}
+\end{equation}
+
+Furthermore, we see that the expected future return of \(Q_{\pi}(S, a)\) is the sum of the current reward \(R(S)\) as well as the expected return of the next state regardless action multiply by the probability of moving to that state. Therefore, we have the equation below:
+
+\begin{equation}
+Q_{\pi}(S, a) = R(S) + \gamma \sum_{S' \in \mathcal{S}} P(S' | S, a) V_{\pi}(S')
+\label{eq:q-to-v}
+\end{equation}
+
+Finally, the bellman equations are obtained from \eqref{eq:v-to-q} and \eqref{eq:q-to-v}:
 
 \begin{align}
-V_{\pi}(s) &= \sum_{a \in \mathcal{A}} \pi(a | s) Q_{\pi}(s, a) \label{eq:bellman-v-1} \\
-Q_{\pi}(s, a) &= \sum_{s' \in \mathcal{S}} P(s' | s, a) (R(s' | s, a) + \gamma V_{\pi}(s')) \label{eq:bellman-q-1}
+\begin{split}
+V_{\pi}(S) {}&= \sum_{a \in \mathcal{A}} \pi(a | S) Q_{\pi}(S, a) \\
+  &= \sum_{a \in \mathcal{A}} \pi(a | S) (R(S) + \gamma \sum_{S' \in \mathcal{S}} P(S' | S, a) V_{\pi}(S')) \\
+  &= R(S) + \gamma \sum_{a \in \mathcal{A}} \pi(a | S) \sum_{S' \in \mathcal{S}} P(S' | S, a) V_{\pi}(S')
+\label{eq:bellman-v-1}
+\end{split} \\
+\begin{split}
+Q_{\pi}(S, a) {}&= R(S) + \gamma \sum_{S' \in \mathcal{S}} P(S' | S, a) V_{\pi}(S') \\
+  &= R(S) + \gamma \sum_{S' \in \mathcal{S}} P(S' | S, a) \sum_{a' \in \mathcal{A}} \pi(a' | S') Q_{\pi}(S', a')
+\label{eq:bellman-q-1}
+\end{split}
 \end{align}
 
 \hypertarget{optimal-policy}{%
 \subsection{Optimal policy}\label{optimal-policy}}
 
-The core idea of this problem is to find an optimal policy \(\pi_{*}\) that maximizes the expected reward or \(V(s)\). Mathematically, we have \(\pi > \pi' \text{ if } V_{\pi}(s) > V_{\pi'}(s) \,\, \forall s \in \mathcal{S}\) and we want to find \(\pi_{*}\) such that \(\pi_{*} \ge \pi \,\, \forall \pi\). We can do that by finding the optimal state-value function \(V_{*}(s) = max_{\pi} V_{\pi}(s)\) or action-value function \(Q_{*}(s, a) = max_{\pi} Q_{\pi}(s, a)\), once we have the \(V_{*}(s)\) and \(Q_{*}(s, a)\), we define the optimal policy as follow:
+The core idea of this problem is to find an optimal policy \(\pi_{*}\) that maximizes the expected reward or \(V(S)\). Mathematically, we have
 \[
-\pi_{*}(s) = \begin{cases}
-1 & \text{ if } a = argmax_{a \in \mathcal{A}} Q_{*}(s, a) \\
+\pi > \pi' \text{ if } V_{\pi}(S) > V_{\pi'}(S) \,\, \forall S \in \mathcal{S}
+\]
+
+And we want to find
+\[
+\pi_{*} \text{ such that } \pi_{*} \ge \pi \,\, \forall \pi
+\]
+
+We can do that by finding the optimal state-value function \(V_{*}(S) = \max_{\pi} V_{\pi}(S)\) or action-value function \(Q_{*}(S, a) = \max_{\pi} Q_{\pi}(S, a)\) and define the optimal policy as follow:
+\[
+\pi_{*}(S) = \begin{cases}
+1 & \text{ if } a = \arg\max_{a \in \mathcal{A}} Q_{*}(S, a) \\
 0 & otherwise
 \end{cases}
 \]
@@ -594,8 +651,10 @@ The core idea of this problem is to find an optimal policy \(\pi_{*}\) that maxi
 Plug all together into equation \eqref{eq:bellman-v-1} and \eqref{eq:bellman-q-1}, we have:
 
 \begin{align}
-V_{*}(s) &= max_{a} Q_{*}(s, a) = max_{a} \sum_{s' \in \mathcal{S}} P(s' | s, a) (R(s' | s, a) + \gamma V_{*}(s')) \label{eq:bellman-max-v} \\
-Q_{*}(s, a) &= \sum_{s' \in \mathcal{S}} P(s' | s, a) (R(s' | s, a) + \gamma V_{\pi}(s')) = \sum_{s' \in \mathcal{S}} P(s' | s, a) (R(s' | s, a) + max_{a} Q_{*}(s, a)) \label{eq:bellman-max-q}
+V_{*}(S) &= R(S) + \max_{a \in \mathcal{A}} \gamma \sum_{s' \in \mathcal{S}} P(s' | s, a) V_{*}(s')
+\label{eq:bellman-max-v} \\
+Q_{*}(s, a) &= R(S) + \gamma \sum_{S' \in \mathcal{S}} P(S' | S, a) \max_{a' \in \mathcal{A}} Q_{*}(S', a')
+\label{eq:bellman-max-q}
 \end{align}
 
 We then move to next sections where we discuss about several training methods based on these equations.
