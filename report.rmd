@@ -2,6 +2,10 @@
 classoption: a4paper, xcolor = usenames,dvipsnames
 geometry: margin=2.5cm
 bibliography: ref.bib
+link-citations: true
+biblio-style: alphabetic
+biblatexoptions: 
+  - backend=biber
 output:
   bookdown::pdf_document2:
     papersize: a4
@@ -14,6 +18,7 @@ output:
     toc_depth: 3
     toc: false
     latex_engine: lualatex
+    citation_package: biblatex
     includes:
       in_header: preamble.tex
       before_body: cover.tex
@@ -75,7 +80,7 @@ Two type of systems are studied in this internship: queuing system and load-bala
 
 ### Parameters
 
-We have $n$ classes of queue $Q_{1}, \dots, Q_{n}$. For each class of queue, its behavior is fully controlled by which environment it is in. An environment can be in one of the states $m_{1}, \dots, m_{m}$. And the environment of class $Q_{i}$ is a random variable, denoted by $M_{i}$, which is in one of the states $m_{1}, \dots, m_{m}$. For each environment, $Q_{i}$ has their own holding cost $c_{i, j}$ (the cost of one unfinished unit of work on the queue), arrival rate $\lambda_{i, j}$ (the rate of one more unit of work arriving to the queue) and departure rate $\mu_{i, j}$ (the rate of one unit of work on the queue has finished). Furthermore, the environment $M_{i}$ can change from $m_{j}$ and $m_{k}$ with the rate of $\xi_{i, j, k}$. In this internship, we focus on the case where $n \coloneq 2$. A table summarizing all parameters is shown below.
+We have $n$ classes of queue $Q_{1}, \dots, Q_{n}$, and $L_{1}, \dots, L_{n}$ the maximum number of work (limit) on each class of queue. For each $Q_{i}$, its behavior is fully controlled by which environment it is in. An environment can be in one of the states $m_{1}, \dots, m_{m}$. And the environment of class $Q_{i}$ is a random variable, denoted by $M_{i}$, which is in one of the states $m_{1}, \dots, m_{m}$. For each environment, $Q_{i}$ has their own holding cost $c_{i, j}$ (the cost of one unfinished unit of work on the queue), arrival rate $\lambda_{i, j}$ (the rate of one more unit of work arriving to the queue) and departure rate $\mu_{i, j}$ (the rate of one unit of work on the queue has finished). Furthermore, the environment $M_{i}$ can change from $m_{j}$ and $m_{k}$ with the rate of $\xi_{i, j, k}$. In this internship, we focus on the case where $n \coloneq 2$. A table summarizing all parameters is shown below.
 
 ```{=latex}
 \begin{table}[ht]
@@ -493,7 +498,7 @@ We then move to next sections where we discuss about several training methods ba
 
 ## About the algorithm
 
-Online Q-learning is probably one of the most simple and popular algorithm for reinforcement learning problem. It is used to estimate $Q_{*}(S, a) \,\, \forall S \in \mathcal{S} \text{ and } a \in \mathcal{A}$ while interacting with the system. This algorithm only requires the real system or a simulator to interact with, and not the internal settings of that system, which makes it fit the context of this internship and more broadly real-life, where these settings can change at any time. Visually, we can imagine that our agent will follow a grid trajectory of states and try to discover what is the action-value at that state with a specific action.
+Online Q-learning is probably one of the most simple and popular algorithm for reinforcement learning problem. It is used to estimate $Q_{*}(S, a) \,\, \forall S \in \mathcal{S} \text{ and } a \in \mathcal{A}$ while interacting with the system. This algorithm only requires the real system or a simulator to interact with, and not the internal settings of that system, which makes it fit the context of this internship and more broadly real-life, where these settings can change at any time. Beside its simplicity and close to real life context, the algorithm is also proven to converge almost surely when the number of visit to each state goes to $\infty$ in [@q-learning-converge]. Visually, we can imagine that our agent will follow a grid trajectory of states and try to discover what is the action-value at that state with a specific action.
 
 ```{=latex}
 \begin{figure}
@@ -549,6 +554,8 @@ $\mathfrak{S}$ simulator of the system\;
 
 ## Implementation
 
+### From Python to C++
+
 In this section, we document the some difficulties while implementing the framework and how we overcome it. For illustration purpose, we will test the algorithm with a very simple problem of the [queuing system](#queuing-system)
 and linear cost function with no environment (or constant environment). The parameter of this system is show in table \@ref(tab:q-learning-test).
 
@@ -559,11 +566,11 @@ and linear cost function with no environment (or constant environment). The para
 \begin{tabular}{c c c}
     \hline
     \multirow{3}{*}{$Q_{1}$} & Holding cost $c_{1}$ & $2$ \\
-    & Arrival rate $\lambda_{1}$ & $0.14$ \\
+    & Arrival rate $\lambda_{1}$ & $0.135$ \\
     & Departure rate $\mu_{1}$ & $0.3$ \\
     \cline{2-3}
     \multirow{3}{*}{$Q_{2}$} & Holding cost $c_{2}$ & $3$ \\
-    & Arrival rate $\lambda_{2}$ & $0.14$ \\
+    & Arrival rate $\lambda_{2}$ & $0.135$ \\
     & Departure rate $\mu_{2}$ & $0.3$ \\    
     \hline
 \end{tabular}
@@ -573,3 +580,69 @@ and linear cost function with no environment (or constant environment). The para
 ```
 
 It has been proven that if we have $c_{1} \mu_{1} \ge c_{2} \mu_{2}$, the optimal policy for all cases is activating the first queue if possible, and vice versa in the case where $c_{1} \mu_{1} \le c_{2} \mu_{2}$. From table \@ref(tab:q-learning-test), we know that our optimal action here is activating the second queue.
+
+With a naive Python implementation, the algorithm works correctly when the limit of both queue are small.
+
+```{r, 3x3-python, out.width="40%", fig.align="center", fig.cap="Result of online Q-learning using Python for 3x3 case. $\\gamma = 0.999$, $\\epsilon = 0.99$"}
+```
+
+First, we see that on the first column where $Q_{2} = 0$, our agent always chooses to activate the first queue, not because this is the optimal action but this is the only option possible, because there is no work on the second queue. Same thing holds for the first row where $Q_{1} = 0$. For the other cells, we have the black color which means the agent chooses the second queue which is aligned with the analytical solution as above.
+
+This implementation runs $10^6$ iterations for approximately $2$ minutes. This is quite good for number with small case. However, if we increase the limit to 10, with the same number of iterations gives a imperfect result.
+
+```{r, 10x10-python, fig.show="hold", out.width="40%", fig.align="center", fig.cap="Result of online Q-learning using Python for 10x10 case. $\\gamma = 0.99$, $\\epsilon = 0.999$", fig.subcap=c("For $10^6$ iterations", "For $10^7$ iterations")}
+```
+
+In the figure above, we can see that even after 20 minutes with $10^7$ iterations, the algorithm still does not converge completely yet. To have a clear view about the reason ưhy, we have figure \@ref(fig:10x10-python-n-visit).
+
+```{r, 10x10-python-n-visit, fig.show="hold", out.width="40%", fig.align="center", fig.cap="Number of visit for the system above. $\\gamma = 0.99$, $\\epsilon = 0.999$", fig.subcap=c("Activating $Q_{1}$", "Activating $Q_{2}$")}
+```
+
+We can see that, our agent is stuck at $(0, 0)$, only the area around the origin has a high number of visit. The rest have relatively low visit and therefore, does not converge because of the nonfulfillment of the condition in [@q-learning-converge].
+
+To speed up the algorithm, we decided to switch to C++, which is famous for its speed and its mature support for high-speed computation with library like `Eigen` and then expose a Python interface for more ease of use. This is also the same approach for many scientific libraries in Python such as `Numpy` or  `Tensorflow`. After switching to C++ and some improvements later, the algorithm now can run $10^9$ iterations in only 1 minutes, a $2 \times 10^3$ speed up.
+
+### From $n$-dimensions to $2$-dimensions
+
+With C++, the simulator is already running faster. However, there are still room for improvements. Now, the probability $P(S', E' | S, E, a)$ is calculated on-the-fly when we meet that state $(S, E)$ while running the algorithm, we could make it faster by calculate the matrix transition for all the states beforehand. However, the state $S$ and $E$ of the system are each represented by a vector of $n$ entries, if we keep using vector like that, we will need a tensor of $n + n + 1 = 2N + 1$ dimensions (first $n$ dimensions for saving the observable state $S$, the next $n$ dimensions for saving the unobservable state $S$ and the last one for action). In addition, since there is no sparse version for high-dimensional tensor, it will take a lot of memories to save that tensor, more precisely:
+
+$$
+(L_{1} + 1) \times \dots \times (L_{n} + 1) \times \underbrace{n^{m}}_{n \text{ queues and } m \text{ environments}} \times \underbrace{n}_{n \text{ actions}}
+$$
+
+If we try to allocate a tensor of that size, we will get an "out of memory" error.
+
+Furthermore, in other algorithms, we are required to iterate all over the set of states. If $n$, the number of queues is static, we could something similar to algorithm \@ref(alg:states-3). However our goal is to let $n$ as a input for the program. So we can not use that algorithm there.
+
+```{=latex}
+\begin{algorithm}
+\caption{Iteration over the set of visible states $\mathcal{S}$ when $n = 3$} \label{alg:states-3}
+\For {$i \gets 0$ \KwTo $L_{1}$} {
+  \For {$j \gets 0$ \KwTo $L_{2}$} {
+    \For {$k \gets 0$ \KwTo $L_{3}$} {
+      $S \gets (i, j, k)$\;
+      \dots\;
+    }
+  }
+}
+\end{algorithm}
+```
+
+In the end, we decide to encode the whole state into an integer by extending the notion of base of number. Given state $(S, E)$, we introduce 3 functions:
+$$
+\begin{aligned}
+f_{\mathcal{S}}(S) &= f(X_{1}, \dots, X_{n}) = X_{1} L_{2} \dots L_{n} + X_{2} L_{3} \dots L_{n} + \dots + X_{n - 1} L_{n} + X_{n} \\
+f_{\mathcal{E}}(E) &= f(M_{1}, \dots, M_{n}) = M_{1} m^{n - 1} + M_{2} m^{n - 2} + \dots + M_{n - 1} m + M_{n} \\
+f_{\mathcal{S, E}(S, E)} &= f(X_{1}, \dots, X_{n}, M_{1}, \dots, M_{n}) = m^{n} f_{\mathcal{S}}(S) + f_{\mathcal{E}}(E)
+\end{aligned}
+$$
+
+All three functions are one-to-one mapping, so we can replace the state with the result of these function without losing anything. Because of doing so, we have achieved several benefits:
+
+- We can calculate the transition matrix right now and use a sparse matrix to store it for efficiency in both storage and performance (since the transition matrix will be full of 0).
+- Turn a problem with unknown dimension to a 2-dimensional one which makes accessing and looping through the states easier.
+- Overall speed improvement since we only need to deal with integer instead of a vector.
+
+## Result
+
+\newpage
