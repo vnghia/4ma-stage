@@ -485,9 +485,9 @@ Plug all together into equation \@ref(eq:bellman-v-1) and \@ref(eq:bellman-q-1),
 
 ```{=latex}
 \begin{align}
-V_{*}(S) &= R(S) + \max_{a \in \mathcal{A}} \gamma \sum_{s' \in \mathcal{S}} P(s' | s, a) V_{*}(s')
+V_{*}(S) &= R(S) + \max_{a \in \mathcal{A}} \gamma \sum_{S' \in \mathcal{S}} P(S' | S, a) V_{*}(S')
 (\#eq:bellman-max-v) \\
-Q_{*}(s, a) &= R(S) + \gamma \sum_{S' \in \mathcal{S}} P(S' | S, a) \max_{a' \in \mathcal{A}} Q_{*}(S', a')
+Q_{*}(S, a) &= R(S) + \gamma \sum_{S' \in \mathcal{S}} P(S' | S, a) \max_{a' \in \mathcal{A}} Q_{*}(S', a')
 (\#eq:bellman-max-q)
 \end{align}
 ```
@@ -663,7 +663,7 @@ $E$ initial environment state of the system\;
   \If{$E \ne E'$}{
     $E \gets E'$ \;
   }
-  \For {$s \in \mathcal{S}$} {
+  \For {$S \in \mathcal{S}$} {
     \For {$a \in \mathcal{A}$} {
       $S', R, - \gets \mathfrak{S}(a, S, E)$\;
       $Q_{t+1}(S, a) \gets Q_{t}(S, a) + \eta (R + \gamma \max_{a'} Q_{t}(S', a'))$\;
@@ -674,5 +674,89 @@ $E$ initial environment state of the system\;
 ```
 
 ## Result
+
+# Value iteration
+
+## About the algorithm
+
+This algorithm is directly based on equation \@ref(eq:bellman-max-v) and used to estimate the value of $V_{*}(S)$. After obtaining an estimate of $V_{*}(S)$, the policy is deduced as $\pi_{*}(S) = \arg\max_{a} R(S) + \gamma \sum_{S' \in \mathcal{S}} P(S' | S, a) V_{*}(S')$. The algorithm is written as follow:
+
+
+```{=latex}
+\begin{algorithm}
+\caption{Value iteration} \label{alg:value-iteration}
+\KwIn{$\gamma$ discount factor}
+\KwOut{$V_{*}$, $\pi_{*}$}
+$\Delta \gets \infty$\;
+\While {\Delta > \epsilon} {
+  \For {$S \in \mathcal{S}$} {
+    $V_{t+1}(S) \gets \max_{a \in \mathcal{A}} R(S) + \gamma \sum_{S' \in \mathcal{S}} P(S' | S, a) V_{*}(S')$\;
+  }
+  $\Delta \gets \lVert V_{t + 1} - V_{t} \rVert$\_{2};
+}
+\end{algorithm}
+```
+
+We can see above that the algorithm makes use of $P(S' | S, a)$, because of this, this algorithm converge a lot faster than both Q-learning methods but it does not fit into the goal of the internship since we have to know the transition probability, so this method is use only as a baseline to compare with the result of Q-learning. Furthermore, if we have only one constant environment $E_{c}$ (or no environment changing), we could rewrite $P(S', E_{c} | S, E_{c}, a) = P(S' | S, a)$ and value iterations work correctly. However, adding environment will eventually break the algorithm because we have $P(S', E' | S, E, a)$ but we want to estimate $V_{*}(S)$ and not $V_{*}(S, E)$. In the next section, we discuss about how to get an empirical estimate of $P(S'|S, a)$ based on $P(S', E' | S, E, a)$.
+
+## Empirical transition probability
+
+Our idea is to calculate the probability of the system stay in a particular state $E \in \mathcal{E}$ and then multiply it with the transition probability to get the average probability. First, we have some equations:
+
+```{=latex}
+\begin{equation}
+  P(S'|S, E, a) = 
+    \begin{cases}
+        P(S', E|S, E, a) \quad & \text{if} \, S' \neq S \\
+        1 - \sum_{S' \neq S} P(S', E|S, E, a) = \sum_{E'} P(S, E'|S, E, a) \quad & \text{otherwise} \\
+    \end{cases}
+(\#eq:p-s)
+\end{equation}
+```
+```{=latex}
+\begin{equation}
+  P(E'|S, E, a) = 
+    \begin{cases}
+        P(S, E'|S, E, a) \quad & \text{if} \, E' \neq E \\
+        1 - \sum_{E' \neq E} P(S, E'|S, E, a) \quad & \text{otherwise} \\
+    \end{cases}
+(\#eq:p-e)
+\end{equation}
+```
+
+The logic behind equation \@ref(eq:p-s) and \@ref(eq:p-e) is the fact that there is only one event can happen at a time.
+
+```{=latex}
+\begin{equation}
+  P(S, E'|S, E, a) = 
+    \begin{cases}
+        \xi_{i, M_{i}, M_{i}'} \quad & \text{if} \, E' \text{ and } E \text{ differ by only one entry at index } i \\
+        0 \quad & \text{else} \\
+    \end{cases}
+(\#eq:p-e-e)
+\end{equation}
+```
+
+By rewriting $P(S, E' | S, E, a)$ as in equation \@ref(eq:p-e-e), we see that $P(E'|S, E, a)$ does not depend on $S, a$ and therefore $P(E'|S, E, a) = P(E'| E)$. From that, we could calculate the steady state by an iterative method using the equation below:
+
+```{=latex}
+\begin{equation}
+\label{eqn:steady_prob}
+    \pi_{t + 1}(E') = \sum_{E \in \mathcal{E}} P(E'| E) \pi_{t}(E)
+\end{equation}
+```
+
+After $\pi(E)$ converges to $\tilde{\pi}(E)$ and using \@ref(eq:p-s), we have the final empirical value we want:
+
+```{=latex}
+\begin{equation}
+\label{eqn:p_tilde}
+    \tilde{P}(S'| S, a) = \sum_{E \in \mathcal{E}} \tilde{\pi}(E) P(S'| S, E, a)
+\end{equation}
+```
+
+## Result
+
+# Comparison
 
 \newpage
