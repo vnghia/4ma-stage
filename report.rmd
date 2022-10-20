@@ -645,4 +645,34 @@ All three functions are one-to-one mapping, so we can replace the state with the
 
 ## Result
 
+# Offline Q-learning
+
+## About the algorithm
+
+In this version of Q-learning, we do not explore or follow the trajectory as in the online version, but we will force calculate the q value for all pair $(S, a)$. This method is faster than online Q-learning, however, it requires a reliable simulator of the system to be able to work. The algorithm could be described below: 
+
+```{=latex}
+\begin{algorithm}
+\caption{Offline Q-Learning}\label{alg:off-q-learning}
+\KwIn{$T > 0$ number iterations, $\gamma$ discount factor, $\eta$ learning rate}
+\KwOut{$Q_{*}$, $\pi_{*}$}
+$\mathfrak{S}$ simulator of the system\;
+$E$ initial environment state of the system\;
+\For {$t \gets 0$ \KwTo $T$} {
+  $ -, -, E' \gets \mathfrak{S}(-, -, E)$\;
+  \If{$E \ne E'$}{
+    $E \gets E'$ \;
+  }
+  \For {$s \in \mathcal{S}$} {
+    \For {$a \in \mathcal{A}$} {
+      $S', R, - \gets \mathfrak{S}(a, S, E)$\;
+      $Q_{t+1}(S, a) \gets Q_{t}(S, a) + \eta (R + \gamma \max_{a'} Q_{t}(S', a'))$\;
+    }
+  }
+}
+\end{algorithm}
+```
+
+## Result
+
 \newpage
