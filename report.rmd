@@ -492,7 +492,7 @@ Our problem is a POMDP, the parameters could be seen as follow:
 - $P(S', E' | S, E, a)$: the transition probability that is clarified in the evolution section and depends on the both visible and hidden state (S, E).
 - $R(S' | S, E, a)$: the immediate reward is $-C$ where $C$ is the total holding cost of the system. Since this function depends only on the the state (S, E) of system, we could write $R(S, E)$ instead.
 
-Since the goal of the internship is not about solving the POMDP, in the later sections, we will explore how learning algorithms of MDP work in the context of unobservable environment. 
+Since the goal of the internship is not about solving the POMDP, in the later sections, we will explore how learning algorithms of MDP work in the context of unobservable environment.
 
 # Online Q-learning
 
@@ -645,7 +645,7 @@ All three functions are one-to-one mapping, so we can replace the state with the
 
 ## About the algorithm
 
-In this version of Q-learning, we do not explore or follow the trajectory as in the online version, but we will force the calculation of the Q-value for all pairs $(S, a)$. This method is faster than online Q-learning, however, it requires a reliable simulator of the system to be able to work. The algorithm is described below: 
+In this version of Q-learning, we do not explore or follow the trajectory as in the online version, but we will force the calculation of the Q-value for all pairs $(S, a)$. This method is faster than online Q-learning, however, it requires a reliable simulator of the system to be able to work. The algorithm is described below:
 
 ```{=latex}
 \begin{algorithm}
@@ -675,7 +675,6 @@ $E$ initial environment state of the system\;
 
 This algorithm is directly based on equation \@ref(eq:bellman-max-v) and used to estimate the value of $V_{*}(S)$. After obtaining an estimate of $V_{*}(S)$, the policy is deduced as $\pi_{*}(S) = \arg\max_{a} R(S) + \gamma \sum_{S' \in \mathcal{S}} P(S' | S, a) V_{*}(S')$. The algorithm is written as follow:
 
-
 ```{=latex}
 \begin{algorithm}
 \caption{Value iteration} \label{alg:value-iteration}
@@ -691,7 +690,7 @@ $\Delta \gets \infty$\;
 \end{algorithm}
 ```
 
-We can see above that the algorithm makes use of $P(S' | S, a)$, because of this, this algorithm converge a lot faster than both Q-learning methods but we have to know the transition probability, so this method is use only as a baseline to compare with the result of Q-learning. 
+We can see above that the algorithm makes use of $P(S' | S, a)$, because of this, this algorithm converge a lot faster than both Q-learning methods but we have to know the transition probability, so this method is use only as a baseline to compare with the result of Q-learning.
 
 If we have only one constant environment $E_{c}$ (or no environment changing), we could rewrite $P(S', E_{c} | S, E_{c}, a) = P(S' | S, a)$ and value iterations work correctly. However, as we have unobservable environment, algorithm \@ref(alg:value-iteration) can not work without modification because we have $P(S', E' | S, E, a)$ but we want to estimate $V_{*}(S)$ and not $V_{*}(S, E)$. In the next section, we discuss about how to get an empirical estimate of $P(S'|S, a)$ based on $P(S', E' | S, E, a)$.
 
@@ -709,6 +708,7 @@ Our idea is to calculate the probability of the system stay in a particular stat
 (\#eq:p-s)
 \end{equation}
 ```
+
 ```{=latex}
 \begin{equation}
   P(E'|S, E, a) = 
@@ -783,8 +783,7 @@ The theoretical optimal action here is $1$.
 
 (ref:title-simple-queuing-1) Result of table \@ref(tab:simple-queuing-1) for 20x20 case. $\gamma = 0.999$, $\epsilon = 0.999$.
 
-
-```{r, 20x20-simple-queuing-1, fig.show="hold", out.width="33%", fig.align="center", fig.cap='(ref:title-simple-queuing-1)', fig.subcap=c("Online Q-learning", "Offline Q-learning", "Value iterations")}
+```{r, 20x20-simple-queuing-1, fig.show="hold", out.width="33%", fig.align="center", fig.cap="(ref:title-simple-queuing-1)", fig.subcap=c("Online Q-learning", "Offline Q-learning", "Value iterations")}
 ```
 
 And the second one is nearly the same, except the holding cost is reverse, and therefore the optimal action here is $2$:
@@ -811,8 +810,7 @@ And the second one is nearly the same, except the holding cost is reverse, and t
 
 (ref:title-simple-queuing-2) Result of table \@ref(tab:simple-queuing-2) for 20x20 case. $\gamma = 0.999$, $\epsilon = 0.999$.
 
-
-```{r, 20x20-simple-queuing-2, fig.show="hold", out.width="33%", fig.align="center", fig.cap='(ref:title-simple-queuing-2)', fig.subcap=c("Online Q-learning", "Offline Q-learning", "Value iterations")}
+```{r, 20x20-simple-queuing-2, fig.show="hold", out.width="33%", fig.align="center", fig.cap="(ref:title-simple-queuing-2)", fig.subcap=c("Online Q-learning", "Offline Q-learning", "Value iterations")}
 ```
 
 As we can see, all three algorithms work well for this simple case. We will move to more complex case.
@@ -820,7 +818,6 @@ As we can see, all three algorithms work well for this simple case. We will move
 ### Load-balancing
 
 For this system, We first try a system where two queues have the same parameters:
-
 
 ```{=latex}
 \begin{table}[ht]
@@ -844,12 +841,20 @@ For this system, We first try a system where two queues have the same parameters
 
 (ref:title-simple-lb-1) Result of table \@ref(tab:simple-lb-1) for 20x20 case. $\gamma = 0.999$, $\epsilon = 0.999$.
 
-
-```{r, 20x20-simple-lb-1, fig.show="hold", out.width="33%", fig.align="center", fig.cap='(ref:title-simple-lb-1)', fig.subcap=c("Online Q-learning", "Offline Q-learning", "Value iterations")}
+```{r, 20x20-simple-lb-1, fig.show="hold", out.width="33%", fig.align="center", fig.cap="(ref:title-simple-lb-1)", fig.subcap=c("Online Q-learning", "Offline Q-learning", "Value iterations")}
 ```
 
-Intuitively, if two queues has the same parameters, the optimal action will be serving which queue has less jobs, which is the result of value iterations method (the right grid) of figure \@ref(fig:20x20-simple-lb-1). There is also a gray color indicates that at those states, either action $1$ or $2$ leads to the same result, because they have the same number of jobs.
+Intuitively, if two queues has the same parameters, the optimal action will be sending job to the queue that has less jobs, which is the result of value iterations method (the right grid) of figure \@ref(fig:20x20-simple-lb-1). There is also a gray color indicates that at those states, either action $1$ (sending new job to $Q_{1}$) or $2$ (sending to new job to Q_{2}) leads to the same result, because they have the same number of jobs.
 
 For two Q-learning methods, the online and offline version has been trained for $3 \times 10^{10}$ and $5 \times 10^{7}$ iterations respectively and takes 30 minutes each, however, there is still a clear difference between them. The offline version is nearly converged and is quite similar to the policy of value iterations method. However, the online one just begins to form an uncompleted diagonal. The difference can be explained by the fact that in the offline version, each pair state-action is visited $5 \times 10^{7}$ times, so the total number of iterations will be $2 \times 41^{2} \times 5 \times 10^{7} \approx 1.6 \times 10^{11}$, which is $\gg 3 \times 10^{10}$, the total number of iterations of the online version.
+
+Furthermore, even if we run the online version with that much iterations, it will still not guarantee that we will have a good approximation of the offline result. This is because we are following the trajectory (or the evolution of the system) and therefore it is impossible to visit all states equally. We can see the number of visits of each pair state-action below.
+
+(ref:title-simple-lb-1-n-visit) Number of visits of online Q-learning on table \@ref(tab:simple-lb-1) for 20x20 case.
+
+```{r, 20x20-simple-lb-1-n-visit, fig.show="hold", out.width="40%", fig.align="center", fig.cap="(ref:title-simple-lb-1-n-visit)", fig.subcap=c("Sending to $Q_{1}$", "Sending to $Q_{2}$")}
+```
+
+The number of visits is high around $(0, 0)$ and $(40, 40)$. Central region of the grid receives much less visits. Therefore, we see in figure \@ref(fig:20x20-simple-lb-1) that the diagonal is beginning to form from these two points but not the region near the grid center.
 
 \newpage
