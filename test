@@ -1,0 +1,20 @@
+```{=latex}
+\begin{algorithm}
+\caption{Offline Q-Learning}\label{alg:off-q-learning}
+\KwData{$T > 0$ number iterations, $\gamma$ discount factor, $\eta$ learning rate}
+\KwResult{$Q_{*}$, $\pi_{*}$}
+$\mathfrak{S}$ simulator of the system \;
+$e$ initial environment state of the system \;
+\For {$t \gets 0$ \KwTo $T$} {
+  \For {$s \in \mathcal{S}$} {
+    \For {$a \in \mathcal{A}$} {
+      $s', e' \gets \mathfrak{S}(a, s, e)$ \;
+      \If{$e \ne e;$}{
+        $e \gets e'$ \;
+      }
+      $Q_{t+1}(s, a) \gets Q_{t}(s, a) + \eta (R(s' | s, a, e) + \gamma max_{a} Q_{t}(s', a))$ \;
+    }
+  }
+}
+\end{algorithm}
+```
