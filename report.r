@@ -4,7 +4,6 @@ library(reticulate)
 library(ggplot2)
 library(scico)
 library(dplyr, quietly = T)
-library(hrbrthemes, quietly = T)
 library(tidyverse, quietly = T)
 library(reshape2, quietly = T)
 
