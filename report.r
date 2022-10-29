@@ -20,7 +20,7 @@ default_theme <- theme_ipsum(base_family = "") + theme(
 
 theme_set(default_theme)
 
-knitr::opts_chunk$set(dev = "tikz", echo = F, cache = T)
+knitr::opts_chunk$set(dev = "tikz", echo = F, cache = T, external = F)
 options(tikzDefaultEngine = "luatex")
 
 np <- import("numpy")
