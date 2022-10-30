@@ -1087,10 +1087,43 @@ Furthermore, even if we run the online version with that much iterations, it wil
 
 }
 
-\caption{Number of visits of online Q-learning on table \ref{tab:simple-lb-1} for 20x20 case.}\label{fig:20x20-simple-lb-2-n-visit}
+\caption{Number of visits of online Q-learning on table \ref{tab:simple-lb-2} for 20x20 case.}\label{fig:20x20-simple-lb-2-n-visit}
 \end{figure}
 
 The number of visits is high around \((0, 0)\) and \((40, 40)\). Central region of the grid receives much less visits. Therefore, we see in figure \ref{fig:20x20-simple-lb-1} that the diagonal is beginning to form from these two points but not the region near the grid center.
+
+We will the finish this section with an unbalance example. We fix the cost and make the departure rate of the first queue higher than the second one as follow:
+
+\begin{table}[ht]
+\caption{Simple load-balancing 3}
+\begin{center}
+\begin{tabular}{c c c}
+    \hline
+    \multirow{3}{*}{$Q_{1}$} & Holding cost $c_{1}$ & $3$ \\
+    & Departure rate $\mu_{1}$ & $0.4$ \\
+    \cline{2-3}
+    \multirow{3}{*}{$Q_{2}$} & Holding cost $c_{2}$ & $3$ \\
+    & Departure rate $\mu_{2}$ & $0.3$ \\
+    \cline{2-3}
+    & Global arrival rate & $0.6$ \\    
+    \hline
+\end{tabular}
+\end{center}
+\label{tab:simple-lb-3}
+\end{table}
+
+
+
+\begin{figure}
+
+{\centering \subfloat[Online Q-learning\label{fig:20x20-simple-lb-3-1}]{\includegraphics[width=0.33\linewidth]{report_files/figure-latex/20x20-simple-lb-3-1} }\subfloat[Offline Q-learning\label{fig:20x20-simple-lb-3-2}]{\includegraphics[width=0.33\linewidth]{report_files/figure-latex/20x20-simple-lb-3-2} }\subfloat[Value iterations\label{fig:20x20-simple-lb-3-3}]{\includegraphics[width=0.33\linewidth]{report_files/figure-latex/20x20-simple-lb-3-3} }
+
+}
+
+\caption{Result of table \ref{tab:simple-lb-3} for 20x20 case. \(\gamma = 0.999\), \(\epsilon = 0.999\).}\label{fig:20x20-simple-lb-3}
+\end{figure}
+
+Once again, we see the sensitivity of Q-learning with the system settings. Intuitively, since class \(1\) works faster than class \(2\) with the same cost, we will send more jobs to the first one as in the value iterations method. However, the learning capacity of both Q-learning methods is not sufficient to capture all the information of the system.
 
 \newpage
 
