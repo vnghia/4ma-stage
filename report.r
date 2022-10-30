@@ -7,19 +7,7 @@ library(dplyr, quietly = T)
 library(tidyverse, quietly = T)
 library(reshape2, quietly = T)
 
-default_theme <- theme_ipsum(base_family = "") + theme(
-  axis.title.x = element_text(hjust = 0.5),
-  axis.title.y = element_text(hjust = 0.5),
-  plot.margin = margin(
-    t = 0.5,
-    r = 2, b = 0.5, l = 2, "cm"
-  ),
-  legend.position = "bottom"
-)
-
-theme_set(default_theme)
-
-knitr::opts_chunk$set(dev = "tikz", echo = F, cache = T, external = F)
+knitr::opts_chunk$set(dev = "tikz", echo = F, cache = T)
 options(tikzDefaultEngine = "luatex")
 
 np <- import("numpy")

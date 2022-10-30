@@ -581,19 +581,19 @@ It has been proven that if we have $c_{1} \mu_{1} \ge c_{2} \mu_{2}$, the optima
 
 With a naive Python implementation, the algorithm works correctly when the limit of both queue are small.
 
-```{r, 3x3-python, resize.width="0.5\\textwidth", resize.height="!", fig.align="center", fig.cap="Result of online Q-learning using Python for 3x3 case. $\\gamma = 0.999$, $\\epsilon = 0.99$"}
+```{r, 3x3-python, out.width="40%", fig.align="center", fig.cap="Result of online Q-learning using Python for 3x3 case. $\\gamma = 0.999$, $\\epsilon = 0.99$"}
 ```
 
 First, we see that on the first column where $Q_{2} = 0$, our agent always chooses to activate the first queue, because this is the only option possible, because there is no job on the second queue. Same thing holds for the first row where $Q_{1} = 0$. For the other cells, we have the black color which means the agent chooses the second queue which is aligned with the analytical solution as above.
 
 This implementation runs $10^6$ iterations for approximately $2$ minutes. This is quite good for number with small case. However, if we increase the limit to 10, with the same number of iterations gives a imperfect result.
 
-```{r, 10x10-python, fig.show="hold", resize.width="0.5\\textwidth", resize.height="!", fig.align="center", fig.cap="Result of online Q-learning using Python for 10x10 case. $\\gamma = 0.99$, $\\epsilon = 0.999$", fig.subcap=c("For $10^6$ iterations", "For $10^7$ iterations")}
+```{r, 10x10-python, fig.show="hold", out.width="40%", fig.align="center", fig.cap="Result of online Q-learning using Python for 10x10 case. $\\gamma = 0.99$, $\\epsilon = 0.999$", fig.subcap=c("For $10^6$ iterations", "For $10^7$ iterations")}
 ```
 
 In the figure above, we can see that even after 20 minutes with $10^7$ iterations, the algorithm still does not converge completely yet. To have a clear view about the reason ưhy, we have figure \@ref(fig:10x10-python-n-visit).
 
-```{r, 10x10-python-n-visit, fig.show="hold", resize.width="0.5\\textwidth", resize.height="!", fig.align="center", fig.cap="Number of visit for the system above. $\\gamma = 0.99$, $\\epsilon = 0.999$", fig.subcap=c("Activating $Q_{1}$", "Activating $Q_{2}$")}
+```{r, 10x10-python-n-visit, fig.show="hold", out.width="40%", fig.align="center", fig.cap="Number of visit for the system above. $\\gamma = 0.99$, $\\epsilon = 0.999$", fig.subcap=c("Activating $Q_{1}$", "Activating $Q_{2}$")}
 ```
 
 We can see that our agent is stuck at $(0, 0)$, only the area around the origin has a high number of visits. The rest have relatively low number of visits and therefore, does not converge because of the nonfulfillment of the condition in [@q-learning-converge].
@@ -783,7 +783,7 @@ The theoretical optimal action here is $1$.
 
 (ref:title-simple-queuing-1) Result of table \@ref(tab:simple-queuing-1) for 20x20 case. $\gamma = 0.999$, $\epsilon = 0.999$.
 
-```{r, 20x20-simple-queuing-1, fig.show="hold", resize.width="0.33\\textwidth", resize.height="!", fig.align="center", fig.cap="(ref:title-simple-queuing-1)", fig.subcap=c("Online Q-learning", "Offline Q-learning", "Value iterations")}
+```{r, 20x20-simple-queuing-1, fig.show="hold", out.width="33%", fig.align="center", fig.cap="(ref:title-simple-queuing-1)", fig.subcap=c("Online Q-learning", "Offline Q-learning", "Value iterations")}
 ```
 
 And the second one is nearly the same, except the holding cost is reverse, and therefore the optimal action here is $2$:
@@ -810,7 +810,7 @@ And the second one is nearly the same, except the holding cost is reverse, and t
 
 (ref:title-simple-queuing-2) Result of table \@ref(tab:simple-queuing-2) for 20x20 case. $\gamma = 0.999$, $\epsilon = 0.999$.
 
-```{r, 20x20-simple-queuing-2, fig.show="hold", resize.width="0.33\\textwidth", resize.height="!", fig.align="center", fig.cap="(ref:title-simple-queuing-2)", fig.subcap=c("Online Q-learning", "Offline Q-learning", "Value iterations")}
+```{r, 20x20-simple-queuing-2, fig.show="hold", out.width="33%", fig.align="center", fig.cap="(ref:title-simple-queuing-2)", fig.subcap=c("Online Q-learning", "Offline Q-learning", "Value iterations")}
 ```
 
 As we can see, all three algorithms work well for this simple case. We will move to more complex case.
@@ -841,7 +841,7 @@ For this system, We first try a system where two queues have the same parameters
 
 (ref:title-simple-lb-1) Result of table \@ref(tab:simple-lb-1) for 20x20 case. $\gamma = 0.999$, $\epsilon = 0.999$.
 
-```{r, 20x20-simple-lb-1, fig.show="hold", resize.width="0.33\\textwidth", resize.height="!", fig.align="center", fig.cap="(ref:title-simple-lb-1)", fig.subcap=c("Online Q-learning", "Offline Q-learning", "Value iterations")}
+```{r, 20x20-simple-lb-1, fig.show="hold", out.width="33%", fig.align="center", fig.cap="(ref:title-simple-lb-1)", fig.subcap=c("Online Q-learning", "Offline Q-learning", "Value iterations")}
 ```
 
 Intuitively, if two queues has the same parameters, the optimal action will be sending job to the queue that has less jobs, which is the result of value iterations method (the right grid) of figure \@ref(fig:20x20-simple-lb-1). There is also a gray color indicates that at those states, either action $1$ (sending new job to $Q_{1}$) or $2$ (sending to new job to Q_{2}) leads to the same result, because they have the same number of jobs.
@@ -852,7 +852,7 @@ Furthermore, even if we run the online version with that much iterations, it wil
 
 (ref:title-simple-lb-1-n-visit) Number of visits of online Q-learning on table \@ref(tab:simple-lb-1) for 20x20 case.
 
-```{r, 20x20-simple-lb-1-n-visit, fig.show="hold", resize.width="0.5\\textwidth", resize.height="!", fig.align="center", fig.cap="(ref:title-simple-lb-1-n-visit)", fig.subcap=c("Sending to $Q_{1}$", "Sending to $Q_{2}$")}
+```{r, 20x20-simple-lb-1-n-visit, fig.show="hold", out.width="40%", fig.align="center", fig.cap="(ref:title-simple-lb-1-n-visit)", fig.subcap=c("Sending to $Q_{1}$", "Sending to $Q_{2}$")}
 ```
 
 The number of visits is high around $(0, 0)$ and $(40, 40)$. Central region of the grid receives much less visits. Therefore, we see in figure \@ref(fig:20x20-simple-lb-1) that the diagonal is beginning to form from these two points but not the region near the grid center.
