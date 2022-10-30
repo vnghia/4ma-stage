@@ -97,7 +97,7 @@ setNames(melt(
   scale_x_reverse(expand = c(0.1, 0.1)) +
   scale_y_discrete(position = "right", expand = c(0.1, 0.1)) +
   guides(fill = "none") +
-  scale_fill_scico(palette = "grayC", na.value = NA)
+  scale_fill_scico(palette = "grayC", begin = 0.05, na.value = NA)
 
 setNames(melt(
   n_visit[, , 2]
@@ -117,7 +117,7 @@ setNames(melt(
   scale_x_reverse(expand = c(0.1, 0.1)) +
   scale_y_discrete(position = "right", expand = c(0.1, 0.1)) +
   labs(fill = "Number of visits") +
-  scale_fill_scico(palette = "grayC", na.value = NA)
+  scale_fill_scico(palette = "grayC", begin = 0.05, na.value = NA)
 
 ## ---- 20x20-simple-queuing-1 ----
 
@@ -332,7 +332,7 @@ setNames(melt(
   scale_x_reverse(expand = c(0.1, 0.1)) +
   scale_y_discrete(position = "right", expand = c(0.1, 0.1)) +
   guides(fill = "none") +
-  scale_fill_scico(palette = "grayC", na.value = NA)
+  scale_fill_scico(palette = "grayC", begin = 0.05, na.value = NA)
 
 setNames(melt(
   n_visit[, , 2]
@@ -352,4 +352,4 @@ setNames(melt(
   scale_x_reverse(expand = c(0.1, 0.1)) +
   scale_y_discrete(position = "right", expand = c(0.1, 0.1)) +
   labs(fill = "Number of visits") +
-  scale_fill_scico(palette = "grayC", na.value = NA)
+  scale_fill_scico(palette = "grayC", begin = 0.05, na.value = NA)
