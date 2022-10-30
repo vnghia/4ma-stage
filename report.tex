@@ -1015,10 +1015,10 @@ For this system, We first try a system where two queues have the same parameters
 \begin{tabular}{c c c}
     \hline
     \multirow{3}{*}{$Q_{1}$} & Holding cost $c_{1}$ & $3$ \\
-    & Departure rate $\mu_{1}$ & $0.25$ \\
+    & Departure rate $\mu_{1}$ & $0.3$ \\
     \cline{2-3}
     \multirow{3}{*}{$Q_{2}$} & Holding cost $c_{2}$ & $3$ \\
-    & Departure rate $\mu_{2}$ & $0.25$ \\
+    & Departure rate $\mu_{2}$ & $0.3$ \\
     \cline{2-3}
     & Global arrival rate & $0.5$ \\    
     \hline
@@ -1038,9 +1038,44 @@ For this system, We first try a system where two queues have the same parameters
 \caption{Result of table \ref{tab:simple-lb-1} for 20x20 case. \(\gamma = 0.999\), \(\epsilon = 0.999\).}\label{fig:20x20-simple-lb-1}
 \end{figure}
 
-Intuitively, if two queues has the same parameters, the optimal action will be sending job to the queue that has less jobs, which is the result of value iterations method (the right grid) of figure \ref{fig:20x20-simple-lb-1}. There is also a gray color indicates that at those states, either action \(1\) (sending new job to \(Q_{1}\)) or \(2\) (sending to new job to Q\_\{2\}) leads to the same result, because they have the same number of jobs.
+Intuitively, if two queues has the same parameters, the optimal action will be sending job to the queue that has less jobs, which is the result of value iterations method (the right grid) of figure \ref{fig:20x20-simple-lb-1}. There is also a gray color indicates that at those states, either action \(1\) (sending new job to \(Q_{1}\)) or \(2\) (sending to new job to \(Q_{2}\)) leads to the same result, because they have the same number of jobs.
 
-For two Q-learning methods, the online and offline version has been trained for \(3 \times 10^{10}\) and \(5 \times 10^{7}\) iterations respectively and takes 30 minutes each, however, there is still a clear difference between them. The offline version is nearly converged and is quite similar to the policy of value iterations method. However, the online one just begins to form an uncompleted diagonal. The difference can be explained by the fact that in the offline version, each pair state-action is visited \(5 \times 10^{7}\) times, so the total number of iterations will be \(2 \times 41^{2} \times 5 \times 10^{7} \approx 1.6 \times 10^{11}\), which is \(\gg 3 \times 10^{10}\), the total number of iterations of the online version.
+For two Q-learning methods, the online and offline version has been trained for \(3 \times 10^{10}\) and \(5 \times 10^{7}\) iterations respectively and takes 30 minutes each. They give us a similar result and both are close to the optimal policy of value iterations.
+
+However, since both methods depends on the evolution of the system, they are very sensitive to the parameters of systems. For example, if we increase the arrival rate to \(0.55\):
+
+\begin{table}[ht]
+\caption{Simple load-balancing 2}
+\begin{center}
+\begin{tabular}{c c c}
+    \hline
+    \multirow{3}{*}{$Q_{1}$} & Holding cost $c_{1}$ & $3$ \\
+    & Departure rate $\mu_{1}$ & $0.3$ \\
+    \cline{2-3}
+    \multirow{3}{*}{$Q_{2}$} & Holding cost $c_{2}$ & $3$ \\
+    & Departure rate $\mu_{2}$ & $0.3$ \\
+    \cline{2-3}
+    & Global arrival rate & $0.55$ \\    
+    \hline
+\end{tabular}
+\end{center}
+\label{tab:simple-lb-2}
+\end{table}
+
+Although the optimal policy should be the same as above, the same number of iterations give us a different result.
+
+
+
+\begin{figure}
+
+{\centering \subfloat[Online Q-learning\label{fig:20x20-simple-lb-2-1}]{\includegraphics[width=0.33\linewidth]{report_files/figure-latex/20x20-simple-lb-2-1} }\subfloat[Offline Q-learning\label{fig:20x20-simple-lb-2-2}]{\includegraphics[width=0.33\linewidth]{report_files/figure-latex/20x20-simple-lb-2-2} }\subfloat[Value iterations\label{fig:20x20-simple-lb-2-3}]{\includegraphics[width=0.33\linewidth]{report_files/figure-latex/20x20-simple-lb-2-3} }
+
+}
+
+\caption{Result of table \ref{tab:simple-lb-2} for 20x20 case. \(\gamma = 0.999\), \(\epsilon = 0.999\).}\label{fig:20x20-simple-lb-2}
+\end{figure}
+
+The offline version is similar to the policy of value iterations method and has a smaller hole compared to the online version. The difference can be explained by the fact that in the offline version, each pair state-action is visited \(5 \times 10^{7}\) times, so the total number of iterations will be \(2 \times 41^{2} \times 5 \times 10^{7} \approx 1.6 \times 10^{11}\), which is \(\gg 3 \times 10^{10}\), the total number of iterations of the online version.
 
 Furthermore, even if we run the online version with that much iterations, it will still not guarantee that we will have a good approximation of the offline result. This is because we are following the trajectory (or the evolution of the system) and therefore it is impossible to visit all states equally. We can see the number of visits of each pair state-action below.
 
@@ -1048,11 +1083,11 @@ Furthermore, even if we run the online version with that much iterations, it wil
 
 \begin{figure}
 
-{\centering \subfloat[Sending to $Q_{1}$\label{fig:20x20-simple-lb-1-n-visit-1}]{\includegraphics[width=0.4\linewidth]{report_files/figure-latex/20x20-simple-lb-1-n-visit-1} }\subfloat[Sending to $Q_{2}$\label{fig:20x20-simple-lb-1-n-visit-2}]{\includegraphics[width=0.4\linewidth]{report_files/figure-latex/20x20-simple-lb-1-n-visit-2} }
+{\centering \subfloat[Sending to $Q_{1}$\label{fig:20x20-simple-lb-2-n-visit-1}]{\includegraphics[width=0.4\linewidth]{report_files/figure-latex/20x20-simple-lb-2-n-visit-1} }\subfloat[Sending to $Q_{2}$\label{fig:20x20-simple-lb-2-n-visit-2}]{\includegraphics[width=0.4\linewidth]{report_files/figure-latex/20x20-simple-lb-2-n-visit-2} }
 
 }
 
-\caption{Number of visits of online Q-learning on table \ref{tab:simple-lb-1} for 20x20 case.}\label{fig:20x20-simple-lb-1-n-visit}
+\caption{Number of visits of online Q-learning on table \ref{tab:simple-lb-1} for 20x20 case.}\label{fig:20x20-simple-lb-2-n-visit}
 \end{figure}
 
 The number of visits is high around \((0, 0)\) and \((40, 40)\). Central region of the grid receives much less visits. Therefore, we see in figure \ref{fig:20x20-simple-lb-1} that the diagonal is beginning to form from these two points but not the region near the grid center.
