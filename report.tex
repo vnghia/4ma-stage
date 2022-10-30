@@ -79,6 +79,8 @@
 \usepackage{tikz}
 \usepackage[ruled]{algorithm2e}
 \usepackage{siunitx}
+\usepackage{amsthm}
+\newtheorem*{lemma*}{Lemma}
 \usetikzlibrary{chains,shapes.multipart}
 \usetikzlibrary{shapes,calc,fit}
 \usetikzlibrary{automata,positioning}
@@ -115,6 +117,23 @@
 \author{}
 \date{\vspace{-2.5em}}
 
+\usepackage{amsthm}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}{Lemma}[section]
+\newtheorem{corollary}{Corollary}[section]
+\newtheorem{proposition}{Proposition}[section]
+\newtheorem{conjecture}{Conjecture}[section]
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\theoremstyle{definition}
+\newtheorem{example}{Example}[section]
+\theoremstyle{definition}
+\newtheorem{exercise}{Exercise}[section]
+\theoremstyle{definition}
+\newtheorem{hypothesis}{Hypothesis}[section]
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+\newtheorem*{solution}{Solution}
 \begin{document}
 
 \onehalfspacing
@@ -918,14 +937,14 @@ The logic behind equation \eqref{eq:p-s} and \eqref{eq:p-e} is the fact that onl
 By rewriting \(P(S, E' | S, E, a)\) as in equation \eqref{eq:p-e-e}, we see that \(P(E'|S, E, a)\) does not depend on \(S, a\) and therefore \(P(E'|S, E, a) = P(E'| E)\). From that, we could calculate the steady state by an iterative method using the equation below:
 
 \begin{equation}
-\label{eqn:steady_prob}
+\label{eq:steady-prob}
     \pi_{t + 1}(E') = \sum_{E \in \mathcal{E}} P(E'| E) \pi_{t}(E)
 \end{equation}
 
 After \(\pi(E)\) converges to \(\tilde{\pi}(E)\) and using \eqref{eq:p-s}, we have the final empirical value we want:
 
 \begin{equation}
-\label{eqn:p_tilde}
+\label{eq:p-tilde}
     \tilde{P}(S'| S, a) = \sum_{E \in \mathcal{E}} \tilde{\pi}(E) P(S'| S, E, a)
 \end{equation}
 
@@ -1124,6 +1143,84 @@ We will the finish this section with an unbalance example. We fix the cost and m
 \end{figure}
 
 Once again, we see the sensitivity of Q-learning with the system settings. Intuitively, since class \(1\) works faster than class \(2\) with the same cost, we will send more jobs to the first one as in the value iterations method. However, the learning capacity of both Q-learning methods is not sufficient to capture all the information of the system.
+
+We then now move to the cases of multiple environments.
+
+\hypertarget{multiple-environments-pomdp}{%
+\subsection{Multiple environments (POMDP)}\label{multiple-environments-pomdp}}
+
+We will introduce some new notations of environment transitions. We note that after uniformization, the probability of transitioning from one environment to itself (the diagonal of table \ref{tab:mat-transition-ci}) does not matter any more since it will be taken account into the dummy event. Futhermore, the sum of the other probabilities does not need to be less than \(1\) as we will divide them with the normalization constant.
+
+The more important thing now is the ratio between each probabilities pair. We can rewrite table \ref{tab:mat-transition-ci} as follow:
+
+\begin{table}[ht]
+\caption{Uniformized matrix transition of the environment of $Q_{i}$}
+\begin{center}
+\begin{tabular}{c c c c c}
+    \hline
+    & $m_{1}$ & $m_{2}$ & $\dots$ & $m_{m}$ \\
+    $m_{1}$ & $*$ & $\xi_{i, 1, 2}$ & \dots & $\xi_{i, 1, m}$ \\
+    $m_{2}$ & $\xi_{i, 2, 1}$ & $*$ & \dots & $\xi_{i, 2, m}$ \\
+    $\vdots$ & & & & \\
+    $m_{m}$ & $\xi_{i, m, 1}$ & $\xi_{i, m, 2}$ & \dots & $*$ \\
+    \hline
+\end{tabular}
+\end{center}
+\label{tab:uni-mat-transition-ci}
+\end{table}
+
+Furthermore, because we want to see if the speed of environment changing affects the optimal policy of each method, we multiply all transition matrices of each \(Q_{i}\) of the system with \(\alpha\). This does not change the ratio mentioned above and only takes effect when uniformization. In this process, it acts as a ratio between the change in the observable state and non observable (environment) state. If \(\alpha\) is small, the rate of environment changing will only take a small part in the uniformized probability and vice versa.
+
+From all the small transition matrices of each \(Q_{i}\), we can get a big environment transition matrix \(\mathcal{M}_{\mathcal{E}}\) where each row and column represents an environment state encoded using the method present in \protect\hyperlink{from-n-dimensions-to-2-dimensions}{From \(n\)-dimensions to \(2\)-dimensions} section. Since all the entries except the ones on the diagonal are multiplied by \(\alpha\), we can express \(\mathcal{M}_{\mathcal{E}}\) as follow:
+
+\[
+\mathcal{M}_{\mathcal{E}} = \begin{pmatrix}
+\rho_{1, 1} & \alpha \rho_{1, 2} & \dots & \alpha \rho_{1, |\mathcal{E}|} \\
+\alpha \rho_{2, 1} & \rho_{2, 2} & \dots & \alpha \rho_{2, |\mathcal{E}|} \\
+\vdots & & & \vdots \\
+\alpha \rho_{|\mathcal{E}|, 1} & \alpha \rho_{2, 2} & \dots & \rho_{|\mathcal{E}|, |\mathcal{E}|} \\
+\end{pmatrix}
+\]
+
+Where for example if \((1, 1, \dots, 1, 1) \mapsto i\) and \((1, 1, \dots, 1, 2) \mapsto j\), then \(\rho_{i, j}\) will be equal to \(\xi_{n, 1, 2}\) (the probability that the environment of queue \(n\) moves from \(m_{1}\) to \(m_{2}\)).
+
+If \(\Pi_{\mathcal{E}}\) is the solution of equation \eqref{eq:steady-prob} then \(\mathcal{M}_{\mathcal{E}} \Pi_{\mathcal{E}} = \Pi_{\mathcal{E}}\) (because \(P(E' | E)\) is actually \(\rho\)).
+
+Lastly, with all the notion above, we can prove that the solution of
+equation \eqref{eq:steady-prob} does not depend on \(\alpha\).
+
+\begin{lemma*}
+Given a set of all $\rho_{i, j} \, (i \neq j)$ defined as above.
+
+We call a pair of $(\alpha, (\rho_{1, 1}, \dots, \rho_{|\mathcal{E}|, |\mathcal{E}|}))$ satisfied if $\mathcal{M}_{\alpha}$ is a right stochastic matrix where:
+
+$$
+\mathcal{M}_{\alpha} = \begin{pmatrix}
+\rho_{1, 1} & \alpha \rho_{1, 2} & \dots & \alpha \rho_{1, |\mathcal{E}|} \\
+\alpha \rho_{2, 1} & \rho_{2, 2} & \dots & \alpha \rho_{2, |\mathcal{E}|} \\
+\vdots & & & \vdots \\
+\alpha \rho_{|\mathcal{E}|, 1} & \alpha \rho_{2, 2} & \dots & \rho_{|\mathcal{E}|, |\mathcal{E}|} \\
+\end{pmatrix}
+$$
+
+If $(\alpha, (\rho_{1, 1}, \dots, \rho_{|\mathcal{E}|, |\mathcal{E}|}))$ and $(\alpha', (\rho_{1, 1}', \dots, \rho_{|\mathcal{E}|, |\mathcal{E}|}'))$ are satisfied, and there is $\Tau$ such that $\mathcal{M}_{\alpha} \Tau = \Tau$, then $\mathcal{M}_{\alpha'} \Tau = \Tau$
+\end{lemma*}
+
+\begin{proof}
+From $\mathcal{M}_{\alpha} \Tau = \Tau$, we have:
+
+\begin{align*}
+\iff & \alpha \sum_{j, j \neq i} \rho_{i, j} \tau_{j} + \rho_{i, i} \tau_{i} = \tau_{i} \\
+\iff & \alpha \sum_{j, j \neq i} \rho_{i, j} \tau_{j} + (1 - \alpha \sum_{j, j \neq i} \rho_{i, j}) \tau_{i} = \tau_{i} \\
+\iff & \alpha \sum_{j, j \neq i} \rho_{i, j} \tau_{j} - \alpha \tau_{i} \sum_{j, j \neq i} \rho_{i, j} = 0 \\
+\iff & \sum_{j, j \neq i} \rho_{i, j} \tau_{j} = \tau_{i} \sum_{j, j \neq i} \rho_{i, j} \\
+\iff & \alpha' \sum_{j, j \neq i} \rho_{i, j} \tau_{j} = \alpha' \tau_{i} \sum_{j, j \neq i} \rho_{i, j} \\
+\iff & \alpha' \sum_{j, j \neq i} \rho_{i, j} \tau_{j} + (1 - \alpha' \sum_{j, j \neq i} \rho_{i, j}) \tau_{i} = \tau_{i} \\
+\iff & \alpha' \sum_{j, j \neq i} \rho_{i, j} \tau_{j} + \rho_{i, i}' \tau_{i} = \tau_{i} \\
+\end{align*}
+
+Therefore, $\mathcal{M}_{\alpha'} \Tau = \Tau$.
+\end{proof}
 
 \newpage
 
