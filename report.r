@@ -116,7 +116,7 @@ setNames(melt(
   ylab("$Q_{2}$") +
   scale_x_reverse(expand = c(0.1, 0.1)) +
   scale_y_discrete(position = "right", expand = c(0.1, 0.1)) +
-  labs(fill = "Number of visits") +
+  labs(fill = "Number of \nvisits") +
   scale_fill_scico(palette = "grayC", begin = 0.05, na.value = NA)
 
 ## ---- 20x20-simple-queuing-1 ----
@@ -415,5 +415,5 @@ setNames(melt(
   ylab("$Q_{2}$") +
   scale_x_reverse(expand = c(0.1, 0.1)) +
   scale_y_discrete(position = "right", expand = c(0.1, 0.1)) +
-  labs(fill = "Number of visits") +
+  labs(fill = "Number of \nvisits") +
   scale_fill_scico(palette = "grayC", begin = 0.05, na.value = NA)
