@@ -1229,4 +1229,89 @@ We also try the complex example of table \@ref(tab:queuing-3) with $\alpha = 10^
 
 Same as above, the majority of Q-learning choose the optimal action of the empirical MDP. But it still contains some noisy cells that is not received enough number of visit.
 
+### Load-balancing
+
+#### Small $alpha$
+
+We will start with a simple case as follow:
+
+```{=latex}
+\begin{table}[!htbp]
+\caption{Load-balancing 1}
+\begin{center}
+\begin{tabular}{c c c c}
+    \hline
+    \multicolumn{2}{c}{} & $m_{1}$ & $m_{2}$ \\
+    \cline{2-4}
+    \multirow{2}{*}{$Q_{1}$} &  Holding cost & $3$ & $1$ \\
+    & Departure rate & $0.3$ & $0.3$ \\
+    \cline{2-4}
+    \multirow{2}{*}{$Q_{n}$} &  Holding cost & $2$ & \\
+    & Departure rate & $0.3$ & \\
+    \cline{2-4}
+    & Global arrival rate & \multicolumn{2}{c}{$0.5$} \\
+    \hline
+\end{tabular}
+\end{center}
+\label{tab:lb-1}
+\end{table}
+```
+
+```{=latex}
+\begin{table}[!htbp]
+\caption{Matrix transition of the environment of $Q_{1}$ of table \ref{tab:lb-1}}
+\begin{center}
+\begin{tabular}{c c c}
+    \hline
+    & $m_{1}$ & $m_{2}$ \\
+    $m_{1}$ & $*$ & $1$ \\
+    $m_{2}$ & $1$ & $*$ \\
+    \hline
+    $\alpha$ & \multicolumn{2}{c}{$10^{-3}$} \\
+    \hline
+\end{tabular}
+\end{center}
+\label{tab:lb-1-mat-1}
+\end{table}
+```
+
+```{=latex}
+\begin{table}[!htbp]
+\caption{Empirical MDP of table \ref{tab:lb-1}}
+\begin{center}
+\begin{tabular}{c c c}
+    \hline
+    \cline{2-3}
+    \multirow{2}{*}{$Q_{1}$} &  Holding cost & $2$ \\
+    & Departure rate & $0.3$ \\
+    \cline{2-3}
+    \multirow{2}{*}{$Q_{n}$} &  Holding cost & $2$ \\
+    & Departure rate & $0.3$ \\
+    \cline{2-3}
+    & Global arrival rate & $0.5$ \\
+    \hline
+\end{tabular}
+\end{center}
+\label{tab:mdp-lb-1}
+\end{table}
+```
+
+(ref:title-lb-1) Result of table \@ref(tab:lb-1) for 20x20 case. $\gamma = 0.999$, $\epsilon = 0.999$.
+
+```{r, 20x20-lb-1, fig.show="hold", out.width="33%", fig.align="center", fig.cap="(ref:title-queuing-5)", fig.subcap=c("Online Q-learning", "Offline Q-learning", "Value iterations")}
+```
+
+The value iterations shows the same result as expected with a neutral diagonal line. For Q-learning, Although there is a large hole in the center of the grid, we could still see a diagonal line that split the grid into two regions as in the optimal policy of the empirical MDP.
+
+Since the learning capacity of Q-learning is not really good for complex load balancing system, we will just test it with the same case but bigger $\alpha$.
+
+#### Big $\alpha$
+
+(ref:title-lb-2) Result of table \@ref(tab:lb-1) with $\alpha = 10^{2}$ for 20x20 case. $\gamma = 0.999$, $\epsilon = 0.999$.
+
+```{r, 20x20-lb-2, fig.show="hold", out.width="33%", fig.align="center", fig.cap="(ref:title-queuing-5)", fig.subcap=c("Online Q-learning", "Offline Q-learning", "Value iterations")}
+```
+
+Unfortunately, the Q-learning result here is completely random and we will need to run a lot longer simulation for it to be converged.
+
 \newpage
