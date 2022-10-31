@@ -1408,6 +1408,66 @@ Using the same logic as above, we can transform it into a MDP problem as follow:
 
 The result of value iterations on the right side is also the same as the value iterations of table \ref{tab:mdp-queuing-3}. Both actually gives the same numerical estimation of \(V_{*}\). Q-learning is also good at learning this type of system and we can see that it deduces a similar policy to the value iteration's one.
 
+\hypertarget{big-alpha}{%
+\paragraph{\texorpdfstring{Big \(\alpha\)}{Big \textbackslash alpha}}\label{big-alpha}}
+
+We take the same parameters as in table \ref{tab:queuing-2} with a different \(\alpha\).
+
+\begin{table}[!htbp]
+\caption{Matrix transition of the environment of $Q_{1}$ of table \ref{tab:queuing-2}}
+\begin{center}
+\begin{tabular}{c c c}
+    \hline
+    & $m_{1}$ & $m_{2}$ \\
+    $m_{1}$ & $*$ & $1$ \\
+    $m_{2}$ & $1$ & $*$ \\
+    \hline
+    $\alpha$ & \multicolumn{2}{c}{$10^{2}$} \\
+    \hline
+\end{tabular}
+\end{center}
+\label{tab:queuing-4-mat-1}
+\end{table}
+
+
+
+\begin{figure}
+
+{\centering \subfloat[Online Q-learning\label{fig:20x20-queuing-4-1}]{\includegraphics[width=0.33\linewidth]{report_files/figure-latex/20x20-queuing-4-1} }\subfloat[Offline Q-learning\label{fig:20x20-queuing-4-2}]{\includegraphics[width=0.33\linewidth]{report_files/figure-latex/20x20-queuing-4-2} }\subfloat[Value iterations\label{fig:20x20-queuing-4-3}]{\includegraphics[width=0.33\linewidth]{report_files/figure-latex/20x20-queuing-4-3} }
+
+}
+
+\caption{Result of table \ref{tab:queuing-4-mat-1} for 20x20 case. \(\gamma = 0.999\), \(\epsilon = 0.999\).}\label{fig:20x20-queuing-4}
+\end{figure}
+
+As explained above, the policy perceived by the value iterations is quite similar as above. The majority of Q-learning cells are choosing action \(1\), especially the ones near the origin. However, Q-learning still contains a lot of noise, a sign that suggests we have not iterated enough. Although the number of iterations (\(3 \times 10^{10}\)) is sufficiently large, bigger \(\alpha\) requires a lot more iterations because in that case, the system does not evolve much in trajectory but in environment instead (for example we could think that the system will stuck at one cell near the origin and the environment state constantly changes after each iteration). The figure below shown that phenomena:
+
+
+
+\begin{figure}
+
+{\centering \subfloat[Activating $Q_{1}$\label{fig:20x20-queuing-4-n-visit-1}]{\includegraphics[width=0.4\linewidth]{report_files/figure-latex/20x20-queuing-4-n-visit-1} }\subfloat[Activating $Q_{2}$\label{fig:20x20-queuing-4-n-visit-2}]{\includegraphics[width=0.4\linewidth]{report_files/figure-latex/20x20-queuing-4-n-visit-2} }
+
+}
+
+\caption{Number of visits of online Q-learning on table \ref{tab:queuing-4-mat-1} for 20x20 case. The highest number of visit is \(\approx 4 \times 10^{9}\) (at \((0, 0)\)) while the lowest one is \(\approx 5 \times 10^5\) (at \((20, 20)\)).}\label{fig:20x20-queuing-4-n-visit}
+\end{figure}
+
+We also try the complex example of table \ref{tab:queuing-3} with \(\alpha = 10^{2}\). Below is the policy perceived by Q-learning and value iterations.
+
+
+
+\begin{figure}
+
+{\centering \subfloat[Online Q-learning\label{fig:20x20-queuing-5-1}]{\includegraphics[width=0.33\linewidth]{report_files/figure-latex/20x20-queuing-5-1} }\subfloat[Offline Q-learning\label{fig:20x20-queuing-5-2}]{\includegraphics[width=0.33\linewidth]{report_files/figure-latex/20x20-queuing-5-2} }\subfloat[Value iterations\label{fig:20x20-queuing-5-3}]{\includegraphics[width=0.33\linewidth]{report_files/figure-latex/20x20-queuing-5-3} }
+
+}
+
+\caption{Result of table \ref{tab:queuing-3} with \(\alpha = 10^{2}\) for 20x20 case. \(\gamma = 0.999\), \(\epsilon = 0.999\).}\label{fig:20x20-queuing-5}
+\end{figure}
+
+Same as above, the majority of Q-learning choose the optimal action of the empirical MDP. But it still contains some noisy cells that is not received enough number of visit.
+
 \newpage
 
 \printbibliography
