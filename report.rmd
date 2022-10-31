@@ -1281,7 +1281,6 @@ We will start with a simple case as follow:
 \begin{center}
 \begin{tabular}{c c c}
     \hline
-    \cline{2-3}
     \multirow{2}{*}{$Q_{1}$} &  Holding cost & $2$ \\
     & Departure rate & $0.3$ \\
     \cline{2-3}
@@ -1313,5 +1312,19 @@ Since the learning capacity of Q-learning is not really good for complex load ba
 ```
 
 Unfortunately, the Q-learning result here is completely random and we will need to run a lot longer simulation for it to be converged.
+
+# Conclusion and extension
+
+Through the internship, we have seen different behaviors of each method in solving MDP and POMDP. The table below summarizes the advantages and weaknesses of each method in our report:
+
+| Aspect | Online Q-learning | Offline Q-learning | Value iterations |
+|--|----|--|--|
+| Can be used on POMDP | Yes | No | No |
+| Prerequisites | A system simulator or nothing (by interacting directly with the real system) | A reliable system simulator | Real or calculated (empirical) parameters of the system such that it is a MDP problem |
+| Checking for convergence (checking if the value does not change much after some iterations) | Since only one cell is updated at a time, and each cell is not visited uniformly, such checking requires a lot of efforts and will slow down the simulation. An alternative solution is re-running the simulation with different learning steps and comparing the result, but this also requires a lot of time and manual efforts. | By calculating $\| \cdot \|_{2}$ between the previous Q-value and the current Q-value. | By calculating $\| \cdot \|_{2}$ between the previous V-value and the current V-value. |
+| Speed of convergence | Since it follows the trajectory, one training session might take very long time. In addition, because checking for convergence is not simple, we might have to run the training session multiple times as well as carefully tunning the hyper-parameters so that takes a lot of time. | Faster than online Q-learning but still taking long time before converging | The fastest method. |
+| Quality of the result | The result might not converge to the best policy and contain a lot of noise. Futhermore, its result is extremely sensitive to system parameters, especially the ones having impacts on the evolution of the whole system. | The result might not converge to the best policy but it will less likely to contain noise and is more robust to a change in the settings of system. | The result converged to the optimal solution when we are working on a MDP problem. |
+
+Table: Comparison between methods for MDP / POMDP problem
 
 \newpage

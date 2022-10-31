@@ -1517,7 +1517,6 @@ We will start with a simple case as follow:
 \begin{center}
 \begin{tabular}{c c c}
     \hline
-    \cline{2-3}
     \multirow{2}{*}{$Q_{1}$} &  Holding cost & $2$ \\
     & Departure rate & $0.3$ \\
     \cline{2-3}
@@ -1561,6 +1560,85 @@ Since the learning capacity of Q-learning is not really good for complex load ba
 \end{figure}
 
 Unfortunately, the Q-learning result here is completely random and we will need to run a lot longer simulation for it to be converged.
+
+\hypertarget{conclusion-and-extension}{%
+\section{Conclusion and extension}\label{conclusion-and-extension}}
+
+Through the internship, we have seen different behaviors of each method in solving MDP and POMDP. The table below summarizes the advantages and weaknesses of each method in our report:
+
+\begin{longtable}[]{@{}llll@{}}
+\caption{Comparison between methods for MDP / POMDP problem}\tabularnewline
+\toprule
+\begin{minipage}[b]{0.18\columnwidth}\raggedright
+Aspect\strut
+\end{minipage} & \begin{minipage}[b]{0.35\columnwidth}\raggedright
+Online Q-learning\strut
+\end{minipage} & \begin{minipage}[b]{0.18\columnwidth}\raggedright
+Offline Q-learning\strut
+\end{minipage} & \begin{minipage}[b]{0.18\columnwidth}\raggedright
+Value iterations\strut
+\end{minipage}\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+\begin{minipage}[b]{0.18\columnwidth}\raggedright
+Aspect\strut
+\end{minipage} & \begin{minipage}[b]{0.35\columnwidth}\raggedright
+Online Q-learning\strut
+\end{minipage} & \begin{minipage}[b]{0.18\columnwidth}\raggedright
+Offline Q-learning\strut
+\end{minipage} & \begin{minipage}[b]{0.18\columnwidth}\raggedright
+Value iterations\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.18\columnwidth}\raggedright
+Can be used on POMDP\strut
+\end{minipage} & \begin{minipage}[t]{0.35\columnwidth}\raggedright
+Yes\strut
+\end{minipage} & \begin{minipage}[t]{0.18\columnwidth}\raggedright
+No\strut
+\end{minipage} & \begin{minipage}[t]{0.18\columnwidth}\raggedright
+No\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.18\columnwidth}\raggedright
+Prerequisites\strut
+\end{minipage} & \begin{minipage}[t]{0.35\columnwidth}\raggedright
+A system simulator or nothing (by interacting directly with the real system)\strut
+\end{minipage} & \begin{minipage}[t]{0.18\columnwidth}\raggedright
+A reliable system simulator\strut
+\end{minipage} & \begin{minipage}[t]{0.18\columnwidth}\raggedright
+Real or calculated (empirical) parameters of the system such that it is a MDP problem\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.18\columnwidth}\raggedright
+Checking for convergence (checking if the value does not change much after some iterations)\strut
+\end{minipage} & \begin{minipage}[t]{0.35\columnwidth}\raggedright
+Since only one cell is updated at a time, and each cell is not visited uniformly, such checking requires a lot of efforts and will slow down the simulation. An alternative solution is re-running the simulation with different learning steps and comparing the result, but this also requires a lot of time and manual efforts.\strut
+\end{minipage} & \begin{minipage}[t]{0.18\columnwidth}\raggedright
+By calculating \(\| \cdot \|_{2}\) between the previous Q-value and the current Q-value.\strut
+\end{minipage} & \begin{minipage}[t]{0.18\columnwidth}\raggedright
+By calculating \(\| \cdot \|_{2}\) between the previous V-value and the current V-value.\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.18\columnwidth}\raggedright
+Speed of convergence\strut
+\end{minipage} & \begin{minipage}[t]{0.35\columnwidth}\raggedright
+Since it follows the trajectory, one training session might take very long time. In addition, because checking for convergence is not simple, we might have to run the training session multiple times as well as carefully tunning the hyper-parameters so that takes a lot of time.\strut
+\end{minipage} & \begin{minipage}[t]{0.18\columnwidth}\raggedright
+Faster than online Q-learning but still taking long time before converging\strut
+\end{minipage} & \begin{minipage}[t]{0.18\columnwidth}\raggedright
+The fastest method.\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.18\columnwidth}\raggedright
+Quality of the result\strut
+\end{minipage} & \begin{minipage}[t]{0.35\columnwidth}\raggedright
+The result might not converge to the best policy and contain a lot of noise. Futhermore, its result is extremely sensitive to system parameters, especially the ones having impacts on the evolution of the whole system.\strut
+\end{minipage} & \begin{minipage}[t]{0.18\columnwidth}\raggedright
+The result might not converge to the best policy but it will less likely to contain noise and is more robust to a change in the settings of system.\strut
+\end{minipage} & \begin{minipage}[t]{0.18\columnwidth}\raggedright
+The result converged to the optimal solution when we are working on a MDP problem.\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
 
 \newpage
 
