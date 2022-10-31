@@ -81,7 +81,7 @@ In this internship, we are interested in learning an efficient policy for some d
 We have $n$ classes of queue $Q_{1}, \dots, Q_{n}$, and $L_{1}, \dots, L_{n}$ the maximum number of jobs (limit) on each class of queue. For each $Q_{i}$, its behavior is fully controlled by which environment it is in. An environment can be in one of the states $m_{1}, \dots, m_{m}$. And the environment of class $Q_{i}$ is a random variable, denoted by $M_{i}$, which is in one of the states $m_{1}, \dots, m_{m}$. For each environment $m_{j}$, $Q_{i}$ has their own holding cost $c_{i, j}$ (the cost of one unfinished job on the queue), arrival rate $\lambda_{i, j}$ (the rate of one more job arriving to the queue) and departure rate $\mu_{i, j}$ (the rate that a job departs the system (if served)). Furthermore, the environment $M_{i}$ can change from $m_{j}$ and $m_{k}$ with the rate of $\xi_{i, j, k}$. A table summarizing all parameters is shown below.
 
 ```{=latex}
-\begin{table}[ht]
+\begin{table}[!htbp]
 \caption{Queuing system parameters}
 \begin{center}
 \begin{tabular}{c c c c c}
@@ -105,7 +105,7 @@ We have $n$ classes of queue $Q_{1}, \dots, Q_{n}$, and $L_{1}, \dots, L_{n}$ th
 ```
 
 ```{=latex}
-\begin{table}[ht]
+\begin{table}[!htbp]
 \caption{Matrix transition of the environment of $Q_{i}$}
 \begin{center}
 \begin{tabular}{c c c c}
@@ -202,7 +202,7 @@ The agent will decide which queues should be activated. His goal is to minimize 
   ([xshift=1.5cm]q-n.east);
 \path ([xshift=0.5cm]q-2.south) -- ([xshift=0.5cm]q-n.north) node [font=\LARGE, midway, sloped] {$\dots$};
 \end{tikzpicture}
-\caption[Visualization of the queueing system when the agent activates queue 2]{Visualization of the queueing system when the agent activates queue 2, the bold lines represent the flow of jobs inside the system.}
+\caption[Visualization of the queuing system when the agent activates queue 2]{Visualization of the queuing system when the agent activates queue 2, the bold lines represent the flow of jobs inside the system.}
 \end{figure}
 ```
 
@@ -236,7 +236,7 @@ After obtaining all the information above, we use that discrete probability dist
 For the load-balancing system, we only have one stream of job arrivals with rate $\lambda$ and $n$ queues. Same as above, The queues capacities (holding cost and departure rate) also depend on which environment they are in. Therefore, we have similar parameters to the one of the queuing system.  The only difference in this system is that instead of having multiple arrival rate that depends on the class of queue as well as the environment, we have only one global arrival rate $\lambda$. A table summarizing the parameters of this system is shown below.
 
 ```{=latex}
-\begin{table}[ht]
+\begin{table}[!htbp]
 \caption{Load-balancing system parameters}
 \begin{center}
 \begin{tabular}{c c c c c}
@@ -558,7 +558,7 @@ In this section, we document some difficulties while implementing the framework 
 and linear cost function with no environment (or constant environment). The parameter of this system is show in table \@ref(tab:q-learning-test).
 
 ```{=latex}
-\begin{table}[ht]
+\begin{table}[!htbp]
 \caption{Simple queuing problem for testing}
 \begin{center}
 \begin{tabular}{c c c}
@@ -755,12 +755,12 @@ After $\pi(E)$ converges to $\tilde{\pi}(E)$ and using \@ref(eq:p-s), we have th
 
 ## No environment changing (MDP)
 
-### Queueing
+### Queuing
 
 First we will try with the linear cost. This is the simplest case and since it is proven mathematically (?), it is only a test to show that all algorithms works correctly. We will try two tuples of parameters, the first one will be:
 
 ```{=latex}
-\begin{table}[ht]
+\begin{table}[!htbp]
 \caption{Simple queuing 1}
 \begin{center}
 \begin{tabular}{c c c}
@@ -789,7 +789,7 @@ The theoretical optimal action here is $1$.
 And the second one is nearly the same, except the holding cost is reverse, and therefore the optimal action here is $2$:
 
 ```{=latex}
-\begin{table}[ht]
+\begin{table}[!htbp]
 \caption{Simple queuing 2}
 \begin{center}
 \begin{tabular}{c c c}
@@ -820,7 +820,7 @@ As we can see, all three algorithms work well for this simple case. We will move
 For this system, We first try a system where two queues have the same parameters:
 
 ```{=latex}
-\begin{table}[ht]
+\begin{table}[!htbp]
 \caption{Simple load-balancing 1}
 \begin{center}
 \begin{tabular}{c c c}
@@ -851,7 +851,7 @@ For two Q-learning methods, the online and offline version has been trained for 
 However, since both methods depends on the evolution of the system, they are very sensitive to the parameters of systems. For example, if we increase the arrival rate to $0.55$:
 
 ```{=latex}
-\begin{table}[ht]
+\begin{table}[!htbp]
 \caption{Simple load-balancing 2}
 \begin{center}
 \begin{tabular}{c c c}
@@ -891,7 +891,7 @@ The number of visits is high around $(0, 0)$ and $(40, 40)$. Central region of t
 We will the finish this section with an unbalance example. We fix the cost and make the departure rate of the first queue higher than the second one as follow:
 
 ```{=latex}
-\begin{table}[ht]
+\begin{table}[!htbp]
 \caption{Simple load-balancing 3}
 \begin{center}
 \begin{tabular}{c c c}
@@ -926,7 +926,7 @@ We will introduce some new notations of environment transitions. We note that af
 The more important thing now is the ratio between each probabilities pair. We can rewrite table \@ref(tab:mat-transition-ci) as follow:
 
 ```{=latex}
-\begin{table}[ht]
+\begin{table}[!htbp]
 \caption{Uniformized matrix transition of the environment of $Q_{i}$}
 \begin{center}
 \begin{tabular}{c c c c c}
@@ -956,7 +956,7 @@ $$
 \end{pmatrix}
 $$
 
-Where for example if $(1, 1, \dots, 1, 1) \mapsto i$ and $(1, 1, \dots, 1, 2) \mapsto j$, then $\rho_{i, j}$ will be equal to $\xi_{n, 1, 2}$ (the probability that the environment of queue $n$ moves from $m_{1}$ to $m_{2}$).
+Where for example if $(m_{1}, m_{1}, \dots, m_{1}, m_{1}) \mapsto i$ and $(m_{1}, m_{1}, \dots, m_{1}, m_{2}) \mapsto j$, then $\rho_{i, j}$ will be equal to $\xi_{n, 1, 2}$ (the probability that the environment of queue $n$ moves from $m_{1}$ to $m_{2}$).
 
 If $\Pi_{\mathcal{E}}$ is the solution of equation \@ref(eq:steady-prob) then $\mathcal{M}_{\mathcal{E}} \Pi_{\mathcal{E}} = \Pi_{\mathcal{E}}$ (because $P(E' | E)$ is actually $\rho$).
 
@@ -997,5 +997,193 @@ From $\mathcal{M}_{\alpha} \Tau = \Tau$, we have:
 Therefore, $\mathcal{M}_{\alpha'} \Tau = \Tau$.
 \end{proof}
 ```
+
+### Queuing
+
+#### Small $\alpha$
+
+We start with a simple parameter as below:
+
+```{=latex}
+\begin{table}[!htbp]
+\caption{Queuing 1}
+\begin{center}
+\begin{tabular}{c c c c}
+    \hline
+    \multicolumn{2}{c}{} & $m_{1}$ & $m_{2}$ \\
+    \cline{2-4}
+    \multirow{3}{*}{$C_{1}$} & Holding cost & $5$ & $1$ \\
+    & Arrival rate & $0.13$ & $0.13$ \\
+    & Departure rate & $0.3$ & $0.3$ \\
+    \cline{2-4}
+    \multirow{3}{*}{$C_{2}$} & Holding cost & $2$ & \\
+    & Arrival rate & $0.13$ & \\
+    & Departure rate & $0.3$ & \\    
+    \hline
+\end{tabular}
+\label{tab:queuing-1}
+\end{center}
+\end{table}
+```
+
+```{=latex}
+\begin{table}[!htbp]
+\caption{Queuing 2}
+\begin{center}
+\begin{tabular}{c c c c}
+    \hline
+    \multicolumn{2}{c}{} & $m_{1}$ & $m_{2}$ \\
+    \cline{2-4}
+    \multirow{3}{*}{$C_{1}$} & Holding cost & $1$ & $5$ \\
+    & Arrival rate & $0.13$ & $0.13$ \\
+    & Departure rate & $0.3$ & $0.3$ \\
+    \cline{2-4}
+    \multirow{3}{*}{$C_{2}$} & Holding cost & $2$ & \\
+    & Arrival rate & $0.13$ & \\
+    & Departure rate & $0.3$ & \\    
+    \hline
+\end{tabular}
+\label{tab:queuing-2}
+\end{center}
+\end{table}
+```
+
+```{=latex}
+\begin{table}[!htbp]
+\caption{Matrix transition of the environment of $Q_{1}$ of table \ref{tab:queuing-1} and table \ref{tab:queuing-2}}
+\begin{center}
+\begin{tabular}{c c c}
+    \hline
+    & $m_{1}$ & $m_{2}$ \\
+    $m_{1}$ & $*$ & $1$ \\
+    $m_{2}$ & $1$ & $*$ \\
+    \hline
+    $\alpha$ & \multicolumn{2}{c}{$10^{-3}$} \\
+    \hline
+\end{tabular}
+\end{center}
+\label{tab:queuing-1-mat-1}
+\end{table}
+```
+
+(ref:title-queuing-1) Result of table \@ref(tab:queuing-1) (upper) and \@ref(tab:queuing-2) (lower) for 20x20 case. $\gamma = 0.999$, $\epsilon = 0.999$.
+
+```{r, 20x20-queuing-1-2, fig.show="hold", fig.ncol=3, out.width="33%", fig.align="center", fig.cap="(ref:title-queuing-1)", fig.subcap=c("Online Q-learning", "Offline Q-learning", "Value iterations", "Online Q-learning", "Offline Q-learning", "Value iterations")}
+```
+
+First, for both cases, the solution of equation \@ref(eq:steady-prob) is $\Pi = (0.5, 0.5)$ with $\mathcal{E} = \{(m_{1}, m_{1}), (m_{2}, m_{1})\}$ (since queue $2$ has only one environment). Furthermore, from equation \@ref(eq:p-tilde), the value iteration method is actually a MDP problem as above with the following parameters.
+
+```{=latex}
+\begin{table}[!htbp]
+\caption{Empirical MDP of table \ref{tab:queuing-1} and table \ref{tab:queuing-2}}
+\begin{center}
+\begin{tabular}{c c c}
+    \hline
+    \multirow{3}{*}{$Q_{1}$} & Holding cost $c_{1}$ & $0.5 \times 1 + 0.5 \times 5 = 3$ \\
+    & Arrival rate $\lambda_{1}$ & $0.5 \times 0.13 + 0.5 \times 0.13 = 0.13$ \\
+    & Departure rate $\mu_{1}$ & $0.5 \times 0.3 + 0.5 \times 0.3 = 0.3$ \\
+    \cline{2-3}
+    \multirow{3}{*}{$Q_{2}$} & Holding cost $c_{2}$ & $2$ \\
+    & Arrival rate $\lambda_{2}$ & $0.13$ \\
+    & Departure rate $\mu_{2}$ & $0.3$ \\    
+    \hline
+\end{tabular}
+\end{center}
+\label{tab:mdp-queuing-1}
+\end{table}
+```
+
+As in (??), the solution of table \@ref(tab:mdp-queuing-1) is serving queue $1$, which is also the result of the value iteration method on both table \@ref(tab:queuing-1) and table \@ref(tab:queuing-2).
+
+And finally, Q-learning also captures quite well these information and give us a similar result instead of choosing which queue has less cost in the initial environment (queue $1$ for table \@ref(tab:queuing-1) and queue $2$ for table \@ref(tab:queuing-2)) even though the speed of environment changing is slow.
+
+We now move to a more complex case as follow:
+
+```{=latex}
+\begin{table}[!htbp]
+\caption{Queuing 3}
+\begin{center}
+\begin{tabular}{c c c c}
+    \hline
+    \multicolumn{2}{c}{} & $m_{1}$ & $m_{2}$ \\
+    \cline{2-4}
+    \multirow{3}{*}{$C_{1}$} & Holding cost & $3$ & $4$ \\
+    & Arrival rate & $0.13$ & $0.12$ \\
+    & Departure rate & $0.28$ & $0.31$ \\
+    \cline{2-4}
+    \multirow{3}{*}{$C_{2}$} & Holding cost & $2$ & $6$ \\
+    & Arrival rate & $0.13$ & $0.14$ \\
+    & Departure rate & $0.3$ & $0.32$ \\    
+    \hline
+\end{tabular}
+\label{tab:queuing-3}
+\end{center}
+\end{table}
+```
+
+```{=latex}
+\begin{table}[!htbp]
+\caption{Matrix transition of the environment of $Q_{1}$ of table \ref{tab:queuing-3}}
+\begin{center}
+\begin{tabular}{c c c}
+    \hline
+    & $m_{1}$ & $m_{2}$ \\
+    $m_{1}$ & $*$ & $1$ \\
+    $m_{2}$ & $2$ & $*$ \\
+    \hline
+    $\alpha$ & \multicolumn{2}{c}{$10^{-3}$} \\
+    \hline
+\end{tabular}
+\end{center}
+\label{tab:queuing-3-mat-1}
+\end{table}
+```
+
+```{=latex}
+\begin{table}[!htbp]
+\caption{Matrix transition of the environment of $Q_{2}$ of table \ref{tab:queuing-3}}
+\begin{center}
+\begin{tabular}{c c c}
+    \hline
+    & $m_{1}$ & $m_{2}$ \\
+    $m_{1}$ & $*$ & $4$ \\
+    $m_{2}$ & $3$ & $*$ \\
+    \hline
+    $\alpha$ & \multicolumn{2}{c}{$10^{-3}$} \\
+    \hline
+\end{tabular}
+\end{center}
+\label{tab:queuing-3-mat-2}
+\end{table}
+```
+
+Using the same logic as above, we can transform it into a MDP problem as follow:
+
+```{=latex}
+\begin{table}[!htbp]
+\caption{Empirical MDP of table \ref{tab:queuing-3}}
+\begin{center}
+\begin{tabular}{c c c}
+    \hline
+    \multirow{3}{*}{$Q_{1}$} & Holding cost $c_{1}$ & $3.3333$ \\
+    & Arrival rate $\lambda_{1}$ & $0.1266$ \\
+    & Departure rate $\mu_{1}$ & $0.2899$ \\
+    \cline{2-3}
+    \multirow{3}{*}{$Q_{2}$} & Holding cost $c_{2}$ & $4.2857$ \\
+    & Arrival rate $\lambda_{2}$ & $0.1357$ \\
+    & Departure rate $\mu_{2}$ & $0.3114$ \\    
+    \hline
+\end{tabular}
+\end{center}
+\label{tab:mdp-queuing-3}
+\end{table}
+```
+
+(ref:title-queuing-3) Result of table \@ref(tab:queuing-3) for 20x20 case. $\gamma = 0.999$, $\epsilon = 0.999$.
+
+```{r, 20x20-queuing-3, fig.show="hold", out.width="33%", fig.align="center", fig.cap="(ref:title-queuing-3)", fig.subcap=c("Online Q-learning", "Offline Q-learning", "Value iterations")}
+```
+
+The result of value iterations on the right side is also the same as the value iterations of table \@ref(tab:mdp-queuing-3). Both actually gives the same numerical estimation of $V_{*}$. Q-learning is also good at learning this type of system and we can see that it deduces a similar policy to the value iteration's one.
 
 \newpage
