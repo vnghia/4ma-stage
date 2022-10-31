@@ -1567,7 +1567,7 @@ Unfortunately, the Q-learning result here is completely random and we will need 
 Through the internship, we have seen different behaviors of each method in solving MDP and POMDP. The table below summarizes the advantages and weaknesses of each method in our report:
 
 \begin{longtable}[]{@{}llll@{}}
-\caption{Comparison between methods for MDP / POMDP problem}\tabularnewline
+\caption{Comparison between methods for MDP / POMDP problem.}\tabularnewline
 \toprule
 \begin{minipage}[b]{0.18\columnwidth}\raggedright
 Aspect\strut
@@ -1637,8 +1637,19 @@ The result might not converge to the best policy but it will less likely to cont
 \end{minipage} & \begin{minipage}[t]{0.18\columnwidth}\raggedright
 The result converged to the optimal solution when we are working on a MDP problem.\strut
 \end{minipage}\tabularnewline
+\begin{minipage}[t]{0.18\columnwidth}\raggedright
+Behavior on POMDP\strut
+\end{minipage} & \begin{minipage}[t]{0.35\columnwidth}\raggedright
+Q-learning seems to perceive the problem as an empirical MDP problem as we could observe that its results resemble the value iterations result. But we need more analytical inspections to verify this hypothesis.\strut
+\end{minipage} & \begin{minipage}[t]{0.18\columnwidth}\raggedright
+\strut
+\end{minipage} & \begin{minipage}[t]{0.18\columnwidth}\raggedright
+This method can not work on a POMDP problem, but said problem can be converted to an empirical MDP problem by the method describe in section \protect\hyperlink{empirical-transition-probability}{Empirical transition probability}.\strut
+\end{minipage}\tabularnewline
 \bottomrule
 \end{longtable}
+
+Finally, we will end the report with an unanswered question: \textbf{``How can we know that the policy we obtained is the optimal policy in case of POMDP ?''}. This question is very important because if we have the optimal policy beforehand, not necessarily through a model free method, we can later compare it with the result of another method to get an idea if that method works with our problem or not (like what we did with the MDP problem: compare the Q-learning result and the value iterations one). However, because the limited context of the internship, we are not able to answer that question and left it as a possibility for future work.
 
 \newpage
 
