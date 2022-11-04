@@ -119,29 +119,9 @@ setNames(melt(
   labs(fill = "Number of \nvisits") +
   scale_fill_scico(palette = "grayC", begin = 0.05, na.value = NA)
 
-## ---- 20x20-simple-queuing-1 ----
+## ---- 20x20-simple-scheduling-1 ----
 
-q_20_20 <- np$load("binary/20x20-simple-queuing-1.npy")
-
-setNames(melt(
-  q_20_20
-), c("Q1", "Q2", "queue")) %>%
-  mutate(Q1 = Q1 - 1, Q2 = Q2 - 1, queue = factor(as.integer(queue) + 1)) %>%
-  ggplot(aes(Q1, Q2)) +
-  geom_tile(aes(fill = queue), colour = "grey10", size = 0.001) +
-  coord_flip() +
-  theme_void(base_size = 33) +
-  theme(
-    aspect.ratio = 1,
-    axis.title.x = element_text(size = 33, hjust = 0.5),
-    axis.title.y = element_text(size = 33, hjust = 0.5),
-  ) +
-  ylab("$Q_{2}$") +
-  xlab("$Q_{1}$") +
-  scale_x_reverse(expand = c(0.1, 0.1)) +
-  scale_y_discrete(position = "right", expand = c(0.1, 0.1)) +
-  guides(fill = "none") +
-  scale_colour_manual(values = c("white", "black"), aesthetics = c("fill"))
+q_20_20 <- np$load("binary/20x20-simple-scheduling-1.npy")
 
 setNames(melt(
   q_20_20
@@ -180,11 +160,31 @@ setNames(melt(
   xlab("$Q_{1}$") +
   scale_x_reverse(expand = c(0.1, 0.1)) +
   scale_y_discrete(position = "right", expand = c(0.1, 0.1)) +
+  guides(fill = "none") +
   scale_colour_manual(values = c("white", "black"), aesthetics = c("fill"))
 
-## ---- 20x20-simple-queuing-2 ----
+setNames(melt(
+  q_20_20
+), c("Q1", "Q2", "queue")) %>%
+  mutate(Q1 = Q1 - 1, Q2 = Q2 - 1, queue = factor(as.integer(queue) + 1)) %>%
+  ggplot(aes(Q1, Q2)) +
+  geom_tile(aes(fill = queue), colour = "grey10", size = 0.001) +
+  coord_flip() +
+  theme_void(base_size = 33) +
+  theme(
+    aspect.ratio = 1,
+    axis.title.x = element_text(size = 33, hjust = 0.5),
+    axis.title.y = element_text(size = 33, hjust = 0.5),
+  ) +
+  ylab("$Q_{2}$") +
+  xlab("$Q_{1}$") +
+  scale_x_reverse(expand = c(0.1, 0.1)) +
+  scale_y_discrete(position = "right", expand = c(0.1, 0.1)) +
+  scale_colour_manual(values = c("white", "black"), aesthetics = c("fill"))
 
-q_20_20 <- np$load("binary/20x20-simple-queuing-2.npy")
+## ---- 20x20-simple-scheduling-2 ----
+
+q_20_20 <- np$load("binary/20x20-simple-scheduling-2.npy")
 
 setNames(melt(
   q_20_20
@@ -568,10 +568,10 @@ setNames(melt(
     aesthetics = c("fill"), label = c("1", "2", "neutral")
   )
 
-# ---- 20x20-queuing-1-2 ----
+# ---- 20x20-scheduling-1-2 ----
 
 setNames(melt(
-  np$load("binary/20x20-queuing-1-q-on.npy")
+  np$load("binary/20x20-scheduling-1-q-on.npy")
 ), c("Q1", "Q2", "queue")) %>%
   mutate(Q1 = Q1 - 1, Q2 = Q2 - 1, queue = factor(as.integer(queue) + 1)) %>%
   ggplot(aes(Q1, Q2)) +
@@ -591,7 +591,7 @@ setNames(melt(
   scale_colour_manual(values = c("white", "black"), aesthetics = c("fill"))
 
 setNames(melt(
-  np$load("binary/20x20-queuing-1-q-off.npy")
+  np$load("binary/20x20-scheduling-1-q-off.npy")
 ), c("Q1", "Q2", "queue")) %>%
   mutate(Q1 = Q1 - 1, Q2 = Q2 - 1, queue = factor(as.integer(queue) + 1)) %>%
   ggplot(aes(Q1, Q2)) +
@@ -611,7 +611,7 @@ setNames(melt(
   scale_colour_manual(values = c("white", "black"), aesthetics = c("fill"))
 
 setNames(melt(
-  np$load("binary/20x20-queuing-1-v.npy")
+  np$load("binary/20x20-scheduling-1-v.npy")
 ), c("Q1", "Q2", "queue")) %>%
   mutate(Q1 = Q1 - 1, Q2 = Q2 - 1, queue = factor(as.integer(queue) + 1)) %>%
   ggplot(aes(Q1, Q2)) +
@@ -633,7 +633,7 @@ setNames(melt(
   )
 
 setNames(melt(
-  np$load("binary/20x20-queuing-2-q-on.npy")
+  np$load("binary/20x20-scheduling-2-q-on.npy")
 ), c("Q1", "Q2", "queue")) %>%
   mutate(Q1 = Q1 - 1, Q2 = Q2 - 1, queue = factor(as.integer(queue) + 1)) %>%
   ggplot(aes(Q1, Q2)) +
@@ -653,7 +653,7 @@ setNames(melt(
   scale_colour_manual(values = c("white", "black"), aesthetics = c("fill"))
 
 setNames(melt(
-  np$load("binary/20x20-queuing-2-q-off.npy")
+  np$load("binary/20x20-scheduling-2-q-off.npy")
 ), c("Q1", "Q2", "queue")) %>%
   mutate(Q1 = Q1 - 1, Q2 = Q2 - 1, queue = factor(as.integer(queue) + 1)) %>%
   ggplot(aes(Q1, Q2)) +
@@ -673,7 +673,7 @@ setNames(melt(
   scale_colour_manual(values = c("white", "black"), aesthetics = c("fill"))
 
 setNames(melt(
-  np$load("binary/20x20-queuing-2-v.npy")
+  np$load("binary/20x20-scheduling-2-v.npy")
 ), c("Q1", "Q2", "queue")) %>%
   mutate(Q1 = Q1 - 1, Q2 = Q2 - 1, queue = factor(as.integer(queue) + 1)) %>%
   ggplot(aes(Q1, Q2)) +
@@ -694,10 +694,10 @@ setNames(melt(
     aesthetics = c("fill"), label = c("1", "2", "neutral")
   )
 
-# ---- 20x20-queuing-3 ----
+# ---- 20x20-scheduling-3 ----
 
 setNames(melt(
-  np$load("binary/20x20-queuing-3-q-on.npy")
+  np$load("binary/20x20-scheduling-3-q-on.npy")
 ), c("Q1", "Q2", "queue")) %>%
   mutate(Q1 = Q1 - 1, Q2 = Q2 - 1, queue = factor(as.integer(queue) + 1)) %>%
   ggplot(aes(Q1, Q2)) +
@@ -717,7 +717,7 @@ setNames(melt(
   scale_colour_manual(values = c("white", "black"), aesthetics = c("fill"))
 
 setNames(melt(
-  np$load("binary/20x20-queuing-3-q-off.npy")
+  np$load("binary/20x20-scheduling-3-q-off.npy")
 ), c("Q1", "Q2", "queue")) %>%
   mutate(Q1 = Q1 - 1, Q2 = Q2 - 1, queue = factor(as.integer(queue) + 1)) %>%
   ggplot(aes(Q1, Q2)) +
@@ -737,7 +737,7 @@ setNames(melt(
   scale_colour_manual(values = c("white", "black"), aesthetics = c("fill"))
 
 setNames(melt(
-  np$load("binary/20x20-queuing-3-v.npy")
+  np$load("binary/20x20-scheduling-3-v.npy")
 ), c("Q1", "Q2", "queue")) %>%
   mutate(Q1 = Q1 - 1, Q2 = Q2 - 1, queue = factor(as.integer(queue) + 1)) %>%
   ggplot(aes(Q1, Q2)) +
@@ -758,10 +758,10 @@ setNames(melt(
     aesthetics = c("fill"), label = c("1", "2", "neutral")
   )
 
-# ---- 20x20-queuing-4 ----
+# ---- 20x20-scheduling-4 ----
 
 setNames(melt(
-  np$load("binary/20x20-queuing-4-q-on.npy")
+  np$load("binary/20x20-scheduling-4-q-on.npy")
 ), c("Q1", "Q2", "queue")) %>%
   mutate(Q1 = Q1 - 1, Q2 = Q2 - 1, queue = factor(as.integer(queue) + 1)) %>%
   ggplot(aes(Q1, Q2)) +
@@ -781,7 +781,7 @@ setNames(melt(
   scale_colour_manual(values = c("white", "black"), aesthetics = c("fill"))
 
 setNames(melt(
-  np$load("binary/20x20-queuing-4-q-off.npy")
+  np$load("binary/20x20-scheduling-4-q-off.npy")
 ), c("Q1", "Q2", "queue")) %>%
   mutate(Q1 = Q1 - 1, Q2 = Q2 - 1, queue = factor(as.integer(queue) + 1)) %>%
   ggplot(aes(Q1, Q2)) +
@@ -801,7 +801,7 @@ setNames(melt(
   scale_colour_manual(values = c("white", "black"), aesthetics = c("fill"))
 
 setNames(melt(
-  np$load("binary/20x20-queuing-4-v.npy")
+  np$load("binary/20x20-scheduling-4-v.npy")
 ), c("Q1", "Q2", "queue")) %>%
   mutate(Q1 = Q1 - 1, Q2 = Q2 - 1, queue = factor(as.integer(queue) + 1)) %>%
   ggplot(aes(Q1, Q2)) +
@@ -822,9 +822,9 @@ setNames(melt(
     aesthetics = c("fill"), label = c("1", "2", "neutral")
   )
 
-## ---- 20x20-queuing-4-n-visit ----
+## ---- 20x20-scheduling-4-n-visit ----
 
-n_visit <- np$load("binary/20x20-queuing-4-n-visit.npy")
+n_visit <- np$load("binary/20x20-scheduling-4-n-visit.npy")
 n_visit[n_visit == 0] <- NA
 
 setNames(melt(
@@ -867,10 +867,10 @@ setNames(melt(
   labs(fill = "Number of \nvisits") +
   scale_fill_scico(palette = "grayC", begin = 0.05, na.value = NA)
 
-# ---- 20x20-queuing-5 ----
+# ---- 20x20-scheduling-5 ----
 
 setNames(melt(
-  np$load("binary/20x20-queuing-5-q-on.npy")
+  np$load("binary/20x20-scheduling-5-q-on.npy")
 ), c("Q1", "Q2", "queue")) %>%
   mutate(Q1 = Q1 - 1, Q2 = Q2 - 1, queue = factor(as.integer(queue) + 1)) %>%
   ggplot(aes(Q1, Q2)) +
@@ -890,7 +890,7 @@ setNames(melt(
   scale_colour_manual(values = c("white", "black"), aesthetics = c("fill"))
 
 setNames(melt(
-  np$load("binary/20x20-queuing-5-q-off.npy")
+  np$load("binary/20x20-scheduling-5-q-off.npy")
 ), c("Q1", "Q2", "queue")) %>%
   mutate(Q1 = Q1 - 1, Q2 = Q2 - 1, queue = factor(as.integer(queue) + 1)) %>%
   ggplot(aes(Q1, Q2)) +
@@ -910,7 +910,7 @@ setNames(melt(
   scale_colour_manual(values = c("white", "black"), aesthetics = c("fill"))
 
 setNames(melt(
-  np$load("binary/20x20-queuing-5-v.npy")
+  np$load("binary/20x20-scheduling-5-v.npy")
 ), c("Q1", "Q2", "queue")) %>%
   mutate(Q1 = Q1 - 1, Q2 = Q2 - 1, queue = factor(as.integer(queue) + 1)) %>%
   ggplot(aes(Q1, Q2)) +

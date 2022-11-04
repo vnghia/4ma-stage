@@ -76,7 +76,7 @@ This is the internship description: _"Markov decisions processes (MDPs) and thei
 
 In this internship, we are interested in learning an efficient policy for some dynamic systems where the internal settings (transitions rate) of the system depend on some environments (or which environment the system is in). We could take one decision at a specific time (doing some things or even doing nothing) to make the system run more efficiently (faster or cheaper depends on each type of problem). However, we can only observe the state of the system (for example: the number of remaining tasks) and not the environments when taking decisions. And therefore, we will explorer Q-learning and derived techniques since they does not need to know the internal settings of the systems. In this report, we focus ourselves on two following system models.
 
-## Queuing system
+## Scheduling system
 
 ### Parameters
 
@@ -84,7 +84,7 @@ We have $n$ classes of queue $Q_{1}, \dots, Q_{n}$, and $L_{1}, \dots, L_{n}$ th
 
 ```{=latex}
 \begin{table}[!htbp]
-\caption{Queuing system parameters}
+\caption{Scheduling system parameters}
 \begin{center}
 \begin{tabular}{c c c c c}
     \hline
@@ -204,7 +204,7 @@ The agent will decide which queues should be activated. His goal is to minimize 
   ([xshift=1.5cm]q-n.east);
 \path ([xshift=0.5cm]q-2.south) -- ([xshift=0.5cm]q-n.north) node [font=\LARGE, midway, sloped] {$\dots$};
 \end{tikzpicture}
-\caption[Visualization of the queuing system when the agent activates queue 2]{Visualization of the queuing system when the agent activates queue 2, the bold lines represent the flow of jobs inside the system.}
+\caption[Visualization of the scheduling system when the agent activates queue 2]{Visualization of the scheduling system when the agent activates queue 2, the bold lines represent the flow of jobs inside the system.}
 \end{figure}
 ```
 
@@ -235,7 +235,7 @@ After obtaining all the information above, we use that discrete probability dist
 
 ### Parameters
 
-For the load-balancing system, we only have one stream of job arrivals with rate $\lambda$ and $n$ queues. Same as above, The queues capacities (holding cost and departure rate) also depend on which environment they are in. Therefore, we have similar parameters to the one of the queuing system.  The only difference in this system is that instead of having multiple arrival rate that depends on the class of queue as well as the environment, we have only one global arrival rate $\lambda$. A table summarizing the parameters of this system is shown below.
+For the load-balancing system, we only have one stream of job arrivals with rate $\lambda$ and $n$ queues. Same as above, The queues capacities (holding cost and departure rate) also depend on which environment they are in. Therefore, we have similar parameters to the one of the scheduling system.  The only difference in this system is that instead of having multiple arrival rate that depends on the class of queue as well as the environment, we have only one global arrival rate $\lambda$. A table summarizing the parameters of this system is shown below.
 
 ```{=latex}
 \begin{table}[!htbp]
@@ -556,12 +556,12 @@ In this report, we want to investigate the Q-learning algorithm when applied to 
 
 ### From Python to C++
 
-In this section, we document some difficulties while implementing the framework and how we overcome it. For illustration purpose, we will test the algorithm with a very simple problem of the [queuing system](#queuing-system)
+In this section, we document some difficulties while implementing the framework and how we overcome it. For illustration purpose, we will test the algorithm with a very simple problem of the [scheduling system](#scheduling-system)
 and linear cost function with no environment (or constant environment). The parameter of this system is show in table \@ref(tab:q-learning-test).
 
 ```{=latex}
 \begin{table}[!htbp]
-\caption{Simple queuing problem for testing}
+\caption{Simple scheduling problem for testing}
 \begin{center}
 \begin{tabular}{c c c}
     \hline
@@ -757,13 +757,13 @@ After $\pi(E)$ converges to $\tilde{\pi}(E)$ and using \@ref(eq:p-s), we have th
 
 ## No environment changing (MDP)
 
-### Queuing
+### Scheduling
 
 First we will try with the linear cost. This is the simplest case and since it is proven mathematically (?), it is only a test to show that all algorithms works correctly. We will try two tuples of parameters, the first one will be:
 
 ```{=latex}
 \begin{table}[!htbp]
-\caption{Simple queuing 1}
+\caption{Simple scheduling 1}
 \begin{center}
 \begin{tabular}{c c c}
     \hline
@@ -777,22 +777,22 @@ First we will try with the linear cost. This is the simplest case and since it i
     \hline
 \end{tabular}
 \end{center}
-\label{tab:simple-queuing-1}
+\label{tab:simple-scheduling-1}
 \end{table}
 ```
 
 The theoretical optimal action here is $1$.
 
-(ref:title-simple-queuing-1) Result of table \@ref(tab:simple-queuing-1) for 20x20 case. $\gamma = 0.999$, $\epsilon = 0.999$.
+(ref:title-simple-scheduling-1) Result of table \@ref(tab:simple-scheduling-1) for 20x20 case. $\gamma = 0.999$, $\epsilon = 0.999$.
 
-```{r, 20x20-simple-queuing-1, fig.show="hold", out.width="33%", fig.align="center", fig.cap="(ref:title-simple-queuing-1)", fig.subcap=c("Online Q-learning", "Offline Q-learning", "Value iterations")}
+```{r, 20x20-simple-scheduling-1, fig.show="hold", out.width="33%", fig.align="center", fig.cap="(ref:title-simple-scheduling-1)", fig.subcap=c("Online Q-learning", "Offline Q-learning", "Value iterations")}
 ```
 
 And the second one is nearly the same, except the holding cost is reverse, and therefore the optimal action here is $2$:
 
 ```{=latex}
 \begin{table}[!htbp]
-\caption{Simple queuing 2}
+\caption{Simple scheduling 2}
 \begin{center}
 \begin{tabular}{c c c}
     \hline
@@ -806,13 +806,13 @@ And the second one is nearly the same, except the holding cost is reverse, and t
     \hline
 \end{tabular}
 \end{center}
-\label{tab:simple-queuing-2}
+\label{tab:simple-scheduling-2}
 \end{table}
 ```
 
-(ref:title-simple-queuing-2) Result of table \@ref(tab:simple-queuing-2) for 20x20 case. $\gamma = 0.999$, $\epsilon = 0.999$.
+(ref:title-simple-scheduling-2) Result of table \@ref(tab:simple-scheduling-2) for 20x20 case. $\gamma = 0.999$, $\epsilon = 0.999$.
 
-```{r, 20x20-simple-queuing-2, fig.show="hold", out.width="33%", fig.align="center", fig.cap="(ref:title-simple-queuing-2)", fig.subcap=c("Online Q-learning", "Offline Q-learning", "Value iterations")}
+```{r, 20x20-simple-scheduling-2, fig.show="hold", out.width="33%", fig.align="center", fig.cap="(ref:title-simple-scheduling-2)", fig.subcap=c("Online Q-learning", "Offline Q-learning", "Value iterations")}
 ```
 
 As we can see, all three algorithms work well for this simple case. We will move to more complex case.
@@ -1034,7 +1034,7 @@ Therefore, $\mathcal{M}_{\alpha'} \Tau = \Tau$.
 \end{proof}
 ```
 
-### Queuing
+### Scheduling
 
 #### Small $\alpha$
 
@@ -1042,7 +1042,7 @@ We start with a simple parameter as below:
 
 ```{=latex}
 \begin{table}[!htbp]
-\caption{Queuing 1}
+\caption{Scheduling 1}
 \begin{center}
 \begin{tabular}{c c c c}
     \hline
@@ -1057,14 +1057,14 @@ We start with a simple parameter as below:
     & Departure rate & $0.3$ & \\    
     \hline
 \end{tabular}
-\label{tab:queuing-1}
+\label{tab:scheduling-1}
 \end{center}
 \end{table}
 ```
 
 ```{=latex}
 \begin{table}[!htbp]
-\caption{Queuing 2}
+\caption{Scheduling 2}
 \begin{center}
 \begin{tabular}{c c c c}
     \hline
@@ -1079,14 +1079,14 @@ We start with a simple parameter as below:
     & Departure rate & $0.3$ & \\    
     \hline
 \end{tabular}
-\label{tab:queuing-2}
+\label{tab:scheduling-2}
 \end{center}
 \end{table}
 ```
 
 ```{=latex}
 \begin{table}[!htbp]
-\caption{Matrix transition of the environment of $Q_{1}$ of table \ref{tab:queuing-1} and table \ref{tab:queuing-2}}
+\caption{Matrix transition of the environment of $Q_{1}$ of table \ref{tab:scheduling-1} and table \ref{tab:scheduling-2}}
 \begin{center}
 \begin{tabular}{c c c}
     \hline
@@ -1098,20 +1098,20 @@ We start with a simple parameter as below:
     \hline
 \end{tabular}
 \end{center}
-\label{tab:queuing-1-mat-1}
+\label{tab:scheduling-1-mat-1}
 \end{table}
 ```
 
-(ref:title-queuing-1) Result of table \@ref(tab:queuing-1) (upper) and \@ref(tab:queuing-2) (lower) for 20x20 case. $\gamma = 0.999$, $\epsilon = 0.999$.
+(ref:title-scheduling-1) Result of table \@ref(tab:scheduling-1) (upper) and \@ref(tab:scheduling-2) (lower) for 20x20 case. $\gamma = 0.999$, $\epsilon = 0.999$.
 
-```{r, 20x20-queuing-1-2, fig.show="hold", fig.ncol=3, out.width="33%", fig.align="center", fig.cap="(ref:title-queuing-1)", fig.subcap=c("Online Q-learning", "Offline Q-learning", "Value iterations", "Online Q-learning", "Offline Q-learning", "Value iterations")}
+```{r, 20x20-scheduling-1-2, fig.show="hold", fig.ncol=3, out.width="33%", fig.align="center", fig.cap="(ref:title-scheduling-1)", fig.subcap=c("Online Q-learning", "Offline Q-learning", "Value iterations", "Online Q-learning", "Offline Q-learning", "Value iterations")}
 ```
 
 First, for both cases, the solution of equation \@ref(eq:steady-prob) is $\Pi = (0.5, 0.5)$ with $\mathcal{E} = \{(m_{1}, m_{1}), (m_{2}, m_{1})\}$ (since queue $2$ has only one environment). Furthermore, from equation \@ref(eq:p-tilde), the value iteration method is actually a MDP problem as above with the following parameters.
 
 ```{=latex}
 \begin{table}[!htbp]
-\caption{Empirical MDP of table \ref{tab:queuing-1} and table \ref{tab:queuing-2}}
+\caption{Empirical MDP of table \ref{tab:scheduling-1} and table \ref{tab:scheduling-2}}
 \begin{center}
 \begin{tabular}{c c c}
     \hline
@@ -1125,19 +1125,19 @@ First, for both cases, the solution of equation \@ref(eq:steady-prob) is $\Pi = 
     \hline
 \end{tabular}
 \end{center}
-\label{tab:mdp-queuing-1}
+\label{tab:mdp-scheduling-1}
 \end{table}
 ```
 
-As in (??), the solution of table \@ref(tab:mdp-queuing-1) is serving queue $1$, which is also the result of the value iteration method on both table \@ref(tab:queuing-1) and table \@ref(tab:queuing-2).
+As in (??), the solution of table \@ref(tab:mdp-scheduling-1) is serving queue $1$, which is also the result of the value iteration method on both table \@ref(tab:scheduling-1) and table \@ref(tab:scheduling-2).
 
-And finally, Q-learning also captures quite well these information and give us a similar result instead of choosing which queue has less cost in the initial environment (queue $1$ for table \@ref(tab:queuing-1) and queue $2$ for table \@ref(tab:queuing-2)) even though the speed of environment changing is slow.
+And finally, Q-learning also captures quite well these information and give us a similar result instead of choosing which queue has less cost in the initial environment (queue $1$ for table \@ref(tab:scheduling-1) and queue $2$ for table \@ref(tab:scheduling-2)) even though the speed of environment changing is slow.
 
 We now move to a more complex case as follow:
 
 ```{=latex}
 \begin{table}[!htbp]
-\caption{Queuing 3}
+\caption{Scheduling 3}
 \begin{center}
 \begin{tabular}{c c c c}
     \hline
@@ -1152,14 +1152,14 @@ We now move to a more complex case as follow:
     & Departure rate & $0.3$ & $0.32$ \\    
     \hline
 \end{tabular}
-\label{tab:queuing-3}
+\label{tab:scheduling-3}
 \end{center}
 \end{table}
 ```
 
 ```{=latex}
 \begin{table}[!htbp]
-\caption{Matrix transition of the environment of $Q_{1}$ of table \ref{tab:queuing-3}}
+\caption{Matrix transition of the environment of $Q_{1}$ of table \ref{tab:scheduling-3}}
 \begin{center}
 \begin{tabular}{c c c}
     \hline
@@ -1171,13 +1171,13 @@ We now move to a more complex case as follow:
     \hline
 \end{tabular}
 \end{center}
-\label{tab:queuing-3-mat-1}
+\label{tab:scheduling-3-mat-1}
 \end{table}
 ```
 
 ```{=latex}
 \begin{table}[!htbp]
-\caption{Matrix transition of the environment of $Q_{2}$ of table \ref{tab:queuing-3}}
+\caption{Matrix transition of the environment of $Q_{2}$ of table \ref{tab:scheduling-3}}
 \begin{center}
 \begin{tabular}{c c c}
     \hline
@@ -1189,7 +1189,7 @@ We now move to a more complex case as follow:
     \hline
 \end{tabular}
 \end{center}
-\label{tab:queuing-3-mat-2}
+\label{tab:scheduling-3-mat-2}
 \end{table}
 ```
 
@@ -1197,7 +1197,7 @@ Using the same logic as above, we can transform it into a MDP problem as follow:
 
 ```{=latex}
 \begin{table}[!htbp]
-\caption{Empirical MDP of table \ref{tab:queuing-3}}
+\caption{Empirical MDP of table \ref{tab:scheduling-3}}
 \begin{center}
 \begin{tabular}{c c c}
     \hline
@@ -1211,24 +1211,24 @@ Using the same logic as above, we can transform it into a MDP problem as follow:
     \hline
 \end{tabular}
 \end{center}
-\label{tab:mdp-queuing-3}
+\label{tab:mdp-scheduling-3}
 \end{table}
 ```
 
-(ref:title-queuing-3) Result of table \@ref(tab:queuing-3) for 20x20 case. $\gamma = 0.999$, $\epsilon = 0.999$.
+(ref:title-scheduling-3) Result of table \@ref(tab:scheduling-3) for 20x20 case. $\gamma = 0.999$, $\epsilon = 0.999$.
 
-```{r, 20x20-queuing-3, fig.show="hold", out.width="33%", fig.align="center", fig.cap="(ref:title-queuing-3)", fig.subcap=c("Online Q-learning", "Offline Q-learning", "Value iterations")}
+```{r, 20x20-scheduling-3, fig.show="hold", out.width="33%", fig.align="center", fig.cap="(ref:title-scheduling-3)", fig.subcap=c("Online Q-learning", "Offline Q-learning", "Value iterations")}
 ```
 
-The result of value iterations on the right side is also the same as the value iterations of table \@ref(tab:mdp-queuing-3). Both actually gives the same numerical estimation of $V_{*}$. Q-learning is also good at learning this type of system and we can see that it deduces a similar policy to the value iteration's one.
+The result of value iterations on the right side is also the same as the value iterations of table \@ref(tab:mdp-scheduling-3). Both actually gives the same numerical estimation of $V_{*}$. Q-learning is also good at learning this type of system and we can see that it deduces a similar policy to the value iteration's one.
 
 #### Big $\alpha$
 
-We take the same parameters as in table \@ref(tab:queuing-2) with a different $\alpha$.
+We take the same parameters as in table \@ref(tab:scheduling-2) with a different $\alpha$.
 
 ```{=latex}
 \begin{table}[!htbp]
-\caption{Matrix transition of the environment of $Q_{1}$ of table \ref{tab:queuing-2}}
+\caption{Matrix transition of the environment of $Q_{1}$ of table \ref{tab:scheduling-2}}
 \begin{center}
 \begin{tabular}{c c c}
     \hline
@@ -1240,27 +1240,27 @@ We take the same parameters as in table \@ref(tab:queuing-2) with a different $\
     \hline
 \end{tabular}
 \end{center}
-\label{tab:queuing-4-mat-1}
+\label{tab:scheduling-4-mat-1}
 \end{table}
 ```
 
-(ref:title-queuing-4) Result of table \@ref(tab:queuing-4-mat-1) for 20x20 case. $\gamma = 0.999$, $\epsilon = 0.999$.
+(ref:title-scheduling-4) Result of table \@ref(tab:scheduling-4-mat-1) for 20x20 case. $\gamma = 0.999$, $\epsilon = 0.999$.
 
-```{r, 20x20-queuing-4, fig.show="hold", out.width="33%", fig.align="center", fig.cap="(ref:title-queuing-4)", fig.subcap=c("Online Q-learning", "Offline Q-learning", "Value iterations")}
+```{r, 20x20-scheduling-4, fig.show="hold", out.width="33%", fig.align="center", fig.cap="(ref:title-scheduling-4)", fig.subcap=c("Online Q-learning", "Offline Q-learning", "Value iterations")}
 ```
 
 As explained above, the policy perceived by the value iterations is quite similar as above. The majority of Q-learning cells are choosing action $1$, especially the ones near the origin. However, Q-learning still contains a lot of noise, a sign that suggests we have not iterated enough. Although the number of iterations ($3 \times 10^{10}$) is sufficiently large, bigger $\alpha$ requires a lot more iterations because in that case, the system does not evolve much in trajectory but in environment instead (for example we could think that the system will stuck at one cell near the origin and the environment state constantly changes after each iteration). The figure below shown that phenomena:
 
-(ref:title-queuing-4-n-visit) Number of visits of online Q-learning on table \@ref(tab:queuing-4-mat-1) for 20x20 case. The highest number of visit is $\approx 4 \times 10^{9}$ (at $(0, 0)$) while the lowest one is $\approx 5 \times 10^5$ (at $(20, 20)$).
+(ref:title-scheduling-4-n-visit) Number of visits of online Q-learning on table \@ref(tab:scheduling-4-mat-1) for 20x20 case. The highest number of visit is $\approx 4 \times 10^{9}$ (at $(0, 0)$) while the lowest one is $\approx 5 \times 10^5$ (at $(20, 20)$).
 
-```{r, 20x20-queuing-4-n-visit, fig.show="hold", out.width="40%", fig.align="center", fig.cap="(ref:title-queuing-4-n-visit)", fig.subcap=c("Activating $Q_{1}$", "Activating $Q_{2}$")}
+```{r, 20x20-scheduling-4-n-visit, fig.show="hold", out.width="40%", fig.align="center", fig.cap="(ref:title-scheduling-4-n-visit)", fig.subcap=c("Activating $Q_{1}$", "Activating $Q_{2}$")}
 ```
 
-We also try the complex example of table \@ref(tab:queuing-3) with $\alpha = 10^{2}$. Below is the policy perceived by Q-learning and value iterations.
+We also try the complex example of table \@ref(tab:scheduling-3) with $\alpha = 10^{2}$. Below is the policy perceived by Q-learning and value iterations.
 
-(ref:title-queuing-5) Result of table \@ref(tab:queuing-3) with $\alpha = 10^{2}$ for 20x20 case. $\gamma = 0.999$, $\epsilon = 0.999$.
+(ref:title-scheduling-5) Result of table \@ref(tab:scheduling-3) with $\alpha = 10^{2}$ for 20x20 case. $\gamma = 0.999$, $\epsilon = 0.999$.
 
-```{r, 20x20-queuing-5, fig.show="hold", out.width="33%", fig.align="center", fig.cap="(ref:title-queuing-5)", fig.subcap=c("Online Q-learning", "Offline Q-learning", "Value iterations")}
+```{r, 20x20-scheduling-5, fig.show="hold", out.width="33%", fig.align="center", fig.cap="(ref:title-scheduling-5)", fig.subcap=c("Online Q-learning", "Offline Q-learning", "Value iterations")}
 ```
 
 Same as above, the majority of Q-learning choose the optimal action of the empirical MDP. But it still contains some noisy cells that is not received enough number of visit.
@@ -1333,7 +1333,7 @@ We will start with a simple case as follow:
 
 (ref:title-lb-1) Result of table \@ref(tab:lb-1) for 20x20 case. $\gamma = 0.999$, $\epsilon = 0.999$.
 
-```{r, 20x20-lb-1, fig.show="hold", out.width="33%", fig.align="center", fig.cap="(ref:title-queuing-5)", fig.subcap=c("Online Q-learning", "Offline Q-learning", "Value iterations")}
+```{r, 20x20-lb-1, fig.show="hold", out.width="33%", fig.align="center", fig.cap="(ref:title-scheduling-5)", fig.subcap=c("Online Q-learning", "Offline Q-learning", "Value iterations")}
 ```
 
 The value iterations shows the same result as expected with a neutral diagonal line. For Q-learning, Although there is a large hole in the center of the grid, we could still see a diagonal line that split the grid into two regions as in the optimal policy of the empirical MDP.
@@ -1344,7 +1344,7 @@ Since the learning capacity of Q-learning is not really good for complex load ba
 
 (ref:title-lb-2) Result of table \@ref(tab:lb-1) with $\alpha = 10^{2}$ for 20x20 case. $\gamma = 0.999$, $\epsilon = 0.999$.
 
-```{r, 20x20-lb-2, fig.show="hold", out.width="33%", fig.align="center", fig.cap="(ref:title-queuing-5)", fig.subcap=c("Online Q-learning", "Offline Q-learning", "Value iterations")}
+```{r, 20x20-lb-2, fig.show="hold", out.width="33%", fig.align="center", fig.cap="(ref:title-scheduling-5)", fig.subcap=c("Online Q-learning", "Offline Q-learning", "Value iterations")}
 ```
 
 Unfortunately, the Q-learning result here is completely random and we will need to run a lot longer simulation for it to be converged.
