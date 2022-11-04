@@ -166,16 +166,23 @@
 I would like to thank my supervisors: Urtzi AYESTA, Maaike VERLOOP and Matthieu JONCKHEERE for giving me an opportunity to work on this internship as well as your guidance and patience during the whole internship !
 
 \newpage
+
+\begin{center}
+  \underline{\textbf{Abstract}}
+\end{center}
+Markov decision processes (MDPs) and their model free counterpart in reinforcement learning (RL) have known a large success in the last two decades. Although research in these two areas has been taking place for more than fifty years, the field gained momentum only recently following the advent of powerful hardware and algorithms with which suprahuman performance were obtained in games like Chess or Go. However, these impressive successes often rely on quite exceptional hardware possibilities and cannot be applied in many usual contexts, where, for instance, the volume of data available or the amount of computing power is more restricted. To define the next generation of more democratic and widely applicable algorithms, such methods still need to deal with very demanding exploration issues as soon as the state/action spaces are not small.
+
+The internship aims to improve the efficiency of learning algorithms by leveraging the structure of the underlying problem and focus mainly on model free approach. The final report is divided into 8 parts. After a first introduction about the laboratory, we then present two situations where we study more carefully. Next, a short recap about MDPs and reinforcement learning, as well as discussions about three learning methods used in this report are presented. Finally, we compare the result of each method and have a final conclusion.
+
+\newpage
+
 \pagenumbering{arabic}
 
-\hypertarget{introduction}{%
-\section{Introduction}\label{introduction}}
-
 \hypertarget{institut-de-recherche-en-informatique-de-toulouse-irit}{%
-\subsection{Institut de Recherche en Informatique de Toulouse (IRIT)}\label{institut-de-recherche-en-informatique-de-toulouse-irit}}
+\section{Institut de Recherche en Informatique de Toulouse (IRIT)}\label{institut-de-recherche-en-informatique-de-toulouse-irit}}
 
 \hypertarget{about-the-institut}{%
-\subsubsection{About the institut}\label{about-the-institut}}
+\subsection{About the institut}\label{about-the-institut}}
 
 The Institut de Recherche en Informatique de Toulouse (IRIT), created in 1990, is a Joint Research Unit (UMR 5505) of the Centre National de la Recherche Scientifique (CNRS), the Institut National Polytechnique de Toulouse (INP), the Université Paul Sabatier Toulouse3 (UT3), the Université Toulouse1 Capitole (UT1) and the Université de Toulouse Jean Jaurès (UT2J).
 
@@ -210,7 +217,7 @@ As well as strategic action:
 My team is coming from team RMESS (Réseaux, Mobiles, Embarqués, Sans fil, Satellites) and belongs to departement ASR (Architecture, Systèmes, Réseaux).
 
 \hypertarget{organization}{%
-\subsubsection{Organization}\label{organization}}
+\subsection{Organization}\label{organization}}
 
 The 24 research groups of the laboratory are dispatched in seven scientific departments:
 
@@ -231,11 +238,6 @@ The 24 research groups of the laboratory are dispatched in seven scientific depa
 \item
   Dpt SI : Signals, Images
 \end{itemize}
-
-\hypertarget{the-internship}{%
-\subsection{The internship}\label{the-internship}}
-
-This is the internship description: \emph{``Markov decision processes (MDPs) and their model free counterpart in reinforcement learning (RL) have known a large success in the last two decades. Although research in these two areas has been taking place for more than fifty years, the field gained momentum only recently following the advent of powerful hardware and algorithms with which supra­human performance were obtained in games like Chess or Go. However, these impressive successes often rely on quite exceptional hardware possibilities and cannot be applied in many usual contexts, where, for instance, the volume of data available or the amount of computing power is more restricted. To define the next generation of more democratic and widely applicable algorithms, such methods still need to deal with very demanding exploration issues as soon as the state/action spaces are not small. One way around this is to use underlying knowledge and structure present in many MDPs. This is especially true for problems related to scheduling and resources sharing in among others server farms, clouds, and cellular wireless networks. The internships will revolve around this theme of improving the efficiency of learning algorithms by leveraging the structure of the underlying problem and focus mainly on model ­free approach.''}
 
 \hypertarget{system-settings}{%
 \section{System settings}\label{system-settings}}
@@ -1617,7 +1619,7 @@ Unfortunately, the Q-learning result here is completely random and we will need 
 \hypertarget{conclusion-and-extension}{%
 \section{Conclusion and extension}\label{conclusion-and-extension}}
 
-Through the internship, we have seen different behaviors of each method in solving MDP and POMDP. The table below summarizes the advantages and weaknesses of each method in our report:
+First, the table below summarizes the advantages and weaknesses of each method in our report:
 
 \begin{longtable}[]{@{}llll@{}}
 \caption{Comparison between methods for MDP / POMDP problem.}\tabularnewline
@@ -1701,6 +1703,8 @@ This method can not work on a POMDP problem, but said problem can be converted t
 \end{minipage}\tabularnewline
 \bottomrule
 \end{longtable}
+
+Through the report, we have seen different behaviors of each method in solving MDP and POMDP. In conclusion, Q-learning can learn the underlying structure of simple systems (as seen in figure \ref{fig:20x20-simple-scheduling-1}, \ref{fig:20x20-simple-scheduling-2}, \ref{fig:20x20-simple-lb-1}, \ref{fig:20x20-scheduling-1-2}, \ref{fig:20x20-scheduling-3}). But when the system becomes more complex, it might take much longer to capture this information (the case of figure \ref{fig:20x20-scheduling-4}, \ref{fig:20x20-lb-1}) or completely fail to do so (figure \ref{fig:20x20-simple-lb-2}, \ref{fig:20x20-simple-lb-3}, \ref{fig:20x20-simple-lb-3-2-11}, \ref{fig:20x20-simple-lb-4}, \ref{fig:20x20-lb-2}). Furthermore, modeling and training takes a particularly long time so more work is needed to have a complete understanding about what Q-learning learns in a system with partial information.
 
 Finally, we will end the report with an unanswered question: \textbf{``How can we know that the policy we obtained is the optimal policy in case of POMDP ?''}. This question is very important because if we have the optimal policy beforehand, not necessarily through a model free method, we can later compare it with the result of another method to get an idea if that method works with our problem or not (like what we did with the MDP problem: compare the Q-learning result and the value iterations one). However, because of the limited context of the internship, we are not able to answer that question and left it as a possibility for future work.
 
