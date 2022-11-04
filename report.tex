@@ -207,7 +207,7 @@ As well as strategic action:
   Scientific Computing, Big Data and AI
 \end{itemize}
 
-My team is comming from team RMESS (Réseaux, Mobiles, Embarqués, Sans fil, Satellites) and belongs to departement ASR (Architecture, Systèmes, Réseaux).
+My team is coming from team RMESS (Réseaux, Mobiles, Embarqués, Sans fil, Satellites) and belongs to departement ASR (Architecture, Systèmes, Réseaux).
 
 \hypertarget{organization}{%
 \subsubsection{Organization}\label{organization}}
@@ -235,12 +235,12 @@ The 24 research groups of the laboratory are dispatched in seven scientific depa
 \hypertarget{the-internship}{%
 \subsection{The internship}\label{the-internship}}
 
-This is the internship description: \emph{``Markov decisions processes (MDPs) and their model free counterpart in reinforcement learning (RL) have known a large success in the last two decades. Although research in these two areas has been taking place for more than fifty years, the field gained momentum only recently following the advent of powerful hardware and algorithms with which supra­human performance were obtained in games like Chess or Go. However, these impressive successes often rely on quite exceptional hardware possibilities and cannot be applied in many usual contexts, where, for instance, the volume of data available or the amount of computing power is more restricted. To define the next generation of more democratic and widely applicable algorithms, such methods still need to deal with very demanding exploration issues as soon as the state/action spaces are not small. One way around this is to use underlying knowledge and structure present in many MDPs. This is especially true for problems related to scheduling and resources sharing in among others server farms, clouds, and cellular wireless networks. The internships will revolve around this theme of improving the efficiency of learning algorithms by leveraging the structure of the underlying problem and focus mainly on model ­free approach.''}
+This is the internship description: \emph{``Markov decision processes (MDPs) and their model free counterpart in reinforcement learning (RL) have known a large success in the last two decades. Although research in these two areas has been taking place for more than fifty years, the field gained momentum only recently following the advent of powerful hardware and algorithms with which supra­human performance were obtained in games like Chess or Go. However, these impressive successes often rely on quite exceptional hardware possibilities and cannot be applied in many usual contexts, where, for instance, the volume of data available or the amount of computing power is more restricted. To define the next generation of more democratic and widely applicable algorithms, such methods still need to deal with very demanding exploration issues as soon as the state/action spaces are not small. One way around this is to use underlying knowledge and structure present in many MDPs. This is especially true for problems related to scheduling and resources sharing in among others server farms, clouds, and cellular wireless networks. The internships will revolve around this theme of improving the efficiency of learning algorithms by leveraging the structure of the underlying problem and focus mainly on model ­free approach.''}
 
 \hypertarget{system-settings}{%
 \section{System settings}\label{system-settings}}
 
-In this internship, we are interested in learning an efficient policy for some dynamic systems where the internal settings (transitions rate) of the system depend on some environments (or which environment the system is in). We could take one decision at a specific time (doing some things or even doing nothing) to make the system run more efficiently (faster or cheaper depends on each type of problem). However, we can only observe the state of the system (for example: the number of remaining tasks) and not the environments when taking decisions. And therefore, we will explorer Q-learning and derived techniques since they does not need to know the internal settings of the systems. In this report, we focus ourselves on two following system models.
+In this internship, we are interested in learning an efficient policy for some dynamic systems where the internal settings (transitions rate) of the system depend on some unobservable environments (or which environment the system is in), more generally, what is the optimal policy in the case of partial information. We could make one decision at a specific time (doing some things or even doing nothing) to make the system run more efficiently (faster or cheaper depending on each type of problem). However, we can only observe the state of the system (for example: the number of remaining tasks) and not the environments when making decisions. And therefore, we will explore Q-learning and derived techniques since they do not need to know the internal settings of the systems. In this report, we focus ourselves on two following system models.
 
 \hypertarget{scheduling-system}{%
 \subsection{Scheduling system}\label{scheduling-system}}
@@ -248,7 +248,7 @@ In this internship, we are interested in learning an efficient policy for some d
 \hypertarget{parameters}{%
 \subsubsection{Parameters}\label{parameters}}
 
-We have \(n\) classes of queue \(Q_{1}, \dots, Q_{n}\), and \(L_{1}, \dots, L_{n}\) the maximum number of jobs (limit) on each class of queue. For each \(Q_{i}\), its behavior is fully controlled by which environment it is in. An environment can be in one of the states \(m_{1}, \dots, m_{m}\). And the environment of class \(Q_{i}\) is a random variable, denoted by \(M_{i}\), which is in one of the states \(m_{1}, \dots, m_{m}\). For each environment \(m_{j}\), \(Q_{i}\) has their own holding cost \(c_{i, j}\) (the cost of one unfinished job on the queue), arrival rate \(\lambda_{i, j}\) (the rate of one more job arriving to the queue) and departure rate \(\mu_{i, j}\) (the rate that a job departs the system (if served)). Furthermore, the environment \(M_{i}\) can change from \(m_{j}\) and \(m_{k}\) with the rate of \(\xi_{i, j, k}\). A table summarizing all parameters is shown below.
+We have \(n\) classes of queues \(Q_{1}, \dots, Q_{n}\), and \(L_{1}, \dots, L_{n}\) the maximum number of jobs (limit) on each class of queue. For each \(Q_{i}\), its behavior is fully controlled by which environment it is in. An environment can be in one of the states \(m_{1}, \dots, m_{m}\). And the environment of class \(Q_{i}\) is a random variable, denoted by \(M_{i}\), which is in one of the states \(m_{1}, \dots, m_{m}\). For each environment \(m_{j}\), \(Q_{i}\) has their own holding cost \(c_{i, j}\) (the cost of one unfinished job on the queue), arrival rate \(\lambda_{i, j}\) (the rate of one more job arriving to the queue) and departure rate \(\mu_{i, j}\) (the rate that a job departs the system (if served)). Furthermore, the environment \(M_{i}\) can change from \(m_{j}\) and \(m_{k}\) with the rate of \(\xi_{i, j, k}\). A table summarizing all parameters is shown below.
 
 \begin{table}[!htbp]
 \caption{Scheduling system parameters}
@@ -380,25 +380,25 @@ The agent will decide which queues should be activated. His goal is to minimize 
 \hypertarget{evolution}{%
 \subsubsection{Evolution}\label{evolution}}
 
-In the continuos-time scale, each type of event (job arrival, job departure and environment changing) happens independently. That system is quite hard to program, therefore, we used a technique called ``uniformization'' to move from the continuos-time scale to discrete-time scale. In this time scale, at a given time, only one event can take place, regardless of their type.
+In the continuous-time scale, each type of event (job arrival, job departure and environment changing) happens independently. That system is quite hard to program, therefore, we used a technique called ``uniformization'' to move from the continuous-time scale to discrete-time scale. In this time scale, at a given time, only one event can take place, regardless of their type.
 
 In particular, given the system state is \((S, E)\), the agent decides to activate queue \(a\). One of these \(n + 1 + n(m - 1) + 1\) events can happen.
 
 \begin{itemize}
 \tightlist
 \item
-  The job of class \(Q_{i}\) increases by 1. Because there are \(n\) classes, we have \(n\) events of this kind with the rate \(\lambda_{1, M_{1}}, \dots, \lambda_{n, M_{n}}\) respectively (if the number of job of class \(Q_{i}\) reaches an upper limit, we consider \(\lambda_{i, M_{i}} = 0\)).
+  The number of jobs in class \(Q_{i}\) increases by 1. Because there are \(n\) classes, we have \(n\) events of this kind with the rate \(\lambda_{1, M_{1}}, \dots, \lambda_{n, M_{n}}\) respectively (if the number of job of class \(Q_{i}\) reaches an upper limit, we consider \(\lambda_{i, M_{i}} = 0\)).
 \item
-  The job of class \(Q_{a}\) decreases by 1. Because we can only activate only one class, there is only one event of this type and its rate is \(\mu_{a, M_{a}}\).
+  The number of jobs in class \(Q_{a}\) decreases by 1. Because we can only activate only one class, there is only one event of this type and its rate is \(\mu_{a, M_{a}}\).
 \item
   The environment of class \(Q_{i}\) changes to a different environment other than \(m_{i}\) and the rate changing to environment \(j\) is \(\xi_{i, M_{i}, j}\). Because there are \(m - 1\) possible changes for each class and there are \(n\) classes, the number of this kind of event is \(n(m - 1)\).
 \item
   And a special dummy event where nothing changes.
 \end{itemize}
 
-A discrete probability distribution is used to express that. In order to satisfy the condition of a probability distribution, all the rates above are divided by a normalization constant \(C\) to make sure that their sum are not greater than 1. If that sum is smaller than 1, the special dummy event is used to fill the gap so that the final sum will be equal to 1.
+A discrete probability distribution is used to express that. In order to satisfy the condition of a probability distribution, all the rates above are divided by a normalization constant \(C\) to make sure that their sum is not greater than 1. If that sum is smaller than 1, the special dummy event is used to fill the gap so that the final sum will be equal to 1.
 
-The normalization constant has the form as follow, which is deduced from the above evolution of the system.
+The normalization constant has the form as follows, which is deduced from the above evolution of the system.
 
 \[
 C = \sum_{i = 1}^{n} \max_{j} \lambda_{i, j} + \max_{i, j} \mu_{i, j} + \sum_{i = 1}^{n} \max_{j} \sum_{k = 1, k \neq j}^{m} \xi_{i, j, k} + \epsilon
@@ -414,7 +414,7 @@ After obtaining all the information above, we use that discrete probability dist
 \hypertarget{parameters-1}{%
 \subsubsection{Parameters}\label{parameters-1}}
 
-For the load-balancing system, we only have one stream of job arrivals with rate \(\lambda\) and \(n\) queues. Same as above, The queues capacities (holding cost and departure rate) also depend on which environment they are in. Therefore, we have similar parameters to the one of the scheduling system. The only difference in this system is that instead of having multiple arrival rate that depends on the class of queue as well as the environment, we have only one global arrival rate \(\lambda\). A table summarizing the parameters of this system is shown below.
+For the load-balancing system, we only have one stream of job arrivals with rate \(\lambda\) and \(n\) queues. Same as above, The queues capacities (holding cost and departure rate) also depend on which environment they are in. Therefore, we have similar parameters to the one of the scheduling system. The only difference in this system is that instead of having multiple arrival rates that depend on the class of queue as well as the environment, we have only one global arrival rate \(\lambda\). A table summarizing the parameters of this system is shown below.
 
 \begin{table}[!htbp]
 \caption{Load-balancing system parameters}
@@ -450,7 +450,7 @@ f_{1}(S, E) = \sum_{1}^{n} c_{i, M_{i}} X_{i}
 \hypertarget{agent-1}{%
 \subsubsection{Agent}\label{agent-1}}
 
-The goal of the agent is the same: minimizing the cost of the whole system. He also receive the same information: the observable state \(S\). The difference here is instead of having to deactivating some queues, all queues now run continuously. His mission is to choose which queue to send the new arriving job to. Only the chosen queue will have new job arriving, the other queues only have to process the remaining jobs of them.
+The goal of the agent is the same: minimizing the cost of the whole system. He also receives the same information: the observable state \(S\). The difference here is instead of having to deactivate some queues, all queues now run continuously. His mission is to choose which queue to send the new arriving job to. Only the chosen queue will have new jobs arriving, the other queues only have to process the remaining jobs.
 
 \begin{figure}
 \centering
@@ -501,20 +501,20 @@ The goal of the agent is the same: minimizing the cost of the whole system. He a
   ([xshift=4.5cm]q-n.east);
 \path ([xshift=0.5cm]q-2.south) -- ([xshift=0.5cm]q-n.north) node [font=\LARGE, midway, sloped] {$\dots$};
 \end{tikzpicture}
-\caption[Visualization of the load-balancing system when the agent sends job to queue 2]{Visualization of the load-balancing system when the agent sends job to queue 2, the bold lines represent the flow of jobs inside the system.}
+\caption[Visualization of the load-balancing system when the agent sends jobs to queue 2]{Visualization of the load-balancing system when the agent sends job to queue 2, the bold lines represent the flow of jobs inside the system.}
 \end{figure}
 
 \hypertarget{evolution-1}{%
 \subsubsection{Evolution}\label{evolution-1}}
 
-In this system, given its state is \((S, E)\), the agent decides to send job to queue \(a\). One of these \(1 + n + n(m - 1) + 1\) events can happen.
+In this system, given its state is \((S, E)\), the agent decides to send jobs to queue \(a\). One of these \(1 + n + n(m - 1) + 1\) events can happen.
 
 \begin{itemize}
 \tightlist
 \item
-  The job of class \(Q_{a}\) increases by 1. Because we can only send job to one queue, there is only one event of this type and its rate is \(\lambda\).
+  The number of jobs in class \(Q_{a}\) increases by 1. Because we can only send jobs to one queue, there is only one event of this type and its rate is \(\lambda\).
 \item
-  The job of class \(Q_{i}\) decreases by 1. Because there are \(n\) classes, we have \(n\) events of this kind with the rate \(\mu_{1, M_{1}}, \dots, \mu_{n, M_{n}}\) respectively (if the number of job of class \(Q_{i}\) reaches 0, we consider \(\mu_{i, M_{i}} = 0\)).
+  The number of jobs in class \(Q_{i}\) decreases by 1. Because there are \(n\) classes, we have \(n\) events of this kind with the rate \(\mu_{1, M_{1}}, \dots, \mu_{n, M_{n}}\) respectively (if the number of job of class \(Q_{i}\) reaches 0, we consider \(\mu_{i, M_{i}} = 0\)).
 \item
   The environment of class \(Q_{i}\) changes to a different environment other than \(m_{i}\) and the rate changing to environment \(j\) is \(\xi_{i, M_{i}, j}\). Because there are \(m - 1\) possible changes for each class and there are \(n\) classes, the number of this kind of event is \(n(m - 1)\).
 \item
@@ -530,7 +530,7 @@ C = \lambda + \sum_{i = 1}^{n} \max_{j} \mu_{i, j} + \sum_{i = 1}^{n} \max_{j} \
 \hypertarget{system-representation}{%
 \subsection{System representation}\label{system-representation}}
 
-In this internship, we limited ourselves on the cases where \(n = 2\) for both systems. A system of that kind can be represented as a grid where each side represents the evolution of each queue. In this report, we use the vertical side for the first queue, and the horizontal one for the second. Each cell of that grid represent a specific observable state of the system.
+In this internship, we limited ourselves on the cases where \(n = 2\) for both systems. A system of that kind can be represented as a grid where each side represents the evolution of each queue. In this report, we use the vertical side for the first queue, and the horizontal one for the second. Each cell of that grid represents a specific observable state of the system.
 
 \begin{figure}
 \centering
@@ -558,7 +558,7 @@ In this internship, we limited ourselves on the cases where \(n = 2\) for both s
 \hypertarget{reinforcement-learning}{%
 \section{Reinforcement learning}\label{reinforcement-learning}}
 
-Reinforcement learning is used for training the agent to attain his goal. In this session, we present a short summary and introduce some related notions that could be useful for later.
+Reinforcement learning is used for training the agent to attain his goal. In this section, we present a short summary and introduce some related notions that could be useful for later.
 
 \hypertarget{parameters-2}{%
 \subsection{Parameters}\label{parameters-2}}
@@ -577,7 +577,7 @@ A simple reinforcement learning is modeled by a markov decision process (MDP) wh
   \(R(S' | S, a)\): the immediate reward received after transitioning from state \(S\) to state \(S'\), due to action \(a\).
 \end{itemize}
 
-In addition, we have policy \(\pi(a | S) = \mathbb{P}[A_{t} = a | S_{t} = S]\), a distribution over actions given states. In our problem, there is also an unobservable state inside our system, therefore, our problem is no longer an MDP, but instead a partial observable markov decision process (POMDP). We will now continue discussing about the MDP and return to the POMDP in later section.
+In addition, we have policy \(\pi(a | S) = \mathbb{P}[A_{t} = a | S_{t} = S]\), a distribution over actions given states. In our problem, there is also an unobservable state inside our system, therefore, our problem is no longer an MDP, but instead a partial observable markov decision process (POMDP). We will now continue discussing the MDP and return to the POMDP in a later section.
 
 \hypertarget{bellman-equation}{%
 \subsection{Bellman equation}\label{bellman-equation}}
@@ -614,7 +614,7 @@ V_{\pi}(S) {}&= \mathbb{E}_{\pi}[G_{t} | S_{t} = S] \\
 \end{split}
 \end{equation}
 
-Furthermore, we see that the expected future return of \(Q_{\pi}(S, a)\) is the sum of the current reward \(R(S)\) as well as the expected return of the next state regardless action multiply by the probability of moving to that state. Therefore, we have the equation below:
+Furthermore, we see that the expected future return of \(Q_{\pi}(S, a)\) is the sum of the current reward \(R(S)\) as well as the expected return of the next state regardless of action multiplied by the probability of moving to that state. Therefore, we have the equation below:
 
 \begin{equation}
 Q_{\pi}(S, a) = R(S) + \gamma \sum_{S' \in \mathcal{S}} P(S' | S, a) V_{\pi}(S')
@@ -683,10 +683,10 @@ Our problem is a POMDP, the parameters could be seen as follow:
 \item
   \(P(S', E' | S, E, a)\): the transition probability that is clarified in the evolution section and depends on the both visible and hidden state (S, E).
 \item
-  \(R(S' | S, E, a)\): the immediate reward is \(-C\) where \(C\) is the total holding cost of the system. Since this function depends only on the the state (S, E) of system, we could write \(R(S, E)\) instead.
+  \(R(S' | S, E, a)\): the immediate reward is \(-C\) where \(C\) is the total holding cost of the system. Since this function depends only on the state (S, E) of the system, we could write \(R(S, E)\) instead.
 \end{itemize}
 
-Since the goal of the internship is not about solving the POMDP, in the later sections, we will explore how learning algorithms of MDP work in the context of unobservable environment.
+Since the goal of the internship is not about solving the POMDP, in the later sections, we will explore how learning algorithms of MDP work in the context of an unobservable environment.
 
 \hypertarget{online-q-learning}{%
 \section{Online Q-learning}\label{online-q-learning}}
@@ -694,7 +694,7 @@ Since the goal of the internship is not about solving the POMDP, in the later se
 \hypertarget{about-the-algorithm}{%
 \subsection{About the algorithm}\label{about-the-algorithm}}
 
-Online Q-learning is probably one of the most simple and popular algorithm for reinforcement learning problem. It is used to estimate \(Q_{*}(S, a) \,\, \forall S \in \mathcal{S} \text{ and } a \in \mathcal{A}\) while interacting with the system. This algorithm only requires the real system or a simulator to interact with, and not the internal settings of that system, which makes it fit the context of this internship and more broadly real-life for a MDP, where these settings can change at any time. Beside its simplicity and close to real life context, the algorithm is also proven to converge almost surely when the number of visits to each state goes to \(\infty\) in \autocite{q-learning-converge}. Visually, we can imagine that our agent will follow a grid trajectory of states and try to discover what is the action-value at that state with a specific action.
+Online Q-learning is probably one of the most simple and popular algorithms for reinforcement learning problems. It is used to estimate \(Q_{*}(S, a) \,\, \forall S \in \mathcal{S} \text{ and } a \in \mathcal{A}\) while interacting with the system. This algorithm only requires the real system or a simulator to interact with, and not the internal settings of that system, which makes it fit the context of this internship and more broadly real-life for a MDP, where these settings can change at any time. Beside its simplicity and close to real life context, the algorithm is also proven to converge almost surely when the number of visits to each state goes to \(\infty\) in \autocite{q-learning-converge}. Visually, we can imagine that our agent will follow a grid trajectory of states and try to discover what is the action-value at that state with a specific action.
 
 \begin{figure}
 \centering
@@ -717,7 +717,7 @@ Online Q-learning is probably one of the most simple and popular algorithm for r
   (\mycolumns + 0.5, \myrows + 2);
 \draw[->, line width=1.25] (0.5, 5.5) -- (1.5, 5.5) -- (1.5, 3.5) -- (0.5, 3.5) -- (0.5, 2.5) -- (3.5, 2.5);
 \end{tikzpicture}
-\caption[An example of the path which the agent might take]{An example of the path which the agent might take. It starts from $(0, 0)$ and moves to $(3, 3)$. The next state could be either $(3, 4), (4, 3), (3, 2), (2, 3)$ depends on the action it chooses and the transition probabilities.}
+\caption[An example of the path which the agent might take]{An example of the path which the agent might take. It starts from $(0, 0)$ and moves to $(3, 3)$. The next state could be either $(3, 4), (4, 3), (3, 2), (2, 3)$ depending on the action it chooses and the transition probabilities.}
 \end{figure}
 
 In this report, we want to investigate the Q-learning algorithm when applied to our POMDP. We used the following algorithm:
@@ -748,8 +748,8 @@ In this report, we want to investigate the Q-learning algorithm when applied to 
 \hypertarget{from-python-to-c}{%
 \subsubsection{From Python to C++}\label{from-python-to-c}}
 
-In this section, we document some difficulties while implementing the framework and how we overcome it. For illustration purpose, we will test the algorithm with a very simple problem of the \protect\hyperlink{scheduling-system}{scheduling system}
-and linear cost function with no environment (or constant environment). The parameter of this system is show in table \ref{tab:q-learning-test}.
+In this section, we document some difficulties while implementing the framework and how we overcome it. For illustration purposes, we will test the algorithm with a very simple problem of the \protect\hyperlink{scheduling-system}{scheduling system}
+and linear cost function with no environment (or constant environment). The parameters of this system are shown in table \ref{tab:q-learning-test}.
 
 \begin{table}[!htbp]
 \caption{Simple scheduling problem for testing}
@@ -771,7 +771,7 @@ and linear cost function with no environment (or constant environment). The para
 
 It has been proven that if we have \(c_{1} \mu_{1} \ge c_{2} \mu_{2}\), the optimal policy for all cases is activating the first queue if possible, and vice versa in the case where \(c_{1} \mu_{1} \le c_{2} \mu_{2}\). From table \ref{tab:q-learning-test}, we know that our optimal action here is activating the second queue.
 
-With a naive Python implementation, the algorithm works correctly when the limit of both queue are small.
+With a naive Python implementation, the algorithm works correctly when the limits of both queues are small.
 
 \begin{figure}
 
@@ -784,7 +784,7 @@ With a naive Python implementation, the algorithm works correctly when the limit
 
 First, we see that on the first column where \(Q_{2} = 0\), our agent always chooses to activate the first queue, because this is the only option possible, because there is no job on the second queue. Same thing holds for the first row where \(Q_{1} = 0\). For the other cells, we have the black color which means the agent chooses the second queue which is aligned with the analytical solution as above.
 
-This implementation runs \(10^6\) iterations for approximately \(2\) minutes. This is quite good for number with small case. However, if we increase the limit to 10, with the same number of iterations gives a imperfect result.
+This implementation runs \(10^6\) iterations for approximately \(2\) minutes. This is quite good for systems with small limits. However, if we increase the limit to 10, with the same number of iterations gives an imperfect result.
 
 \begin{figure}
 
@@ -803,17 +803,17 @@ In the figure above, we can see that even after 20 minutes with \(10^7\) iterati
 
 }
 
-\caption{Number of visit for the system above. $\gamma = 0.99$, $\epsilon = 0.999$}\label{fig:10x10-python-n-visit}
+\caption{Number of visits for the system above. $\gamma = 0.99$, $\epsilon = 0.999$}\label{fig:10x10-python-n-visit}
 \end{figure}
 
-We can see that our agent is stuck at \((0, 0)\), only the area around the origin has a high number of visits. The rest have relatively low number of visits and therefore, does not converge because of the nonfulfillment of the condition in \autocite{q-learning-converge}.
+We can see that our agent is stuck at \((0, 0)\), only the area around the origin has a high number of visits. The rest have relatively low number of visits and therefore, do not converge because of the nonfulfillment of the condition in \autocite{q-learning-converge}.
 
-To speed up the algorithm, we decided to switch to C++, which is famous for its speed and its mature support for high-speed computation with library like \passthrough{\lstinline!Eigen!} and then expose a Python interface for more ease of use. This is also the same approach for many scientific libraries in Python such as \passthrough{\lstinline!Numpy!} or \passthrough{\lstinline!Tensorflow!}. After switching to C++ and some improvements later, the algorithm now can run \(10^9\) iterations in only 1 minute, a \(2 \times 10^3\) speed up.
+To speed up the algorithm, we decided to switch to C++, which is famous for its speed and its mature support for high-speed computation with libraries like \passthrough{\lstinline!Eigen!} and then expose a Python interface for more ease of use. This is also the same approach for many scientific libraries in Python such as \passthrough{\lstinline!Numpy!} or \passthrough{\lstinline!Tensorflow!}. After switching to C++ and some improvements later, the algorithm now can run \(10^9\) iterations in only 1 minute, a \(2 \times 10^3\) speed up.
 
 \hypertarget{from-n-dimensions-to-2-dimensions}{%
 \subsubsection{\texorpdfstring{From \(n\)-dimensions to \(2\)-dimensions}{From n-dimensions to 2-dimensions}}\label{from-n-dimensions-to-2-dimensions}}
 
-With C++, the simulator is already running faster. However, there are still room for improvements. Now, the probability \(P(S', E' | S, E, a)\) is calculated on-the-fly when we meet that state \((S, E)\) while running the algorithm, we could make it faster by calculate the matrix transition for all the states beforehand. However, the state \(S\) and \(E\) of the system are each represented by a vector of \(n\) entries, if we keep using vector like that, we will need a tensor of \(n + n + 1 = 2N + 1\) dimensions (first \(n\) dimensions for saving the observable state \(S\), the next \(n\) dimensions for saving the unobservable state \(S\) and the last one for action). In addition, since there is no sparse version for high-dimensional tensor, it will take a lot of memory to save that tensor, more precisely:
+With C++, the simulator is already running faster. However, there is still room for improvement. Now, the probability \(P(S', E' | S, E, a)\) is calculated on-the-fly when we meet that state \((S, E)\) while running the algorithm. We could make it faster by calculating the matrix transition for all the states beforehand. However, the state \(S\) and \(E\) of the system are each represented by a vector of \(n\) entries, if we keep using vector like that, we will need a tensor of \(n + n + 1 = 2N + 1\) dimensions (first \(n\) dimensions for saving the observable state \(S\), the next \(n\) dimensions for saving the unobservable state \(S\) and the last one for action). In addition, since there is no sparse version for high-dimensional tensor, it will take a lot of memory to save that tensor, more precisely:
 
 \[
 (L_{1} + 1) \times \dots \times (L_{n} + 1) \times \underbrace{n^{m}}_{n \text{ queues and } m \text{ environments}} \times \underbrace{n}_{n \text{ actions}}
@@ -844,7 +844,7 @@ f_{\mathcal{S, E}(S, E)} &= f(X_{1}, \dots, X_{n}, M_{1}, \dots, M_{n}) = m^{n} 
 \end{aligned}
 \]
 
-All three functions are one-to-one mapping, so we can replace the state with the result of these function without losing anything. Because of doing so, we have achieved several benefits:
+All three functions are one-to-one mapping, so we can replace the state with the result of these functions without losing anything. Because of doing so, we have achieved several benefits:
 
 \begin{itemize}
 \tightlist
@@ -853,7 +853,7 @@ All three functions are one-to-one mapping, so we can replace the state with the
 \item
   Turn a problem with unknown dimension to a 2-dimensional one which makes accessing and looping through the states easier.
 \item
-  Overall speed improvement since we only need to deal with integer instead of a vector.
+  Overall speed improvement since we only need to deal with integers instead of a vector.
 \end{itemize}
 
 \hypertarget{offline-q-learning}{%
@@ -905,7 +905,7 @@ $\Delta \gets \infty$\;
 }
 \end{algorithm}
 
-We can see above that the algorithm makes use of \(P(S' | S, a)\), because of this, this algorithm converge a lot faster than both Q-learning methods but we have to know the transition probability, so this method is use only as a baseline to compare with the result of Q-learning.
+We can see above that the algorithm makes use of \(P(S' | S, a)\), because of this, this algorithm converges a lot faster than both Q-learning methods but we have to know the transition probability, so this method is used only as a baseline to compare with the result of Q-learning.
 
 If we have only one constant environment \(E_{c}\) (or no environment changing), we could rewrite \(P(S', E_{c} | S, E_{c}, a) = P(S' | S, a)\) and value iterations work correctly. However, as we have unobservable environment, algorithm \ref{alg:value-iteration} can not work without modification because we have \(P(S', E' | S, E, a)\) but we want to estimate \(V_{*}(S)\) and not \(V_{*}(S, E)\). In the next section, we discuss about how to get an empirical estimate of \(P(S'|S, a)\) based on \(P(S', E' | S, E, a)\).
 
@@ -966,7 +966,7 @@ After \(\pi(E)\) converges to \(\tilde{\pi}(E)\) and using \eqref{eq:p-s}, we ha
 \hypertarget{scheduling}{%
 \subsubsection{Scheduling}\label{scheduling}}
 
-First we will try with the linear cost. This is the simplest case and since it is proven mathematically (?), it is only a test to show that all algorithms works correctly. We will try two tuples of parameters, the first one will be:
+First we will try with the linear cost. This is the simplest case and since it is proven mathematically (?), it is only a test to show that all algorithms work correctly. We will try two tuples of parameters, the first one will be:
 
 \begin{table}[!htbp]
 \caption{Simple scheduling 1}
@@ -1030,7 +1030,7 @@ And the second one is nearly the same, except the holding cost is reverse, and t
 \caption{Result of table \ref{tab:simple-scheduling-2} for 20x20 case. \(\gamma = 0.999\), \(\epsilon = 0.999\).}\label{fig:20x20-simple-scheduling-2}
 \end{figure}
 
-As we can see, all three algorithms work well for this simple case. We will move to more complex case.
+As we can see, all three algorithms work well for this simple case. We will move to more complex cases.
 
 \hypertarget{load-balancing}{%
 \subsubsection{Load-balancing}\label{load-balancing}}
@@ -1066,11 +1066,11 @@ For this system, We first try a system where two queues have the same parameters
 \caption{Result of table \ref{tab:simple-lb-1} for 20x20 case. \(\gamma = 0.999\), \(\epsilon = 0.999\).}\label{fig:20x20-simple-lb-1}
 \end{figure}
 
-Intuitively, if two queues has the same parameters, the optimal action will be sending job to the queue that has less jobs, which is the result of value iterations method (the right grid) of figure \ref{fig:20x20-simple-lb-1}. There is also a gray color indicates that at those states, either action \(1\) (sending new job to \(Q_{1}\)) or \(2\) (sending to new job to \(Q_{2}\)) leads to the same result, because they have the same number of jobs.
+Intuitively, if two queues have the same parameters, the optimal action will be sending jobs to the queue that has fewer jobs, which is the result of the value iterations method (the right grid) of figure \ref{fig:20x20-simple-lb-1}. There is also a gray color indicating that in those states, either action \(1\) (sending a new job to \(Q_{1}\)) or \(2\) (sending a new job to \(Q_{2}\)) leads to the same result, because they have the same number of jobs.
 
 For two Q-learning methods, the online and offline version has been trained for \(3 \times 10^{10}\) and \(5 \times 10^{7}\) iterations respectively and takes 30 minutes each. They give us a similar result and both are close to the optimal policy of value iterations.
 
-However, since both methods depends on the evolution of the system, they are very sensitive to the parameters of systems. For example, if we increase the arrival rate to \(0.55\):
+However, since both methods depend on the evolution of the system, they are very sensitive to the parameters of systems. For example, if we increase the arrival rate to \(0.55\):
 
 \begin{table}[!htbp]
 \caption{Simple load-balancing 2}
@@ -1105,7 +1105,7 @@ Although the optimal policy should be the same as above, the same number of iter
 
 The offline version is similar to the policy of value iterations method and has a smaller hole compared to the online version. The difference can be explained by the fact that in the offline version, each pair state-action is visited \(5 \times 10^{7}\) times, so the total number of iterations will be \(2 \times 41^{2} \times 5 \times 10^{7} \approx 1.6 \times 10^{11}\), which is \(\gg 3 \times 10^{10}\), the total number of iterations of the online version.
 
-Furthermore, even if we run the online version with that much iterations, it will still not guarantee that we will have a good approximation of the offline result. This is because we are following the trajectory (or the evolution of the system) and therefore it is impossible to visit all states equally. We can see the number of visits of each pair state-action below.
+Furthermore, even if we run the online version with that many iterations, it will still not guarantee that we will have a good approximation of the offline result. This is because we are following the trajectory (or the evolution of the system) and therefore it is impossible to visit all states equally. We can see the number of visits of each pair state-action below.
 
 
 
@@ -1120,7 +1120,7 @@ Furthermore, even if we run the online version with that much iterations, it wil
 
 The number of visits is high around \((0, 0)\) and \((40, 40)\). Central region of the grid receives much less visits. Therefore, we see in figure \ref{fig:20x20-simple-lb-1} that the diagonal is beginning to form from these two points but not the region near the grid center.
 
-We will the finish this section with an unbalance example. We fix the cost and make the departure rate of the first queue higher than the second one as follow:
+We will finish this section with an unbalanced example. We fix the cost and make the departure rate of the first queue higher than the second one as follow:
 
 \begin{table}[!htbp]
 \caption{Simple load-balancing 3}
@@ -1153,7 +1153,7 @@ We will the finish this section with an unbalance example. We fix the cost and m
 
 Once again, we see the sensitivity of Q-learning with the system settings. Intuitively, since class \(1\) works faster than class \(2\) with the same cost, we will send more jobs to the first one as in the value iterations method. However, the learning capacity of both Q-learning methods is not sufficient to capture all the information of the system.
 
-Furthermore, if we run the same setting but with \(2 \times 10^{11}\) iterations, the policy remains nearly the same although the \(\|\cdot\|_{2}\) between two Q-values is approximately \(3000\). Since the different is not small, we can see that the Q-value is not converged yet and we still need to run the simulation a lot longer.
+Furthermore, if we run the same setting but with \(2 \times 10^{11}\) iterations, the policy remains nearly the same although the \(\|\cdot\|_{2}\) between two Q-values is approximately \(3000\). Since the difference is not small, we can see that the Q-value has not converged yet and we still need to run the simulation a lot longer.
 
 
 
@@ -1197,12 +1197,12 @@ And finally, we try a reversed setting where more jobs should be sent to queue \
 \caption{Result of table \ref{tab:simple-lb-3} for 20x20 case. \(\gamma = 0.999\), \(\epsilon = 0.999\).}\label{fig:20x20-simple-lb-4}
 \end{figure}
 
-After all the result above, we can see that generally, Q-learning performs badly on load-balancing system even in the MDP context. We then now move to the cases of multiple environments.
+After all the results above, we can see that generally, Q-learning performs badly on load-balancing systems even in the MDP context. We then now move to the cases of multiple environments.
 
 \hypertarget{multiple-environments-pomdp}{%
 \subsection{Multiple environments (POMDP)}\label{multiple-environments-pomdp}}
 
-We will introduce some new notations of environment transitions. We note that after uniformization, the probability of transitioning from one environment to itself (the diagonal of table \ref{tab:mat-transition-ci}) does not matter any more since it will be taken account into the dummy event. Futhermore, the sum of the other probabilities does not need to be less than \(1\) as we will divide them with the normalization constant.
+We will introduce some new notations of environment transitions. We note that after uniformization, the probability of transitioning from one environment to itself (the diagonal of table \ref{tab:mat-transition-ci}) does not matter any more since it will be taken into account in the dummy event. Furthermore, the sum of the other probability does not need to be less than \(1\) as we will divide them with the normalization constant.
 
 The more important thing now is the ratio between each probabilities pair. We can rewrite table \ref{tab:mat-transition-ci} as follow:
 
@@ -1239,7 +1239,7 @@ Where for example if \((m_{1}, m_{1}, \dots, m_{1}, m_{1}) \mapsto i\) and \((m_
 
 If \(\Pi_{\mathcal{E}}\) is the solution of equation \eqref{eq:steady-prob} then \(\mathcal{M}_{\mathcal{E}} \Pi_{\mathcal{E}} = \Pi_{\mathcal{E}}\) (because \(P(E' | E)\) is actually \(\rho\)).
 
-Lastly, with all the notion above, we can prove that the solution of
+Lastly, with all the notions above, we can prove that the solution of
 equation \eqref{eq:steady-prob} does not depend on \(\alpha\).
 
 \begin{lemma*}
@@ -1372,7 +1372,7 @@ First, for both cases, the solution of equation \eqref{eq:steady-prob} is \(\Pi 
 
 As in (??), the solution of table \ref{tab:mdp-scheduling-1} is serving queue \(1\), which is also the result of the value iteration method on both table \ref{tab:scheduling-1} and table \ref{tab:scheduling-2}.
 
-And finally, Q-learning also captures quite well these information and give us a similar result instead of choosing which queue has less cost in the initial environment (queue \(1\) for table \ref{tab:scheduling-1} and queue \(2\) for table \ref{tab:scheduling-2}) even though the speed of environment changing is slow.
+And finally, Q-learning also captures this information quite well and gives us a similar result instead of choosing which queue has less cost in the initial environment (queue \(1\) for table \ref{tab:scheduling-1} and queue \(2\) for table \ref{tab:scheduling-2}) even though the speed of environment changing is slow.
 
 We now move to a more complex case as follow:
 
@@ -1503,7 +1503,7 @@ As explained above, the policy perceived by the value iterations is quite simila
 
 }
 
-\caption{Number of visits of online Q-learning on table \ref{tab:scheduling-4-mat-1} for 20x20 case. The highest number of visit is \(\approx 4 \times 10^{9}\) (at \((0, 0)\)) while the lowest one is \(\approx 5 \times 10^5\) (at \((20, 20)\)).}\label{fig:20x20-scheduling-4-n-visit}
+\caption{Number of visits of online Q-learning on table \ref{tab:scheduling-4-mat-1} for 20x20 case. The highest number of visits is \(\approx 4 \times 10^{9}\) (at \((0, 0)\)) while the lowest one is \(\approx 5 \times 10^5\) (at \((20, 20)\)).}\label{fig:20x20-scheduling-4-n-visit}
 \end{figure}
 
 We also try the complex example of table \ref{tab:scheduling-3} with \(\alpha = 10^{2}\). Below is the policy perceived by Q-learning and value iterations.
@@ -1519,7 +1519,7 @@ We also try the complex example of table \ref{tab:scheduling-3} with \(\alpha = 
 \caption{Result of table \ref{tab:scheduling-3} with \(\alpha = 10^{2}\) for 20x20 case. \(\gamma = 0.999\), \(\epsilon = 0.999\).}\label{fig:20x20-scheduling-5}
 \end{figure}
 
-Same as above, the majority of Q-learning choose the optimal action of the empirical MDP. But it still contains some noisy cells that is not received enough number of visit.
+Same as above, the majority of Q-learning choose the optimal action of the empirical MDP. But it still contains some noisy cells that have not received enough visits.
 
 \hypertarget{load-balancing-1}{%
 \subsubsection{Load-balancing}\label{load-balancing-1}}
@@ -1594,9 +1594,9 @@ We will start with a simple case as follow:
 \caption{Result of table \ref{tab:scheduling-3} with \(\alpha = 10^{2}\) for 20x20 case. \(\gamma = 0.999\), \(\epsilon = 0.999\).}\label{fig:20x20-lb-1}
 \end{figure}
 
-The value iterations shows the same result as expected with a neutral diagonal line. For Q-learning, Although there is a large hole in the center of the grid, we could still see a diagonal line that split the grid into two regions as in the optimal policy of the empirical MDP.
+The value iterations method shows the same result as expected with a neutral diagonal line. For Q-learning, Although there is a large hole in the center of the grid, we could still see a diagonal line that split the grid into two regions as in the optimal policy of the empirical MDP.
 
-Since the learning capacity of Q-learning is not really good for complex load balancing system, we will just test it with the same case but bigger \(\alpha\).
+Since the learning capacity of Q-learning is not really good for complex load balancing systems, we will just test it with the same case but bigger \(\alpha\).
 
 \hypertarget{big-alpha-1}{%
 \paragraph{\texorpdfstring{Big \(\alpha\)}{Big \textbackslash alpha}}\label{big-alpha-1}}
@@ -1612,7 +1612,7 @@ Since the learning capacity of Q-learning is not really good for complex load ba
 \caption{Result of table \ref{tab:scheduling-3} with \(\alpha = 10^{2}\) for 20x20 case. \(\gamma = 0.999\), \(\epsilon = 0.999\).}\label{fig:20x20-lb-2}
 \end{figure}
 
-Unfortunately, the Q-learning result here is completely random and we will need to run a lot longer simulation for it to be converged.
+Unfortunately, the Q-learning result here is completely random and we will need to run a much longer simulation for it to be converged.
 
 \hypertarget{conclusion-and-extension}{%
 \section{Conclusion and extension}\label{conclusion-and-extension}}
@@ -1666,7 +1666,7 @@ Real or calculated (empirical) parameters of the system such that it is a MDP pr
 \begin{minipage}[t]{0.18\columnwidth}\raggedright
 Checking for convergence (checking if the value does not change much after some iterations)\strut
 \end{minipage} & \begin{minipage}[t]{0.35\columnwidth}\raggedright
-Since only one cell is updated at a time, and each cell is not visited uniformly, such checking requires a lot of efforts and will slow down the simulation. An alternative solution is re-running the simulation with different learning steps and comparing the result, but this also requires a lot of time and manual efforts.\strut
+Since only one cell is updated at a time, and each cell is not visited uniformly, such checking requires a lot of efforts and will slow down the simulation. An alternative solution is re-running the simulation with different learning steps and comparing the result, but this also requires a lot of time and manual effort.\strut
 \end{minipage} & \begin{minipage}[t]{0.18\columnwidth}\raggedright
 By calculating \(\| \cdot \|_{2}\) between the previous Q-value and the current Q-value.\strut
 \end{minipage} & \begin{minipage}[t]{0.18\columnwidth}\raggedright
@@ -1675,7 +1675,7 @@ By calculating \(\| \cdot \|_{2}\) between the previous V-value and the current 
 \begin{minipage}[t]{0.18\columnwidth}\raggedright
 Speed of convergence\strut
 \end{minipage} & \begin{minipage}[t]{0.35\columnwidth}\raggedright
-Since it follows the trajectory, one training session might take very long time. In addition, because checking for convergence is not simple, we might have to run the training session multiple times as well as carefully tunning the hyper-parameters so that takes a lot of time.\strut
+Since it follows the trajectory, one training session might take a very long time. In addition, because checking for convergence is not simple, we might have to run the training session multiple times as well as carefully tuning the hyper-parameters so that takes a lot of time.\strut
 \end{minipage} & \begin{minipage}[t]{0.18\columnwidth}\raggedright
 Faster than online Q-learning but still taking long time before converging\strut
 \end{minipage} & \begin{minipage}[t]{0.18\columnwidth}\raggedright
@@ -1684,7 +1684,7 @@ The fastest method.\strut
 \begin{minipage}[t]{0.18\columnwidth}\raggedright
 Quality of the result\strut
 \end{minipage} & \begin{minipage}[t]{0.35\columnwidth}\raggedright
-The result might not converge to the best policy and contain a lot of noise. Futhermore, its result is extremely sensitive to system parameters, especially the ones having impacts on the evolution of the whole system.\strut
+The result might not converge to the best policy and contain a lot of noise. Furthermore, its result is extremely sensitive to system parameters, especially the ones having impacts on the evolution of the whole system.\strut
 \end{minipage} & \begin{minipage}[t]{0.18\columnwidth}\raggedright
 The result might not converge to the best policy but it will less likely to contain noise and is more robust to a change in the settings of system.\strut
 \end{minipage} & \begin{minipage}[t]{0.18\columnwidth}\raggedright
@@ -1702,7 +1702,7 @@ This method can not work on a POMDP problem, but said problem can be converted t
 \bottomrule
 \end{longtable}
 
-Finally, we will end the report with an unanswered question: \textbf{``How can we know that the policy we obtained is the optimal policy in case of POMDP ?''}. This question is very important because if we have the optimal policy beforehand, not necessarily through a model free method, we can later compare it with the result of another method to get an idea if that method works with our problem or not (like what we did with the MDP problem: compare the Q-learning result and the value iterations one). However, because the limited context of the internship, we are not able to answer that question and left it as a possibility for future work.
+Finally, we will end the report with an unanswered question: \textbf{``How can we know that the policy we obtained is the optimal policy in case of POMDP ?''}. This question is very important because if we have the optimal policy beforehand, not necessarily through a model free method, we can later compare it with the result of another method to get an idea if that method works with our problem or not (like what we did with the MDP problem: compare the Q-learning result and the value iterations one). However, because of the limited context of the internship, we are not able to answer that question and left it as a possibility for future work.
 
 \newpage
 
