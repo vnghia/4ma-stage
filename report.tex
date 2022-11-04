@@ -159,6 +159,13 @@
 \tableofcontents
 
 \newpage
+
+\begin{center}
+  \underline{\textbf{ACKNOWLEDGEMENT}}
+\end{center}
+I would like to thank my supervisors: Urtzi AYESTA, Maaike VERLOOP and Matthieu JONCKHEERE for giving me an opportunity to work on this internship as well as your guidance and patience during the whole internship !
+
+\newpage
 \pagenumbering{arabic}
 
 \hypertarget{introduction}{%
@@ -199,6 +206,8 @@ As well as strategic action:
 \item
   Scientific Computing, Big Data and AI
 \end{itemize}
+
+My team is comming from team RMESS (Réseaux, Mobiles, Embarqués, Sans fil, Satellites) and belongs to departement ASR (Architecture, Systèmes, Réseaux).
 
 \hypertarget{organization}{%
 \subsubsection{Organization}\label{organization}}
@@ -1144,7 +1153,51 @@ We will the finish this section with an unbalance example. We fix the cost and m
 
 Once again, we see the sensitivity of Q-learning with the system settings. Intuitively, since class \(1\) works faster than class \(2\) with the same cost, we will send more jobs to the first one as in the value iterations method. However, the learning capacity of both Q-learning methods is not sufficient to capture all the information of the system.
 
-We then now move to the cases of multiple environments.
+Furthermore, if we run the same setting but with \(2 \times 10^{11}\) iterations, the policy remains nearly the same although the \(\|\cdot\|_{2}\) between two Q-values is approximately \(3000\). Since the different is not small, we can see that the Q-value is not converged yet and we still need to run the simulation a lot longer.
+
+
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.33\linewidth]{report_files/figure-latex/20x20-simple-lb-3-2-11-1} 
+
+}
+
+\caption{Result of table \ref{tab:simple-lb-3} for 20x20 case after \(2 \times 10^{11}\) iterations. \(\gamma = 0.999\), \(\epsilon = 0.999\).}\label{fig:20x20-simple-lb-3-2-11}
+\end{figure}
+
+And finally, we try a reversed setting where more jobs should be sent to queue \(2\) than queue \(1\).
+
+\begin{table}[!htbp]
+\caption{Simple load-balancing 4}
+\begin{center}
+\begin{tabular}{c c c}
+    \hline
+    \multirow{3}{*}{$Q_{1}$} & Holding cost $c_{1}$ & $3$ \\
+    & Departure rate $\mu_{1}$ & $0.3$ \\
+    \cline{2-3}
+    \multirow{3}{*}{$Q_{2}$} & Holding cost $c_{2}$ & $3$ \\
+    & Departure rate $\mu_{2}$ & $0.5$ \\
+    \cline{2-3}
+    & Global arrival rate & $0.7$ \\    
+    \hline
+\end{tabular}
+\end{center}
+\label{tab:simple-lb-4}
+\end{table}
+
+
+
+\begin{figure}
+
+{\centering \subfloat[Online Q-learning\label{fig:20x20-simple-lb-4-1}]{\includegraphics[width=0.33\linewidth]{report_files/figure-latex/20x20-simple-lb-4-1} }\subfloat[Offline Q-learning\label{fig:20x20-simple-lb-4-2}]{\includegraphics[width=0.33\linewidth]{report_files/figure-latex/20x20-simple-lb-4-2} }\subfloat[Value iterations\label{fig:20x20-simple-lb-4-3}]{\includegraphics[width=0.33\linewidth]{report_files/figure-latex/20x20-simple-lb-4-3} }
+
+}
+
+\caption{Result of table \ref{tab:simple-lb-3} for 20x20 case. \(\gamma = 0.999\), \(\epsilon = 0.999\).}\label{fig:20x20-simple-lb-4}
+\end{figure}
+
+After all the result above, we can see that generally, Q-learning performs badly on load-balancing system even in the MDP context. We then now move to the cases of multiple environments.
 
 \hypertarget{multiple-environments-pomdp}{%
 \subsection{Multiple environments (POMDP)}\label{multiple-environments-pomdp}}
@@ -1472,7 +1525,7 @@ Same as above, the majority of Q-learning choose the optimal action of the empir
 \subsubsection{Load-balancing}\label{load-balancing-1}}
 
 \hypertarget{small-alpha-1}{%
-\paragraph{\texorpdfstring{Small \(alpha\)}{Small alpha}}\label{small-alpha-1}}
+\paragraph{\texorpdfstring{Small \(\alpha\)}{Small \textbackslash alpha}}\label{small-alpha-1}}
 
 We will start with a simple case as follow:
 

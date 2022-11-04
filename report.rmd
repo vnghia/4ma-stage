@@ -54,6 +54,8 @@ As well as strategic action:
 
 - Scientific Computing, Big Data and AI
 
+My team is comming from team RMESS (Réseaux, Mobiles, Embarqués, Sans fil, Satellites) and belongs to departement ASR (Architecture, Systèmes, Réseaux).
+
 ### Organization
 
 The 24 research groups of the laboratory are dispatched in seven scientific departments:
@@ -68,7 +70,7 @@ The 24 research groups of the laboratory are dispatched in seven scientific depa
 
 ## The internship
 
-This is the internship description: *"Markov decisions processes (MDPs) and their model free counterpart in reinforcement learning (RL) have known a large success in the last two decades. Although research in these two areas has been taking place for more than fifty years, the field gained momentum only recently following the advent of powerful hardware and algorithms with which supra­human performance were obtained in games like Chess or Go. However, these impressive successes often rely on quite exceptional hardware possibilities and cannot be applied in many usual contexts, where, for instance, the volume of data available or the amount of computing power is more restricted. To define the next generation of more democratic and widely applicable algorithms, such methods still need to deal with very demanding exploration issues as soon as the state/action spaces are not small. One way around this is to use underlying knowledge and structure present in many MDPs. This is especially true for problems related to scheduling and resources sharing in among others server farms, clouds, and cellular wireless networks. The internships will revolve around this theme of improving the efficiency of learning algorithms by leveraging the structure of the underlying problem and focus mainly on model ­free approach."*
+This is the internship description: _"Markov decisions processes (MDPs) and their model free counterpart in reinforcement learning (RL) have known a large success in the last two decades. Although research in these two areas has been taking place for more than fifty years, the field gained momentum only recently following the advent of powerful hardware and algorithms with which supra­human performance were obtained in games like Chess or Go. However, these impressive successes often rely on quite exceptional hardware possibilities and cannot be applied in many usual contexts, where, for instance, the volume of data available or the amount of computing power is more restricted. To define the next generation of more democratic and widely applicable algorithms, such methods still need to deal with very demanding exploration issues as soon as the state/action spaces are not small. One way around this is to use underlying knowledge and structure present in many MDPs. This is especially true for problems related to scheduling and resources sharing in among others server farms, clouds, and cellular wireless networks. The internships will revolve around this theme of improving the efficiency of learning algorithms by leveraging the structure of the underlying problem and focus mainly on model ­free approach."_
 
 # System settings
 
@@ -917,7 +919,41 @@ We will the finish this section with an unbalance example. We fix the cost and m
 
 Once again, we see the sensitivity of Q-learning with the system settings. Intuitively, since class $1$ works faster than class $2$ with the same cost, we will send more jobs to the first one as in the value iterations method. However, the learning capacity of both Q-learning methods is not sufficient to capture all the information of the system.
 
-We then now move to the cases of multiple environments.
+Furthermore, if we run the same setting but with $2 \times 10^{11}$ iterations, the policy remains nearly the same although the $\|\cdot\|_{2}$ between two Q-values is approximately $3000$. Since the different is not small, we can see that the Q-value is not converged yet and we still need to run the simulation a lot longer.
+
+(ref:title-simple-lb-3-2-11) Result of table \@ref(tab:simple-lb-3) for 20x20 case after $2 \times 10^{11}$ iterations. $\gamma = 0.999$, $\epsilon = 0.999$.
+
+```{r, 20x20-simple-lb-3-2-11, fig.show="hold", out.width="33%", fig.align="center", fig.cap="(ref:title-simple-lb-3-2-11)", fig.subcap=c("Online Q-learning", "Offline Q-learning", "Value iterations")}
+```
+
+And finally, we try a reversed setting where more jobs should be sent to queue $2$ than queue $1$.
+
+```{=latex}
+\begin{table}[!htbp]
+\caption{Simple load-balancing 4}
+\begin{center}
+\begin{tabular}{c c c}
+    \hline
+    \multirow{3}{*}{$Q_{1}$} & Holding cost $c_{1}$ & $3$ \\
+    & Departure rate $\mu_{1}$ & $0.3$ \\
+    \cline{2-3}
+    \multirow{3}{*}{$Q_{2}$} & Holding cost $c_{2}$ & $3$ \\
+    & Departure rate $\mu_{2}$ & $0.5$ \\
+    \cline{2-3}
+    & Global arrival rate & $0.7$ \\    
+    \hline
+\end{tabular}
+\end{center}
+\label{tab:simple-lb-4}
+\end{table}
+```
+
+(ref:title-simple-lb-4) Result of table \@ref(tab:simple-lb-4) for 20x20 case. $\gamma = 0.999$, $\epsilon = 0.999$.
+
+```{r, 20x20-simple-lb-4, fig.show="hold", out.width="33%", fig.align="center", fig.cap="(ref:title-simple-lb-3)", fig.subcap=c("Online Q-learning", "Offline Q-learning", "Value iterations")}
+```
+
+After all the result above, we can see that generally, Q-learning performs badly on load-balancing system even in the MDP context. We then now move to the cases of multiple environments.
 
 ## Multiple environments (POMDP)
 
@@ -1231,7 +1267,7 @@ Same as above, the majority of Q-learning choose the optimal action of the empir
 
 ### Load-balancing
 
-#### Small $alpha$
+#### Small $\alpha$
 
 We will start with a simple case as follow:
 
@@ -1328,6 +1364,6 @@ Through the internship, we have seen different behaviors of each method in solvi
 
 Table: Comparison between methods for MDP / POMDP problem.
 
-Finally, we will end the report with an unanswered question: **"How can we know that the policy we obtained is the optimal policy in case of POMDP ?"**. This question is very important because if we have the optimal policy beforehand, not necessarily through a model free method, we can later compare it with the result of another method to get an idea if that method works with our problem or not (like what we did with the MDP problem: compare the Q-learning result and the value iterations one). However, because the limited context of the internship, we are not able to answer that question and left it as a possibility for future work.
+Finally, we will end the report with an unanswered question: __"How can we know that the policy we obtained is the optimal policy in case of POMDP ?"__. This question is very important because if we have the optimal policy beforehand, not necessarily through a model free method, we can later compare it with the result of another method to get an idea if that method works with our problem or not (like what we did with the MDP problem: compare the Q-learning result and the value iterations one). However, because the limited context of the internship, we are not able to answer that question and left it as a possibility for future work.
 
 \newpage
