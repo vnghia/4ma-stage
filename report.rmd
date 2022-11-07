@@ -124,16 +124,10 @@ The state of the system is represented by two vectors:
 
 ### Cost
 
-The cost of the system is a function of $S$ and $E$. We propose two functions of cost. The first one is a simple linear function.
+The cost of the system is a function of $S$ and $E$. We choose a simple linear function for the cost:
 
 $$
 f_{1}(S, E) = \sum_{1}^{n} c_{i, M_{i}} X_{i}
-$$
-
-And the second one is a convex function which is specialized for the case $n = 2$, where $\epsilon$ is a fixed positive constant.
-
-$$
-f_{2}(S, E) = c_{1, M_{1}} X_{1} + c_{2, M_{2}} (\epsilon X_{2}^{2} + X_{2})
 $$
 
 ### Agent
@@ -257,11 +251,7 @@ For the load-balancing system, we only have one stream of job arrivals with rate
 
 ### Cost
 
-Same as above, the cost of the system is a function of $S$ and $E$. However, in this system, only the simple linear version is used.
-
-$$
-f_{1}(S, E) = \sum_{1}^{n} c_{i, M_{i}} X_{i}
-$$
+We use the same cost function of scheduling system here.
 
 ### Agent
 
@@ -688,7 +678,7 @@ $\Delta \gets \infty$\;
 
 We can see above that the algorithm makes use of $P(S' | S, a)$, because of this, this algorithm converges a lot faster than both Q-learning methods but we have to know the transition probability, so this method is used only as a baseline to compare with the result of Q-learning.
 
-If we have only one constant environment $E_{c}$ (or no environment changing), we could rewrite $P(S', E_{c} | S, E_{c}, a) = P(S' | S, a)$ and value iterations work correctly. However, as we have unobservable environment, algorithm \@ref(alg:value-iteration) can not work without modification because we have $P(S', E' | S, E, a)$ but we want to estimate $V_{*}(S)$ and not $V_{*}(S, E)$. In the next section, we discuss about how to get an empirical estimate of $P(S'|S, a)$ based on $P(S', E' | S, E, a)$.
+If we have only one constant environment $E_{c}$ (or no environment changing), we could rewrite $P(S', E_{c} | S, E_{c}, a) = P(S' | S, a)$ and value iteration work correctly. However, as we have unobservable environment, algorithm \@ref(alg:value-iteration) can not work without modification because we have $P(S', E' | S, E, a)$ but we want to estimate $V_{*}(S)$ and not $V_{*}(S, E)$. In the next section, we discuss about how to get an empirical estimate of $P(S'|S, a)$ based on $P(S', E' | S, E, a)$.
 
 ## Empirical transition probability
 
@@ -747,13 +737,15 @@ After $\pi(E)$ converges to $\tilde{\pi}(E)$ and using \@ref(eq:p-s), we have th
 \end{equation}
 ```
 
+The empirical value we get here will be used in \@ref(alg:value-iteration) in the case of POMDP for value iteration method.
+
 # Result
 
 ## No environment changing (MDP)
 
 ### Scheduling
 
-First we will try with the linear cost. This is the simplest case and since it is proven mathematically (?), it is only a test to show that all algorithms work correctly. We will try two tuples of parameters, the first one will be:
+First we will try with the linear cost. This is the simplest case and since it is proven mathematically in [@scheduling-optimal], it is only a test to show that all algorithms work correctly. The optimal policy here will be activating the queue whose $c_{i} \mu_{i}$ is bigger. We will try two tuples of parameters, the first one will be:
 
 ```{=latex}
 \begin{table}[!htbp]
@@ -840,9 +832,9 @@ For this system, We first try a system where two queues have the same parameters
 ```{r, 20x20-simple-lb-1, fig.show="hold", out.width="33%", fig.align="center", fig.cap="(ref:title-simple-lb-1)", fig.subcap=c("Online Q-learning", "Offline Q-learning", "Value iterations")}
 ```
 
-Intuitively, if two queues have the same parameters, the optimal action will be sending jobs to the queue that has fewer jobs, which is the result of the value iterations method (the right grid) of figure \@ref(fig:20x20-simple-lb-1). There is also a gray color indicating that in those states, either action $1$ (sending a new job to $Q_{1}$) or $2$ (sending a new job to $Q_{2}$) leads to the same result, because they have the same number of jobs.
+Intuitively, if two queues have the same parameters, the optimal action will be sending jobs to the queue that has fewer jobs, which is the result of the value iteration method (the right grid) of figure \@ref(fig:20x20-simple-lb-1). There is also a gray color indicating that in those states, either action $1$ (sending a new job to $Q_{1}$) or $2$ (sending a new job to $Q_{2}$) leads to the same result, because they have the same number of jobs.
 
-For two Q-learning methods, the online and offline version has been trained for $3 \times 10^{10}$ and $5 \times 10^{7}$ iterations respectively and takes 30 minutes each. They give us a similar result and both are close to the optimal policy of value iterations.
+For two Q-learning methods, the online and offline version has been trained for $3 \times 10^{10}$ and $5 \times 10^{7}$ iterations respectively and takes 30 minutes each. They give us a similar result and both are close to the optimal policy of value iteration.
 
 However, since both methods depend on the evolution of the system, they are very sensitive to the parameters of systems. For example, if we increase the arrival rate to $0.55$:
 
@@ -873,7 +865,7 @@ Although the optimal policy should be the same as above, the same number of iter
 ```{r, 20x20-simple-lb-2, fig.show="hold", out.width="33%", fig.align="center", fig.cap="(ref:title-simple-lb-2)", fig.subcap=c("Online Q-learning", "Offline Q-learning", "Value iterations")}
 ```
 
-The offline version is similar to the policy of value iterations method and has a smaller hole compared to the online version. The difference can be explained by the fact that in the offline version, each pair state-action is visited $5 \times 10^{7}$ times, so the total number of iterations will be $2 \times 41^{2} \times 5 \times 10^{7} \approx 1.6 \times 10^{11}$, which is $\gg 3 \times 10^{10}$, the total number of iterations of the online version.
+The offline version is similar to the policy of value iteration method and has a smaller hole compared to the online version. The difference can be explained by the fact that in the offline version, each pair state-action is visited $5 \times 10^{7}$ times, so the total number of iterations will be $2 \times 41^{2} \times 5 \times 10^{7} \approx 1.6 \times 10^{11}$, which is $\gg 3 \times 10^{10}$, the total number of iterations of the online version.
 
 Furthermore, even if we run the online version with that many iterations, it will still not guarantee that we will have a good approximation of the offline result. This is because we are following the trajectory (or the evolution of the system) and therefore it is impossible to visit all states equally. We can see the number of visits of each pair state-action below.
 
@@ -911,7 +903,7 @@ We will finish this section with an unbalanced example. We fix the cost and make
 ```{r, 20x20-simple-lb-3, fig.show="hold", out.width="33%", fig.align="center", fig.cap="(ref:title-simple-lb-3)", fig.subcap=c("Online Q-learning", "Offline Q-learning", "Value iterations")}
 ```
 
-Once again, we see the sensitivity of Q-learning with the system settings. Intuitively, since class $1$ works faster than class $2$ with the same cost, we will send more jobs to the first one as in the value iterations method. However, the learning capacity of both Q-learning methods is not sufficient to capture all the information of the system.
+Once again, we see the sensitivity of Q-learning with the system settings. Intuitively, since class $1$ works faster than class $2$ with the same cost, we will send more jobs to the first one as in the value iteration method. However, the learning capacity of both Q-learning methods is not sufficient to capture all the information of the system.
 
 Furthermore, if we run the same setting but with $2 \times 10^{11}$ iterations, the policy remains nearly the same although the $\|\cdot\|_{2}$ between two Q-values is approximately $3000$. Since the difference is not small, we can see that the Q-value has not converged yet and we still need to run the simulation a lot longer.
 
@@ -1123,7 +1115,7 @@ First, for both cases, the solution of equation \@ref(eq:steady-prob) is $\Pi = 
 \end{table}
 ```
 
-As in (??), the solution of table \@ref(tab:mdp-scheduling-1) is serving queue $1$, which is also the result of the value iteration method on both table \@ref(tab:scheduling-1) and table \@ref(tab:scheduling-2).
+As in [@scheduling-optimal], the solution of table \@ref(tab:mdp-scheduling-1) is serving queue $1$, which is also the result of the value iteration method on both table \@ref(tab:scheduling-1) and table \@ref(tab:scheduling-2).
 
 And finally, Q-learning also captures this information quite well and gives us a similar result instead of choosing which queue has less cost in the initial environment (queue $1$ for table \@ref(tab:scheduling-1) and queue $2$ for table \@ref(tab:scheduling-2)) even though the speed of environment changing is slow.
 
@@ -1214,7 +1206,7 @@ Using the same logic as above, we can transform it into a MDP problem as follow:
 ```{r, 20x20-scheduling-3, fig.show="hold", out.width="33%", fig.align="center", fig.cap="(ref:title-scheduling-3)", fig.subcap=c("Online Q-learning", "Offline Q-learning", "Value iterations")}
 ```
 
-The result of value iterations on the right side is also the same as the value iterations of table \@ref(tab:mdp-scheduling-3). Both actually gives the same numerical estimation of $V_{*}$. Q-learning is also good at learning this type of system and we can see that it deduces a similar policy to the value iteration's one.
+The result of value iteration on the right side is also the same as the value iteration of table \@ref(tab:mdp-scheduling-3). Both actually gives the same numerical estimation of $V_{*}$. Q-learning is also good at learning this type of system and we can see that it deduces a similar policy to the value iteration's one.
 
 #### Big $\alpha$
 
@@ -1243,21 +1235,23 @@ We take the same parameters as in table \@ref(tab:scheduling-2) with a different
 ```{r, 20x20-scheduling-4, fig.show="hold", out.width="33%", fig.align="center", fig.cap="(ref:title-scheduling-4)", fig.subcap=c("Online Q-learning", "Offline Q-learning", "Value iterations")}
 ```
 
-As explained above, the policy perceived by the value iterations is quite similar as above. The majority of Q-learning cells are choosing action $1$, especially the ones near the origin. However, Q-learning still contains a lot of noise, a sign that suggests we have not iterated enough. Although the number of iterations ($3 \times 10^{10}$) is sufficiently large, bigger $\alpha$ requires a lot more iterations because in that case, the system does not evolve much in trajectory but in environment instead (for example we could think that the system will stuck at one cell near the origin and the environment state constantly changes after each iteration). The figure below shown that phenomena:
+As explained above, the policy perceived by the value iteration is quite similar as above. The majority of online Q-learning cells are choosing action $1$, especially the ones near the origin. However, Q-learning still contains a lot of noise, a sign that suggests we have not iterated enough. Although the number of iterations ($3 \times 10^{10}$) is sufficiently large, bigger $\alpha$ requires a lot more iterations because in that case, the system does not evolve much in trajectory but in environment instead (for example we could think that the system will stuck at one cell near the origin and the environment state constantly changes after each iteration). The figure below shown that phenomena:
 
 (ref:title-scheduling-4-n-visit) Number of visits of online Q-learning on table \@ref(tab:scheduling-4-mat-1) for 20x20 case. The highest number of visits is $\approx 4 \times 10^{9}$ (at $(0, 0)$) while the lowest one is $\approx 5 \times 10^5$ (at $(20, 20)$).
 
 ```{r, 20x20-scheduling-4-n-visit, fig.show="hold", out.width="40%", fig.align="center", fig.cap="(ref:title-scheduling-4-n-visit)", fig.subcap=c("Activating $Q_{1}$", "Activating $Q_{2}$")}
 ```
 
-We also try the complex example of table \@ref(tab:scheduling-3) with $\alpha = 10^{2}$. Below is the policy perceived by Q-learning and value iterations.
+For offline Q-learning, we see no difference with the value iteration method. As in the explanation for the result of figure \@ref(fig:20x20-simple-lb-2), in the same amount of time, most of state-action pairs in offline version receives more visits than the online one (except the cells around the origin) and therefore gives a less noisy result.
+
+We also try the complex example of table \@ref(tab:scheduling-3) with $\alpha = 10^{2}$. Below is the policy perceived by Q-learning and value iteration.
 
 (ref:title-scheduling-5) Result of table \@ref(tab:scheduling-3) with $\alpha = 10^{2}$ for 20x20 case. $\gamma = 0.999$, $\epsilon = 0.999$.
 
 ```{r, 20x20-scheduling-5, fig.show="hold", out.width="33%", fig.align="center", fig.cap="(ref:title-scheduling-5)", fig.subcap=c("Online Q-learning", "Offline Q-learning", "Value iterations")}
 ```
 
-Same as above, the majority of Q-learning choose the optimal action of the empirical MDP. But it still contains some noisy cells that have not received enough visits.
+Same as above, offline Q-learning and value iteration method give the same policy while the majority of Q-learning choose the optimal action of the empirical MDP. But it still contains some noisy cells that have not received enough visits.
 
 ### Load-balancing
 
@@ -1327,10 +1321,10 @@ We will start with a simple case as follow:
 
 (ref:title-lb-1) Result of table \@ref(tab:lb-1) for 20x20 case. $\gamma = 0.999$, $\epsilon = 0.999$.
 
-```{r, 20x20-lb-1, fig.show="hold", out.width="33%", fig.align="center", fig.cap="(ref:title-scheduling-5)", fig.subcap=c("Online Q-learning", "Offline Q-learning", "Value iterations")}
+```{r, 20x20-lb-1, fig.show="hold", out.width="33%", fig.align="center", fig.cap="(ref:title-lb-1)", fig.subcap=c("Online Q-learning", "Offline Q-learning", "Value iterations")}
 ```
 
-The value iterations method shows the same result as expected with a neutral diagonal line. For Q-learning, Although there is a large hole in the center of the grid, we could still see a diagonal line that split the grid into two regions as in the optimal policy of the empirical MDP.
+The value iteration method shows the same result as expected with a neutral diagonal line. For online Q-learning, Although there is a large hole in the center of the grid, we could still see a diagonal line that split the grid into two regions as in the optimal policy of the empirical MDP. However, the offline method gives a very different result compared to the other methods.
 
 Since the learning capacity of Q-learning is not really good for complex load balancing systems, we will just test it with the same case but bigger $\alpha$.
 
@@ -1338,10 +1332,10 @@ Since the learning capacity of Q-learning is not really good for complex load ba
 
 (ref:title-lb-2) Result of table \@ref(tab:lb-1) with $\alpha = 10^{2}$ for 20x20 case. $\gamma = 0.999$, $\epsilon = 0.999$.
 
-```{r, 20x20-lb-2, fig.show="hold", out.width="33%", fig.align="center", fig.cap="(ref:title-scheduling-5)", fig.subcap=c("Online Q-learning", "Offline Q-learning", "Value iterations")}
+```{r, 20x20-lb-2, fig.show="hold", out.width="33%", fig.align="center", fig.cap="(ref:title-lb-1)", fig.subcap=c("Online Q-learning", "Offline Q-learning", "Value iterations")}
 ```
 
-Unfortunately, the Q-learning result here is completely random and we will need to run a much longer simulation for it to be converged.
+Unfortunately, the online Q-learning result here is completely random and we will need to run a much longer simulation for it to be converged. With offline version, it gives a very different, nearly opposite policy with the policy for small $\alpha$. We can see that although the offline method works well with the scheduling system, it is broken on the load-balancing system.
 
 # Conclusion and extension
 
@@ -1349,17 +1343,17 @@ First, the table below summarizes the advantages and weaknesses of each method i
 
 | Aspect | Online Q-learning | Offline Q-learning | Value iterations |
 |--|----|--|--|
-| Can be used on POMDP | Yes | No | No |
+| Can be used on POMDP | Yes | Yes | No |
 | Prerequisites | A system simulator or nothing (by interacting directly with the real system) | A reliable system simulator | Real or calculated (empirical) parameters of the system such that it is a MDP problem |
 | Checking for convergence (checking if the value does not change much after some iterations) | Since only one cell is updated at a time, and each cell is not visited uniformly, such checking requires a lot of efforts and will slow down the simulation. An alternative solution is re-running the simulation with different learning steps and comparing the result, but this also requires a lot of time and manual effort. | By calculating $\| \cdot \|_{2}$ between the previous Q-value and the current Q-value. | By calculating $\| \cdot \|_{2}$ between the previous V-value and the current V-value. |
 | Speed of convergence | Since it follows the trajectory, one training session might take a very long time. In addition, because checking for convergence is not simple, we might have to run the training session multiple times as well as carefully tuning the hyper-parameters so that takes a lot of time. | Faster than online Q-learning but still taking long time before converging | The fastest method. |
 | Quality of the result | The result might not converge to the best policy and contain a lot of noise. Furthermore, its result is extremely sensitive to system parameters, especially the ones having impacts on the evolution of the whole system. | The result might not converge to the best policy but it will less likely to contain noise and is more robust to a change in the settings of system. | The result converged to the optimal solution when we are working on a MDP problem. |
-| Behavior on POMDP | Q-learning seems to perceive the problem as an empirical MDP problem as we could observe that its results resemble the value iterations result. But we need more analytical inspections to verify this hypothesis. | | This method can not work on a POMDP problem, but said problem can be converted to an empirical MDP problem by the method describe in section [Empirical transition probability]. |
+| Behavior on POMDP | Online Q-learning seems to perceive the problem as an empirical MDP problem as we could observe that its results resemble the value iteration result. But we need more analytical inspections to verify this hypothesis. | Same as online Q-learning | This method can not work on a POMDP problem, but said problem can be converted to an empirical MDP problem by the method describe in section [Empirical transition probability]. |
 
 Table: Comparison between methods for MDP / POMDP problem.
 
 Through the report, we have seen different behaviors of each method in solving MDP and POMDP. In conclusion, Q-learning can learn the underlying structure of simple systems (as seen in figure \@ref(fig:20x20-simple-scheduling-1), \@ref(fig:20x20-simple-scheduling-2), \@ref(fig:20x20-simple-lb-1), \@ref(fig:20x20-scheduling-1-2), \@ref(fig:20x20-scheduling-3)). But when the system becomes more complex, it might take much longer to capture this information (the case of figure \@ref(fig:20x20-scheduling-4), \@ref(fig:20x20-lb-1)) or completely fail to do so (figure \@ref(fig:20x20-simple-lb-2), \@ref(fig:20x20-simple-lb-3), \@ref(fig:20x20-simple-lb-3-2-11), \@ref(fig:20x20-simple-lb-4), \@ref(fig:20x20-lb-2)). Furthermore, modeling and training takes a particularly long time so more work is needed to have a complete understanding about what Q-learning learns in a system with partial information.
 
-Finally, we will end the report with an unanswered question: __"How can we know that the policy we obtained is the optimal policy in case of POMDP ?"__. This question is very important because if we have the optimal policy beforehand, not necessarily through a model free method, we can later compare it with the result of another method to get an idea if that method works with our problem or not (like what we did with the MDP problem: compare the Q-learning result and the value iterations one). However, because of the limited context of the internship, we are not able to answer that question and left it as a possibility for future work.
+Finally, we will end the report with an unanswered question: __"How can we know that the policy we obtained is the optimal policy in case of POMDP ?"__. This question is very important because if we have the optimal policy beforehand, not necessarily through a model free method, we can later compare it with the result of another method to get an idea if that method works with our problem or not (like what we did with the MDP problem: compare the Q-learning result and the value iteration one). However, because of the limited context of the internship, we are not able to answer that question and left it as a possibility for future work.
 
 \newpage
